@@ -1,101 +1,122 @@
-import Image from "next/image";
+"use client"
+
+import { useUserContext } from "@/contexts/UserDataProviderContext"
+import Link from "next/link"
 
 export default function Home() {
-  return (
-    <div className="grid grid-rows-[20px_1fr_20px] items-center justify-items-center min-h-screen p-8 pb-20 gap-16 sm:p-20 font-[family-name:var(--font-geist-sans)]">
-      <main className="flex flex-col gap-8 row-start-2 items-center sm:items-start">
-        <Image
-          className="dark:invert"
-          src="/next.svg"
-          alt="Next.js logo"
-          width={180}
-          height={38}
-          priority
-        />
-        <ol className="list-inside list-decimal text-sm text-center sm:text-left font-[family-name:var(--font-geist-mono)]">
-          <li className="mb-2">
-            Get started by editing{" "}
-            <code className="bg-black/[.05] dark:bg-white/[.06] px-1 py-0.5 rounded font-semibold">
-              src/app/page.tsx
-            </code>
-            .
-          </li>
-          <li>Save and see your changes instantly.</li>
-        </ol>
+  const { user } = useUserContext()
 
-        <div className="flex gap-4 items-center flex-col sm:flex-row">
-          <a
-            className="rounded-full border border-solid border-transparent transition-colors flex items-center justify-center bg-foreground text-background gap-2 hover:bg-[#383838] dark:hover:bg-[#ccc] text-sm sm:text-base h-10 sm:h-12 px-4 sm:px-5"
-            href="https://vercel.com/new?utm_source=create-next-app&utm_medium=appdir-template-tw&utm_campaign=create-next-app"
-            target="_blank"
-            rel="noopener noreferrer"
+  return (
+    <div className="bg-gray-100 text-gray-800 min-h-screen select-none">
+      {/* Hero Section */}
+      <header className="bg-primary-500 text-white py-20 px-4 text-center">
+        <h1 className="text-4xl font-bold mb-4">
+          Welcome to{" "}
+          <span className=" text-black text-4xl">Your Productivity Hub</span>
+        </h1>
+        <p className="text-lg mb-6">
+          Stay accountable, achieve your goals, and join a motivated community
+        </p>
+        {user === null ? (
+          <Link
+            href="/auth/register"
+            className="bg-white text-primary-500 px-6 py-3 rounded-lg shadow-lg font-semibold hover:bg-gray-100 transition"
           >
-            <Image
-              className="dark:invert"
-              src="/vercel.svg"
-              alt="Vercel logomark"
-              width={20}
-              height={20}
-            />
-            Deploy now
-          </a>
-          <a
-            className="rounded-full border border-solid border-black/[.08] dark:border-white/[.145] transition-colors flex items-center justify-center hover:bg-[#f2f2f2] dark:hover:bg-[#1a1a1a] hover:border-transparent text-sm sm:text-base h-10 sm:h-12 px-4 sm:px-5 sm:min-w-44"
-            href="https://nextjs.org/docs?utm_source=create-next-app&utm_medium=appdir-template-tw&utm_campaign=create-next-app"
-            target="_blank"
-            rel="noopener noreferrer"
+            Get Started
+          </Link>
+        ) : (
+          <Link
+            href="/work"
+            className="bg-white text-primary-500 px-6 py-3 rounded-lg shadow-lg font-semibold hover:bg-gray-100 transition"
           >
-            Read our docs
-          </a>
+            Visit Workspace
+          </Link>
+        )}
+      </header>
+      {/* <pre className="text-[12px]">{JSON.stringify(user, null, 2)}</pre> */}
+
+      <section className="py-16 px-4 md:px-8 lg:px-16">
+        <h2 className="text-3xl font-bold text-center mb-10">Why Choose Us?</h2>
+        <div className="grid gap-8 md:grid-cols-2 lg:grid-cols-3">
+          <div className="bg-white p-6 rounded-lg shadow-md hover:shadow-xl transition">
+            <h3 className="text-xl font-semibold mb-2">Goal Tracking</h3>
+            <p>
+              Set and manage your daily, weekly, and monthly goals to stay on
+              track and achieve more.
+            </p>
+          </div>
+          <div className="bg-white p-6 rounded-lg shadow-md hover:shadow-xl transition">
+            <h3 className="text-xl font-semibold mb-2">Habit Tracker</h3>
+            <p>
+              Build new habits and break unproductive ones with our easy-to-use
+              habit tracking tools.
+            </p>
+          </div>
+          <div className="bg-white p-6 rounded-lg shadow-md hover:shadow-xl transition">
+            <h3 className="text-xl font-semibold mb-2">Community Challenges</h3>
+            <p>
+              Join challenges, participate in events, and compete with others on
+              the leaderboard.
+            </p>
+          </div>
+          <div className="bg-white p-6 rounded-lg shadow-md hover:shadow-xl transition">
+            <h3 className="text-xl font-semibold mb-2">Personal Insights</h3>
+            <p>
+              Get personalized insights to reflect on your progress and make
+              informed adjustments.
+            </p>
+          </div>
+          <div className="bg-white p-6 rounded-lg shadow-md hover:shadow-xl transition">
+            <h3 className="text-xl font-semibold mb-2">
+              Accountability Partners
+            </h3>
+            <p>
+              Find an accountability partner to keep you motivated and
+              responsible.
+            </p>
+          </div>
+          <div className="bg-white p-6 rounded-lg shadow-md hover:shadow-xl transition">
+            <h3 className="text-xl font-semibold mb-2">
+              Goal-Oriented Community
+            </h3>
+            <p>
+              Connect with like-minded individuals working toward their own
+              ambitious goals.
+            </p>
+          </div>
         </div>
-      </main>
-      <footer className="row-start-3 flex gap-6 flex-wrap items-center justify-center">
-        <a
-          className="flex items-center gap-2 hover:underline hover:underline-offset-4"
-          href="https://nextjs.org/learn?utm_source=create-next-app&utm_medium=appdir-template-tw&utm_campaign=create-next-app"
-          target="_blank"
-          rel="noopener noreferrer"
-        >
-          <Image
-            aria-hidden
-            src="/file.svg"
-            alt="File icon"
-            width={16}
-            height={16}
-          />
-          Learn
-        </a>
-        <a
-          className="flex items-center gap-2 hover:underline hover:underline-offset-4"
-          href="https://vercel.com/templates?framework=next.js&utm_source=create-next-app&utm_medium=appdir-template-tw&utm_campaign=create-next-app"
-          target="_blank"
-          rel="noopener noreferrer"
-        >
-          <Image
-            aria-hidden
-            src="/window.svg"
-            alt="Window icon"
-            width={16}
-            height={16}
-          />
-          Examples
-        </a>
-        <a
-          className="flex items-center gap-2 hover:underline hover:underline-offset-4"
-          href="https://nextjs.org?utm_source=create-next-app&utm_medium=appdir-template-tw&utm_campaign=create-next-app"
-          target="_blank"
-          rel="noopener noreferrer"
-        >
-          <Image
-            aria-hidden
-            src="/globe.svg"
-            alt="Globe icon"
-            width={16}
-            height={16}
-          />
-          Go to nextjs.org →
-        </a>
+      </section>
+
+      <section className="bg-primary-500 text-white py-16 px-4 text-center">
+        <h2 className="text-3xl font-bold mb-4">
+          Ready to Transform Your Productivity?
+        </h2>
+        <p className="text-lg mb-6">
+          Take the first step towards a more organized, goal-driven life.
+        </p>
+        {user === null ? (
+          <Link
+            href="/auth/register"
+            className="bg-white text-primary-500 px-6 py-3 rounded-lg shadow-lg font-semibold hover:bg-gray-100 transition"
+          >
+            Join Now
+          </Link>
+        ) : (
+          <Link
+            href="/work"
+            className="bg-white text-primary-500 px-6 py-3 rounded-lg shadow-lg font-semibold hover:bg-gray-100 transition"
+          >
+            Visit Workspace
+          </Link>
+        )}
+      </section>
+
+      <footer className="bg-gray-800 text-white py-8 px-4 text-center mb-0 ">
+        <p>
+          &copy; {new Date().getFullYear()} Your Productivity Hub. All Rights
+          Reserved.
+        </p>
       </footer>
     </div>
-  );
+  )
 }
