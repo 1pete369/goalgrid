@@ -136,12 +136,13 @@ export default function TodoFeature() {
       const newTodo: Todo = createTodo(todoName, uid, categoryId)
       dispatch({ type: "AddTodo", todo: newTodo, categoryId: categoryId })
 
-      await postTodo(newTodo, user?.uid, categoryId)
-
       setTodoNames((prev) => ({
         ...prev,
         [categoryId]: ""
       }))
+      
+      await postTodo(newTodo, user?.uid, categoryId)
+
     }
   }
 
