@@ -372,7 +372,7 @@ export default function TodoFeature() {
                 key={category.id}
               >
                 <header className="flex justify-between items-center p-0">
-                  <div className="font-semibold text-lg">{category.name}</div>
+                  <div className="font-semibold text-lg w-full truncate">{category.name}</div>
                   <Button
                     className="bg-transparent shadow-none hover:bg-transparent w-1 h-auto"
                     onClick={() => handleDeleteCategory(category.id)}
