@@ -16,7 +16,7 @@ export default function Page() {
         profileIsLoading ? (
           <p>Loading...</p>
         ) : (
-          <p>User not logged in!</p>
+          <p>User not logged in! </p>
         )
       ) : (
         <div className="flex flex-col gap-10 justify-between p-4 shadow-md rounded-sm max-w-lg border-2 border-solid box-border ">
