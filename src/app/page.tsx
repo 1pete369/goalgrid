@@ -19,7 +19,7 @@ export default function Home() {
         </p>
         {user === null ? (
           <Link
-            href="/auth/register"
+            href="/auth/signup"
             className="bg-white text-primary-500 px-6 py-3 rounded-lg shadow-lg font-semibold hover:bg-gray-100 transition"
           >
             Get Started
@@ -96,7 +96,7 @@ export default function Home() {
         </p>
         {user === null ? (
           <Link
-            href="/auth/register"
+            href="/auth/signup"
             className="bg-white text-primary-500 px-6 py-3 rounded-lg shadow-lg font-semibold hover:bg-gray-100 transition"
           >
             Join Now
