@@ -1,7 +1,7 @@
 "use client"
 import { Button } from "@/components/ui/button"
 // import Confetti from "react-confetti"
-import { debounce } from 'lodash';
+import { debounce } from "lodash"
 
 import {
   Dialog,
@@ -186,114 +186,117 @@ export default function HabitFeature() {
     setCategoryLocked(true)
   }
 
+  const handleCompleteHabit = debounce(async (habit: Habit) => {
+    const completedHabitId = habit.id
+    const today = getTodayDate()
 
-const handleCompleteHabit = debounce(async (habit: Habit) => {
-  const completedHabitId = habit.id;
-  const today = getTodayDate();
-
-  // Optimistic UI update: Update state immediately
-  const updatedHabits = habits.map((habit) => {
-    if (habit.id === completedHabitId) {
-      const isTodayCompleted = habit.dailyTracking[today] || false;
-      const updatedDailyTracking = {
-        ...habit.dailyTracking,
-        [today]: !isTodayCompleted,
-      };
-
-      let streak = habit.streak.current;
-      const lastCompletedDate = getLastCompletedDate(habit.dailyTracking);
-
-      // Calculate streak
-      if (lastCompletedDate) {
-        const lastDate = new Date(lastCompletedDate);
-        const todayDate = new Date(today);
-        const daysDifference = Math.floor(
-          (todayDate.getTime() - lastDate.getTime()) / (1000 * 60 * 60 * 24)
-        );
-
-        if (daysDifference > 1) {
-          streak = 1;
-        } else if (!isTodayCompleted && updatedDailyTracking[today]) {
-          streak += 1;
-        } else if (isTodayCompleted && !updatedDailyTracking[today]) {
-          streak -= 1;
+    // Optimistic UI update: Update state immediately
+    const updatedHabits = habits.map((habit) => {
+      if (habit.id === completedHabitId) {
+        const isTodayCompleted = habit.dailyTracking[today] || false
+        const updatedDailyTracking = {
+          ...habit.dailyTracking,
+          [today]: !isTodayCompleted
         }
-      } else {
-        streak = updatedDailyTracking[today] ? 1 : 0;
+
+        let streak = habit.streak.current
+        const lastCompletedDate = getLastCompletedDate(habit.dailyTracking)
+
+        // Calculate streak
+        if (lastCompletedDate) {
+          const lastDate = new Date(lastCompletedDate)
+          const todayDate = new Date(today)
+          const daysDifference = Math.floor(
+            (todayDate.getTime() - lastDate.getTime()) / (1000 * 60 * 60 * 24)
+          )
+
+          if (daysDifference > 1) {
+            streak = 1
+          } else if (!isTodayCompleted && updatedDailyTracking[today]) {
+            streak += 1
+          } else if (isTodayCompleted && !updatedDailyTracking[today]) {
+            streak -= 1
+          }
+        } else {
+          streak = updatedDailyTracking[today] ? 1 : 0
+        }
+
+        // Calculate completion rate
+        const completedDays =
+          Object.values(updatedDailyTracking).filter(Boolean).length
+        const totalDays = parseInt(habit.duration)
+        const completionRate = (completedDays / totalDays) * 100
+
+        return {
+          ...habit,
+          dailyTracking: updatedDailyTracking,
+          progress: {
+            totalCompleted: completedDays,
+            completionRate: completionRate
+          },
+          streak: {
+            current: streak,
+            best: Math.max(streak, habit.streak.best)
+          }
+        }
+      }
+      return habit
+    })
+
+    // Optimistic state update (UI updates immediately)
+    setHabits(updatedHabits)
+
+    // Find the changed habit
+    const changedHabit = updatedHabits.find(
+      (habit) => habit.id === completedHabitId
+    )
+
+    if (changedHabit) {
+      // Update the habit asynchronously
+      await updateHabit(changedHabit)
+    }
+
+    // If the habit is linked to a goal, update the goal too
+    if (changedHabit?.linkedGoal !== "") {
+      const linkedGoalId = changedHabit?.linkedGoal
+
+      // Fetch the linked goal and update it
+      const linkedGoal = await getGoalByID(linkedGoalId as string)
+      const linkedHabits = updatedHabits.filter(
+        (habit) => habit.linkedGoal === linkedGoalId
+      )
+
+      // Calculate total progress and completion rate
+      const totalProgress = linkedHabits.reduce(
+        (sum, habit) => sum + habit.progress.completionRate,
+        0
+      )
+
+      const totalCompleted = linkedHabits.reduce(
+        (sum, habit) => sum + habit.progress.totalCompleted,
+        0
+      )
+
+      const goalCompletionRate = totalProgress / linkedHabits.length || 0
+
+      // Update the goal
+      const updatedGoal: Goal = {
+        ...linkedGoal,
+        progress: {
+          totalCompleted: totalCompleted,
+          completionRate: goalCompletionRate
+        }
       }
 
-      // Calculate completion rate
-      const completedDays = Object.values(updatedDailyTracking).filter(Boolean).length;
-      const totalDays = parseInt(habit.duration);
-      const completionRate = (completedDays / totalDays) * 100;
-
-      return {
-        ...habit,
-        dailyTracking: updatedDailyTracking,
-        progress: {
-          totalCompleted: completedDays,
-          completionRate: completionRate,
-        },
-        streak: {
-          current: streak,
-          best: Math.max(streak, habit.streak.best),
-        },
-      };
+      // Update the goal asynchronously
+      await updateGoal(updatedGoal)
     }
-    return habit;
-  });
+  }, 100) // Debounce to prevent rapid re-triggering
 
-  // Optimistic state update (UI updates immediately)
-  setHabits(updatedHabits);
-
-  // Find the changed habit
-  const changedHabit = updatedHabits.find((habit) => habit.id === completedHabitId);
-
-  if (changedHabit) {
-    // Update the habit asynchronously
-    await updateHabit(changedHabit);
+  // Use the debounced function when handling checkbox click
+  const handleCheckboxClick = (habit: Habit) => {
+    handleCompleteHabit(habit)
   }
-
-  // If the habit is linked to a goal, update the goal too
-  if (changedHabit?.linkedGoal !== "") {
-    const linkedGoalId = changedHabit?.linkedGoal;
-
-    // Fetch the linked goal and update it
-    const linkedGoal = await getGoalByID(linkedGoalId as string);
-    const linkedHabits = updatedHabits.filter((habit) => habit.linkedGoal === linkedGoalId);
-
-    // Calculate total progress and completion rate
-    const totalProgress = linkedHabits.reduce(
-      (sum, habit) => sum + habit.progress.completionRate,
-      0
-    );
-
-    const totalCompleted = linkedHabits.reduce(
-      (sum, habit) => sum + habit.progress.totalCompleted,
-      0
-    );
-
-    const goalCompletionRate = totalProgress / linkedHabits.length || 0;
-
-    // Update the goal
-    const updatedGoal: Goal = {
-      ...linkedGoal,
-      progress: {
-        totalCompleted: totalCompleted,
-        completionRate: goalCompletionRate,
-      },
-    };
-    
-    // Update the goal asynchronously
-    await updateGoal(updatedGoal);
-  }
-}, 100);  // Debounce to prevent rapid re-triggering
-
-// Use the debounced function when handling checkbox click
-const handleCheckboxClick = (habit: Habit) => {
-  handleCompleteHabit(habit);
-};
-
 
   const groupHabitsByCategory = (habits: Habit[]): Record<string, Habit[]> => {
     return habits.reduce((grouped, habit) => {
@@ -317,11 +320,12 @@ const handleCheckboxClick = (habit: Habit) => {
   }, [habits])
 
   useEffect(() => {
-    setLoading(true)
     if (user !== null) {
       async function fetchHabits() {
+        setLoading(true)
         const habits = await getHabits(user?.uid as string)
         setHabits(habits)
+        setLoading(false)
       }
       fetchHabits()
       async function fetchGoals() {
@@ -511,6 +515,11 @@ const handleCheckboxClick = (habit: Habit) => {
         </section>
       </header>
       <section className="flex flex-col mt-4 gap-6">
+        {loading && (
+          <div className="min-h-dvh w-full flex justify-center items-center">
+            <p className=" animate-pulse">Loading...</p>
+          </div>
+        )}
         {Object.entries(groupedHabits).length > 0 ? (
           Object.entries(groupedHabits).map(([category, categoryHabits]) => (
             <div key={category}>
