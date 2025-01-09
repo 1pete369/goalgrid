@@ -160,7 +160,7 @@ export default function ToolBar({ editor }: any) {
   }
 
   return (
-    <div className=" md:max-w-3xl w-full flex overflow-x-scroll scroll-smooth md:flex md:flex-wrap sm:flex sm:flex-wrap md:justify-center px-4 sm:px-8 mx-auto border rounded-md py-2 mb-1 bg-slate-50 space-x-1 gap-1 ">
+    <div className=" md:max-w-3xl w-full flex overflow-x-scroll scroll-smooth md:flex md:flex-wrap sm:flex sm:flex-wrap md:justify-center px-4 sm:px-8 mx-auto border rounded-md py-2 mb-1 space-x-1 gap-1 ">
       {Options.map((option, i) => (
         <Toggle
           key={i}

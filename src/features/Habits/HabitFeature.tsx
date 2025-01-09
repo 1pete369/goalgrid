@@ -366,249 +366,171 @@ export default function HabitFeature() {
 
   return (
     <div className="container md:px-24 p-4 pt-6 min-w-full">
-      <header className="text-4xl font-semibold my-3">
-        Hello, {user?.personalInfo.name.split(" ")[0]}!
-        <p className="text-lg text-neutral-500">Create Habits here!</p>
-      </header>
-      <section>
-        <Dialog open={isDialogOpen} onOpenChange={setIsDialogOpen}>
-          <DialogTrigger asChild>
-            <Button className="font-semibold text-lg">
-              <Plus />
-              Add new Habit!
-            </Button>
-          </DialogTrigger>
-          <DialogContent className="sm:max-w-[425px]">
-            <DialogHeader>
-              <DialogTitle>Add new Habit!</DialogTitle>
-            </DialogHeader>
-            <div className="flex flex-col">
-              <div className="">
-                <Label htmlFor="name" className="text-right">
-                  Name
-                </Label>
-                <Input
-                  id="name"
-                  className="col-span-3"
-                  value={habitName}
-                  onChange={handleHabitName}
-                />
-                {habitNameError !== "" && (
-                  <p className="text-error text-sm">{habitNameError}</p>
-                )}
-              </div>
-              <div className="">
-                <Label htmlFor="description" className="text-right">
-                  Description
-                </Label>
-                <Input
-                  id="description"
-                  className="col-span-3"
-                  value={habitDescription}
-                  onChange={handleHabitDescription}
-                  placeholder="Optional"
-                />
-                {habitDescriptionError !== "" && (
-                  <p className="text-error text-sm">{habitDescriptionError}</p>
-                )}
-              </div>
-              <div className="flex justify-between">
-                <div className="mt-4">
-                  <Select
-                    value={habitDuration}
-                    onValueChange={(value) => handleSetHabitDuration(value)}
-                  >
-                    <SelectTrigger className="w-[180px]">
-                      <SelectValue placeholder="Habit Duration" />
-                    </SelectTrigger>
-                    <SelectContent>
-                      <SelectGroup className="">
-                        <SelectLabel>Habit Duration</SelectLabel>
-                        {preDefinedHabitDurations.map((duration, i) => {
-                          return (
-                            <SelectItem
-                              key={i}
-                              value={duration.value.toString()}
-                            >
-                              {duration.label}
-                            </SelectItem>
-                          )
-                        })}
-                      </SelectGroup>
-                    </SelectContent>
-                  </Select>
-                </div>
-                <div className="mt-4">
-                  <Select
-                    value={habitCategory}
-                    onValueChange={(value) => handleSetHabitCategory(value)}
-                    disabled={categoryLocked}
-                  >
-                    <SelectTrigger className="w-[180px]">
-                      <SelectValue placeholder="Habit Category" />
-                    </SelectTrigger>
-                    <SelectContent>
-                      <SelectGroup className="">
-                        <SelectLabel>Habit Category</SelectLabel>
-                        {preDefinedHabitCategories.map((category) => {
-                          return (
-                            <SelectItem key={category} value={category}>
-                              {category}
-                            </SelectItem>
-                          )
-                        })}
-                      </SelectGroup>
-                    </SelectContent>
-                  </Select>
-                </div>
-              </div>
-              <div className="mt-4">
-                <Select
-                  value={linkedGoal}
-                  onValueChange={(value) => handleSetLinkedGoal(value)}
-                >
-                  <SelectTrigger className="">
-                    <SelectValue placeholder="Link habit to a goal! (Optional)" />
-                  </SelectTrigger>
-                  <SelectContent>
-                    <SelectGroup className="">
-                      <SelectLabel>Link a Goal!</SelectLabel>
-                      {Array.isArray(goals) &&
-                        goals.length > 0 &&
-                        goals.map((goal, i) => {
-                          return (
-                            <SelectItem key={i} value={goal.id}>
-                              {goal.name}
-                            </SelectItem>
-                          )
-                        })}
-                    </SelectGroup>
-                  </SelectContent>
-                </Select>
-              </div>
-            </div>
-            <DialogFooter>
-              <Button
-                disabled={!canCreateHabit}
-                type="submit"
-                className="w-[200px] mx-auto"
-                onClick={handleCreateHabit}
-              >
-                Add
+      <header className="text-4xl font-semibold my-3 md:flex gap-20">
+        <div>
+          Hello, {user?.personalInfo.name.split(" ")[0]}!
+          <p className="text-lg text-neutral-500">Create Habits here!</p>
+        </div>
+        <section>
+          <Dialog open={isDialogOpen} onOpenChange={setIsDialogOpen}>
+            <DialogTrigger asChild>
+              <Button className="font-semibold text-lg">
+                <Plus />
+                Add new Habit!
               </Button>
-            </DialogFooter>
-          </DialogContent>
-        </Dialog>
-      </section>
-      {/* <section className="flex flex-col mt-4 gap-6">
-        {Object.entries(groupedHabits).length > 0 ? (
-          Object.entries(groupedHabits).map(([category, categoryHabits]) => (
-            <div key={category}>
-              <h2 className="text-xl font-semibold mb-2">{category}</h2>
-              <div className="flex flex-wrap gap-4">
-                {categoryHabits.map((habit) => (
-                  <Card
-                    className="w-[300px] border rounded-sm flex flex-col justify-between overflow-hidden"
-                    key={habit.id}
+            </DialogTrigger>
+            <DialogContent className="sm:max-w-[425px]">
+              <DialogHeader>
+                <DialogTitle>Add new Habit!</DialogTitle>
+              </DialogHeader>
+              <div className="flex flex-col">
+                <div className="">
+                  <Label htmlFor="name" className="text-right">
+                    Name
+                  </Label>
+                  <Input
+                    id="name"
+                    className="col-span-3"
+                    value={habitName}
+                    onChange={handleHabitName}
+                  />
+                  {habitNameError !== "" && (
+                    <p className="text-error text-sm">{habitNameError}</p>
+                  )}
+                </div>
+                {/* <div className="">
+                  <Label htmlFor="description" className="text-right">
+                    Description
+                  </Label>
+                  <Input
+                    id="description"
+                    className="col-span-3"
+                    value={habitDescription}
+                    onChange={handleHabitDescription}
+                    placeholder="Optional"
+                  />
+                  {habitDescriptionError !== "" && (
+                    <p className="text-error text-sm">
+                      {habitDescriptionError}
+                    </p>
+                  )}
+                </div> */}
+                <div className="flex justify-between">
+                  <div className="mt-4">
+                    <Select
+                      value={habitDuration}
+                      onValueChange={(value) => handleSetHabitDuration(value)}
+                    >
+                      <SelectTrigger className="w-[180px]">
+                        <SelectValue placeholder="Habit Duration" />
+                      </SelectTrigger>
+                      <SelectContent>
+                        <SelectGroup className="">
+                          <SelectLabel>Habit Duration</SelectLabel>
+                          {preDefinedHabitDurations.map((duration, i) => {
+                            return (
+                              <SelectItem
+                                key={i}
+                                value={duration.value.toString()}
+                              >
+                                {duration.label}
+                              </SelectItem>
+                            )
+                          })}
+                        </SelectGroup>
+                      </SelectContent>
+                    </Select>
+                  </div>
+                  <div className="mt-4">
+                    <Select
+                      value={habitCategory}
+                      onValueChange={(value) => handleSetHabitCategory(value)}
+                      disabled={categoryLocked}
+                    >
+                      <SelectTrigger className="w-[180px]">
+                        <SelectValue placeholder="Habit Category" />
+                      </SelectTrigger>
+                      <SelectContent>
+                        <SelectGroup className="">
+                          <SelectLabel>Habit Category</SelectLabel>
+                          {preDefinedHabitCategories.map((category) => {
+                            return (
+                              <SelectItem key={category} value={category}>
+                                {category}
+                              </SelectItem>
+                            )
+                          })}
+                        </SelectGroup>
+                      </SelectContent>
+                    </Select>
+                  </div>
+                </div>
+                <div className="mt-4">
+                  <Select
+                    value={linkedGoal}
+                    onValueChange={(value) => handleSetLinkedGoal(value)}
                   >
-                    <CardHeader className=" relative flex">
-                      <div className="flex items-center justify-between">
-                        <span className="flex items-center gap-1">
-                          <Calendar size={16} />
-                          <p>{formatDate(habit.startDate)}</p>
-                        </span>
-                        <span className="flex items-center justify-center gap-1">
-                          <p className=" text-sm text-center">
-                            {habit.streak.current}
-                          </p>
-                          <Image
-                            src={"/flame.png"}
-                            height={20}
-                            width={20}
-                            alt="streak"
-                            className="h-5 w-5 -mr-1"
-                          />
-                        </span>
-                      </div>
-                      {habit.linkedGoal !== "" && (
-                        <Image
-                          src={"/goalLink.png"}
-                          sizes="10"
-                          width={25}
-                          height={25}
-                          className="absolute -top-5 -right-3"
-                          alt="linkedGoal"
-                        />
-                      )}
-                    </CardHeader>
-                    <CardContent className="flex flex-col gap-3 h-[50px]">
-                      <div className="flex gap-3">
-                        <Checkbox
-                          id={habit.id}
-                          onCheckedChange={() => handleCompleteHabit(habit)}
-                          checked={habit.dailyTracking[getTodayDate()] || false}
-                          className="h-6 w-6 mt-1 rounded-sm data-[state=checked]:border-no 
-                       data-[state=checked]:bg-green-400 /data-[state=checked]:text-black
-                       "
-                        />
-                        <div>
-                          <Label
-                            htmlFor={habit.id}
-                            className="text-base font-semibold"
-                          >
-                            {habit.name.toWellFormed()}
-                          </Label>
-                          <p className="text-neutral-500 text-sm break-all">
-                            {habit.description &&
-                              habit.description.toWellFormed()}
-                          </p>
-                        </div>
-                      </div>
-                    </CardContent>
-                    <CardFooter className="p-0 m-0">
-                      <Progress
-                        value={habit.progress.completionRate}
-                        className="w-full h-8 rounded-none bg-green-50"
-                        color="bg-success"
-                      />
-                      <p className="absolute translate-x-28 text-sm flex">
-                        {habit.progress.totalCompleted}/{habit.duration} days
-                      </p>
-                    </CardFooter>
-                  </Card>
-                ))}
+                    <SelectTrigger className="">
+                      <SelectValue placeholder="Link habit to a goal! (Optional)" />
+                    </SelectTrigger>
+                    <SelectContent>
+                      <SelectGroup className="">
+                        <SelectLabel>Link a Goal!</SelectLabel>
+                        {Array.isArray(goals) &&
+                          goals.length > 0 &&
+                          goals.map((goal, i) => {
+                            return (
+                              <SelectItem key={i} value={goal.id}>
+                                {goal.name}
+                              </SelectItem>
+                            )
+                          })}
+                      </SelectGroup>
+                    </SelectContent>
+                  </Select>
+                </div>
               </div>
-            </div>
-          ))
-        ) : (
-          <p className="mt-4 text-gray-500">No habits yet!</p>
-        )}
-      </section> */}
+              <DialogFooter>
+                <Button
+                  disabled={!canCreateHabit}
+                  type="submit"
+                  className="w-[200px] mx-auto"
+                  onClick={handleCreateHabit}
+                >
+                  Add
+                </Button>
+              </DialogFooter>
+            </DialogContent>
+          </Dialog>
+        </section>
+      </header>
       <section className="flex flex-col mt-4 gap-6">
         {Object.entries(groupedHabits).length > 0 ? (
           Object.entries(groupedHabits).map(([category, categoryHabits]) => (
             <div key={category}>
               <h2 className="text-xl font-semibold mb-2">{category}</h2>
-              <div className="flex flex-wrap gap-4">
+              <div className="grid gap-8 sm:grid-cols-2 lg:grid-cols-3">
                 {categoryHabits.map((habit) => (
                   <Card
-                    className="w-[300px] border-2 border-black/50 rounded-none shadow-md flex flex-col justify-between overflow-hidden"
+                    className="w-full border-none rounded-none shadow-md hover:shadow-lg flex flex-col justify-between overflow-hidden gap-2"
                     key={habit.id}
                   >
-                    <CardHeader className="relative flex justify-between items-center p-3">
-                      <div className="flex items-center gap-2">
+                    <CardHeader className="relative flex flex-row py-2 px-2 justify-between items-center">
+                      <div className="flex items-center gap-1">
                         <span className="text-sm text-gray-500">
                           {habit.streak.current}
                         </span>
                         <Image
                           src={"/flame.png"}
-                          height={20}
-                          width={20}
+                          height={15}
+                          width={15}
                           alt="streak"
-                          className="h-5 w-5 -mr-1"
+                          // className="h-5 w-5"
                         />
                       </div>
-
+                      <p className="text-sm text-gray-500 underline">
+                        {habit.progress.totalCompleted}/{habit.duration} days
+                      </p>
                       {/* Linked Goal Icon */}
                       {habit.linkedGoal !== "" && (
                         <Image
@@ -621,40 +543,35 @@ export default function HabitFeature() {
                         />
                       )}
                     </CardHeader>
-
-                    <CardContent className="flex flex-col gap-3 py-2 px-3">
+                    <CardContent className="p-0 pl-3 mb-1">
                       <div className="flex gap-3 items-center">
                         <Checkbox
                           id={habit.id}
                           onCheckedChange={() => handleCompleteHabit(habit)}
                           checked={habit.dailyTracking[getTodayDate()] || false}
-                          className="h-6 w-6 mt-1 rounded-sm  data-[state=checked]:border-none data-[state=checked]:bg-green-400 /data-[state=checked]:text-black"
+                          className="h-6 w-6 rounded-sm border-green-500 data-[state=checked]:bg-green-500 /data-[state=checked]:text-black "
                         />
-                        <div>
+                        <div className="">
                           <Label
                             htmlFor={habit.id}
                             className="text-base font-semibold"
                           >
                             {habit.name.toWellFormed()}
                           </Label>
-                          {habit.description && (
+                          {/* {habit.description && (
                             <p className="text-neutral-500 text-sm break-all">
                               {habit.description.toWellFormed()}
                             </p>
-                          )}
+                          )} */}
                         </div>
                       </div>
                     </CardContent>
-
-                    <CardFooter className="p-0 m-0 relative">
+                    <CardFooter className="p-0 m-0 relative ">
                       <Progress
                         value={habit.progress.completionRate}
-                        className="w-full h-8 rounded-none bg-green-50"
+                        className="w-full h-2 rounded-none bg-green-50"
                         color="bg-success"
                       />
-                      <p className="absolute bottom-2 right-2 text-sm text-gray-500 flex">
-                        {habit.progress.totalCompleted}/{habit.duration} days
-                      </p>
                     </CardFooter>
                   </Card>
                 ))}

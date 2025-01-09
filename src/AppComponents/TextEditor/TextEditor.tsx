@@ -38,7 +38,6 @@ export default function TextEditor({
 
   const { toast } = useToast()
 
-
   useEffect(() => {
     const savedContent = localStorage.getItem("EditorData")
     if (savedContent) setEditorContent(savedContent)
@@ -60,7 +59,7 @@ export default function TextEditor({
     editorProps: {
       attributes: {
         class:
-          "prose w-full h-full max-w-3xl mx-auto py-2 px-3 bg-slate-50 overflow-y-auto focus:outline-none"
+          "prose w-full h-full max-w-3xl mx-auto py-2 px-3 overflow-y-auto focus:outline-none"
       }
     },
     onUpdate: ({ editor }) => {
@@ -71,7 +70,6 @@ export default function TextEditor({
   })
 
   const validateAndSubmit = () => {
-
     const nameErr = name.trim().length === 0 ? "Name is required" : ""
     const contentErr = editor && editor.isEmpty ? "Content is empty" : ""
     setNameError(nameErr)
@@ -79,15 +77,14 @@ export default function TextEditor({
     if (!nameErr && !contentErr) {
       onSubmit(name, editorContent) // Pass data to the parent component or API
       console.log(`Submitting ${type} note:`, { name, editorContent })
-      toast({ description: "Note saved!"})
+      toast({ description: "Note saved!" })
     }
-
   }
 
   return (
-    <div className="relative">
+    <div className="relative"> 
       {editor && (
-        <div className="flex flex-col items-center w-full px-4">
+        <div className="flex flex-col items-center w-full ">
           <ToolBar editor={editor} className="w-full max-w-3xl mb-4" />
           <div className="w-full max-w-3xl mt-2">
             <Input
@@ -98,11 +95,13 @@ export default function TextEditor({
               onChange={(e) => setName(e.target.value)}
               className="mb-2"
             />
-            {nameError && <p className="text-red-500 text-sm mt-1">{nameError}</p>}
-            <div className="w-full max-w-3xl mt-2 h-[400px] border-2 border-gray-300 rounded-lg overflow-hidden focus:ring-0">
+            {nameError && (
+              <p className="text-red-500 text-sm mt-1">{nameError}</p>
+            )}
+            <div className="w-full max-w-3xl mt-2 h-[400px] border-solid border-2 rounded-lg overflow-hidden focus:ring-0">
               <EditorContent
                 editor={editor}
-                className="h-full p-4 overflow-auto bg-gray-50 focus:outline-none"
+                className="h-full overflow-auto  focus:outline-none"
               />
             </div>
             {contentError && (
@@ -115,7 +114,6 @@ export default function TextEditor({
           >
             Save
           </Button>
-          
         </div>
       )}
     </div>
