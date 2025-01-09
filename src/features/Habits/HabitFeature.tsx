@@ -509,13 +509,13 @@ export default function HabitFeature() {
           Object.entries(groupedHabits).map(([category, categoryHabits]) => (
             <div key={category}>
               <h2 className="text-xl font-semibold mb-2">{category}</h2>
-              <div className="grid gap-8 sm:grid-cols-2 lg:grid-cols-3">
+              <div className="grid gap-4 md:grid-cols-2 lg:grid-cols-3 mt-4">
                 {categoryHabits.map((habit) => (
                   <Card
-                    className="w-full border-none rounded-none shadow-md hover:shadow-lg flex flex-col justify-between overflow-hidden gap-2"
+                    className="w-full rounded-t-sm rounded-b-none shadow-md hover:shadow-lg flex flex-col justify-between overflow-hidden gap-2"
                     key={habit.id}
                   >
-                    <CardHeader className="relative flex flex-row py-2 px-2 justify-between items-center">
+                    <CardHeader className="relative flex flex-row py-2 px-4 justify-between items-center">
                       <div className="flex items-center gap-1">
                         <span className="text-sm text-gray-500">
                           {habit.streak.current}
@@ -543,7 +543,7 @@ export default function HabitFeature() {
                         />
                       )}
                     </CardHeader>
-                    <CardContent className="p-0 pl-3 mb-1">
+                    <CardContent className="p-0 px-4 mb-1">
                       <div className="flex gap-3 items-center">
                         <Checkbox
                           id={habit.id}
@@ -554,7 +554,7 @@ export default function HabitFeature() {
                         <div className="">
                           <Label
                             htmlFor={habit.id}
-                            className="text-base font-semibold"
+                            className="text-base font-semibold tracking-wide line-clamp-1"
                           >
                             {habit.name.toWellFormed()}
                           </Label>
