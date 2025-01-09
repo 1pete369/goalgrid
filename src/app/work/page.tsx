@@ -29,7 +29,7 @@ export default function WorkPage() {
         <h2 className="text-2xl font-bold  mb-10">Featuring!!</h2>
         <div className="grid gap-8 md:grid-cols-2 lg:grid-cols-3">
             <div className="bg-white p-6 rounded-lg shadow-md hover:shadow-xl transition max-w-sm hover:bg-blue-600 hover:text-white">
-          <Link href={"/work/todos"} className="hover:bg-blue-600 flex items-center gap-1">
+          <Link href={"/work/personal/todos"} className="hover:bg-blue-600 flex items-center gap-1">
               <h3 className="text-xl font-semibold mb-2 underline">
                 Todos Space!
               </h3><div><BiLinkExternal /></div>
