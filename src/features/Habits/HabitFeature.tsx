@@ -1,6 +1,8 @@
 "use client"
 import { Button } from "@/components/ui/button"
-import Confetti from "react-confetti"
+// import Confetti from "react-confetti"
+import { debounce } from 'lodash';
+
 import {
   Dialog,
   DialogContent,
@@ -184,110 +186,114 @@ export default function HabitFeature() {
     setCategoryLocked(true)
   }
 
-  const handleCompleteHabit = async (habit: Habit) => {
-    const completedHabitId = habit.id
-    console.log(habit.name)
-    const today = getTodayDate()
-    const updatedHabits = habits.map((habit) => {
-      if (habit.id === completedHabitId) {
-        const isTodayCompleted = habit.dailyTracking[today] || false
-        const updatedDailyTracking = {
-          ...habit.dailyTracking,
-          [today]: !isTodayCompleted
+
+const handleCompleteHabit = debounce(async (habit: Habit) => {
+  const completedHabitId = habit.id;
+  const today = getTodayDate();
+
+  // Optimistic UI update: Update state immediately
+  const updatedHabits = habits.map((habit) => {
+    if (habit.id === completedHabitId) {
+      const isTodayCompleted = habit.dailyTracking[today] || false;
+      const updatedDailyTracking = {
+        ...habit.dailyTracking,
+        [today]: !isTodayCompleted,
+      };
+
+      let streak = habit.streak.current;
+      const lastCompletedDate = getLastCompletedDate(habit.dailyTracking);
+
+      // Calculate streak
+      if (lastCompletedDate) {
+        const lastDate = new Date(lastCompletedDate);
+        const todayDate = new Date(today);
+        const daysDifference = Math.floor(
+          (todayDate.getTime() - lastDate.getTime()) / (1000 * 60 * 60 * 24)
+        );
+
+        if (daysDifference > 1) {
+          streak = 1;
+        } else if (!isTodayCompleted && updatedDailyTracking[today]) {
+          streak += 1;
+        } else if (isTodayCompleted && !updatedDailyTracking[today]) {
+          streak -= 1;
         }
-        let streak = habit.streak.current
-
-        const lastCompletedDate = getLastCompletedDate(habit.dailyTracking)
-
-        if (lastCompletedDate) {
-          const lastDate = new Date(lastCompletedDate)
-          const todayDate = new Date(today)
-          const daysDifference = Math.floor(
-            (todayDate.getTime() - lastDate.getTime()) / (1000 * 60 * 60 * 24)
-          )
-
-          if (daysDifference > 1) {
-            streak = 1
-          } else if (!isTodayCompleted && updatedDailyTracking[today]) {
-            streak += 1
-          } else if (isTodayCompleted && !updatedDailyTracking[today]) {
-            streak -= 1
-          }
-        } else {
-          streak = updatedDailyTracking[today] ? 1 : 0
-        }
-
-        const completedDays =
-          Object.values(updatedDailyTracking).filter(Boolean).length
-        const totalDays = parseInt(habit.duration)
-        const completionRate = (completedDays / totalDays) * 100
-        return {
-          ...habit,
-          dailyTracking: updatedDailyTracking,
-          progress: {
-            totalCompleted: completedDays,
-            completionRate: completionRate
-          },
-          streak: {
-            current: streak,
-            best: Math.max(streak, habit.streak.best)
-          }
-        }
+      } else {
+        streak = updatedDailyTracking[today] ? 1 : 0;
       }
-      return habit
-    })
 
-    const changedHabit: Habit | undefined = updatedHabits.find(
-      (habit) => habit.id === completedHabitId
-    )
+      // Calculate completion rate
+      const completedDays = Object.values(updatedDailyTracking).filter(Boolean).length;
+      const totalDays = parseInt(habit.duration);
+      const completionRate = (completedDays / totalDays) * 100;
 
-    if (changedHabit) {
-      await updateHabit(changedHabit)
-    }
-
-    console.log(changedHabit)
-
-    setHabits(updatedHabits)
-
-    if (changedHabit?.linkedGoal !== "") {
-      const linkedGoalId = changedHabit?.linkedGoal
-
-      // Fetch the linked goal (ensure `getGoalByID` is implemented)
-      const linkedGoal: Goal = await getGoalByID(linkedGoalId as string)
-
-      const linkedHabits = updatedHabits.filter(
-        (habit) => habit.linkedGoal === linkedGoalId
-      )
-
-      console.log(linkedHabits)
-
-      const totalProgress = linkedHabits.reduce(
-        (sum, habit) => sum + habit.progress.completionRate,
-        0
-      )
-      console.log("Total progress", totalProgress)
-
-      const totalCompleted = linkedHabits.reduce(
-        (sum, habit) => sum + habit.progress.totalCompleted,
-        0
-      )
-
-      console.log("Total completed", totalCompleted)
-
-      const goalCompletionRate = totalProgress / linkedHabits.length || 0
-
-      console.log("Goal Completion Rate", goalCompletionRate)
-
-      const updatedGoal: Goal = {
-        ...linkedGoal,
+      return {
+        ...habit,
+        dailyTracking: updatedDailyTracking,
         progress: {
-          totalCompleted: totalCompleted,
-          completionRate: goalCompletionRate
-        }
-      }
-      await updateGoal(updatedGoal)
+          totalCompleted: completedDays,
+          completionRate: completionRate,
+        },
+        streak: {
+          current: streak,
+          best: Math.max(streak, habit.streak.best),
+        },
+      };
     }
+    return habit;
+  });
+
+  // Optimistic state update (UI updates immediately)
+  setHabits(updatedHabits);
+
+  // Find the changed habit
+  const changedHabit = updatedHabits.find((habit) => habit.id === completedHabitId);
+
+  if (changedHabit) {
+    // Update the habit asynchronously
+    await updateHabit(changedHabit);
   }
+
+  // If the habit is linked to a goal, update the goal too
+  if (changedHabit?.linkedGoal !== "") {
+    const linkedGoalId = changedHabit?.linkedGoal;
+
+    // Fetch the linked goal and update it
+    const linkedGoal = await getGoalByID(linkedGoalId as string);
+    const linkedHabits = updatedHabits.filter((habit) => habit.linkedGoal === linkedGoalId);
+
+    // Calculate total progress and completion rate
+    const totalProgress = linkedHabits.reduce(
+      (sum, habit) => sum + habit.progress.completionRate,
+      0
+    );
+
+    const totalCompleted = linkedHabits.reduce(
+      (sum, habit) => sum + habit.progress.totalCompleted,
+      0
+    );
+
+    const goalCompletionRate = totalProgress / linkedHabits.length || 0;
+
+    // Update the goal
+    const updatedGoal: Goal = {
+      ...linkedGoal,
+      progress: {
+        totalCompleted: totalCompleted,
+        completionRate: goalCompletionRate,
+      },
+    };
+    
+    // Update the goal asynchronously
+    await updateGoal(updatedGoal);
+  }
+}, 100);  // Debounce to prevent rapid re-triggering
+
+// Use the debounced function when handling checkbox click
+const handleCheckboxClick = (habit: Habit) => {
+  handleCompleteHabit(habit);
+};
+
 
   const groupHabitsByCategory = (habits: Habit[]): Record<string, Habit[]> => {
     return habits.reduce((grouped, habit) => {
@@ -547,23 +553,21 @@ export default function HabitFeature() {
                       <div className="flex gap-3 items-center">
                         <Checkbox
                           id={habit.id}
-                          onCheckedChange={() => handleCompleteHabit(habit)}
+                          onCheckedChange={() => handleCheckboxClick(habit)}
                           checked={habit.dailyTracking[getTodayDate()] || false}
                           className="h-6 w-6 rounded-sm border-green-500 data-[state=checked]:bg-green-500 /data-[state=checked]:text-black "
                         />
-                        <div className="">
-                          <Label
-                            htmlFor={habit.id}
-                            className="text-base font-semibold tracking-wide line-clamp-1"
-                          >
-                            {habit.name.toWellFormed()}
-                          </Label>
-                          {/* {habit.description && (
+                        <Label
+                          htmlFor={habit.id}
+                          className="text-base font-semibold tracking-wide line-clamp-1 w-full cursor-pointer"
+                        >
+                          {habit.name.toWellFormed()}
+                        </Label>
+                        {/* {habit.description && (
                             <p className="text-neutral-500 text-sm break-all">
                               {habit.description.toWellFormed()}
                             </p>
                           )} */}
-                        </div>
                       </div>
                     </CardContent>
                     <CardFooter className="p-0 m-0 relative ">
