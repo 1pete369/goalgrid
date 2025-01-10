@@ -153,7 +153,7 @@ const data = {
           items: [
             {
               title: "Beginner's Chat",
-              url: "#"
+              url: "/work/community/chat"
             },
             {
               title: "Community Help",

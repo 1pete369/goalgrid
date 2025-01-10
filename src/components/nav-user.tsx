@@ -34,10 +34,10 @@ export function NavUser() {
           </Link>
         ) : (
           <div>
-            <Link href={"/"}>
-            <Button className="w-full">
-              <ArrowLeft size={20} /> Go Back Home
-            </Button>
+              <Link href={"/"} className="w-full " >
+              <Button className="w-full flex items-center gap-2 mb-2">
+                <ArrowLeft size={20} />
+              </Button>
             </Link>
             <DropdownMenu>
               <DropdownMenuTrigger asChild>

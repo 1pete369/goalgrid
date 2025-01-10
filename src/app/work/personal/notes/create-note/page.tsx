@@ -1,5 +1,4 @@
 "use client"
-
 import TextEditor from "@/AppComponents/TextEditor/TextEditor"
 import { Note } from "@/types/noteFeatureTypes"
 import { getTodayDate } from "@/utils/basics"
