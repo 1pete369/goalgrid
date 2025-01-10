@@ -44,9 +44,7 @@ export default function ChatBox() {
   useEffect(() => {
     const pusherKey = process.env.NEXT_PUBLIC_PUSHER_KEY
     const pusherCluster = process.env.NEXT_PUBLIC_PUSHER_CLUSTER
-  
-    console.log("Pusher Key:", pusherKey)
-    console.log("Pusher Cluster:", pusherCluster)
+
   
     if (pusherKey && pusherCluster) {
       const pusher = new Pusher(pusherKey, {
@@ -56,7 +54,6 @@ export default function ChatBox() {
       const channel = pusher.subscribe("chat-channel")
   
       channel.bind("new-message", (data: any) => {
-        console.log("New message received:", data)  // Check if the message is correct
         setMessages((prevMessages) => [...prevMessages, data])  // Add the message to the state
       })
   
