@@ -103,7 +103,7 @@ export default function ChatBox() {
 
   if (user === null)
     return (
-      <div className="h-screen w-full flex justify-center items-center">
+      <div className="h-screen w-full flex justify-center items-center animate-pulse">
         <p className="">Loading...</p>
       </div>
     )
