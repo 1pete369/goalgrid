@@ -71,6 +71,11 @@ export default function ChatBox() {
     }
   }, []);
   
+  // Utility function to sort messages
+const sortMessagesByDate = (messages: MessageType[]) => {
+  return messages.sort((a, b) => new Date(a.createdAt).getTime() - new Date(b.createdAt).getTime());
+};
+
 
   // Scroll to bottom when a new message is added
   useEffect(() => {
@@ -78,39 +83,46 @@ export default function ChatBox() {
       chatEndRef.current.scrollIntoView({ behavior: "smooth" })
     }
   }, [messages])
-
   const handleSendMessage = async (e: FormEvent) => {
     e.preventDefault();
   
-    if (user !== null) {
-      if (newMessage.trim()) {
-        const messageData: MessageType = {
-          username: user?.personalInfo.username,
-          message: newMessage,
-          name: user.personalInfo.name,
-          id: crypto.randomUUID(),
-          uid: user.uid,
-          createdAt: new Date().toISOString(),
-          type: "public",
-          roomName: "beginnersChat",
-          userProfileImage: user.personalInfo.photoURL,
-        };
+    if (user !== null && newMessage.trim()) {
+      const tempMessageData: MessageType = {
+        username: user?.personalInfo.username,
+        message: newMessage,
+        name: user.personalInfo.name,
+        id: crypto.randomUUID(), // Temporary ID
+        uid: user.uid,
+        createdAt: new Date().toISOString(),
+        type: "public",
+        roomName: "beginnersChat",
+        userProfileImage: user.personalInfo.photoURL,
+      };
   
-        // Optimistically update the messages state
-        setMessages((prevMessages) => [...prevMessages, messageData]);
-        setNewMessage("");
+      // Optimistically update the messages state
+      setMessages((prevMessages) => sortMessagesByDate([...prevMessages, tempMessageData]));
+      setNewMessage("");
   
-        try {
-          // Send the message to the server
-          await axios.post(`${process.env.NEXT_PUBLIC_API_URL}/send-message`, messageData);
-          await axios.post(`${process.env.NEXT_PUBLIC_API_URL}/chat`, messageData);
-        } catch (error) {
-          console.error("Error sending message:", error);
-          // Optional: Remove the optimistically added message on error
-          setMessages((prevMessages) =>
-            prevMessages.filter((msg) => msg.id !== messageData.id)
-          );
-        }
+      try {
+        // Send the message to the server
+        const response = await axios.post(`${process.env.NEXT_PUBLIC_API_URL}/chat`, tempMessageData);
+  
+        // Update the message with the server's response (e.g., if the server assigns an ID or timestamp)
+        const confirmedMessage = response.data;
+        setMessages((prevMessages) => {
+          const filteredMessages = prevMessages.filter((msg) => msg.id !== tempMessageData.id); // Remove the temp message
+          return sortMessagesByDate([...filteredMessages, confirmedMessage]);
+        });
+  
+        // Notify other clients via Pusher
+        await axios.post(`${process.env.NEXT_PUBLIC_API_URL}/send-message`, confirmedMessage);
+      } catch (error) {
+        console.error("Error sending message:", error);
+  
+        // Remove the optimistically added message on error
+        setMessages((prevMessages) =>
+          prevMessages.filter((msg) => msg.id !== tempMessageData.id)
+        );
       }
     }
   };
