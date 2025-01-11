@@ -42,29 +42,35 @@ export default function ChatBox() {
   }, []) // Empty dependency array to ensure this runs only once on mount
 
   useEffect(() => {
-    const pusherKey = process.env.NEXT_PUBLIC_PUSHER_KEY
-    const pusherCluster = process.env.NEXT_PUBLIC_PUSHER_CLUSTER
-
+    const pusherKey = process.env.NEXT_PUBLIC_PUSHER_KEY;
+    const pusherCluster = process.env.NEXT_PUBLIC_PUSHER_CLUSTER;
   
     if (pusherKey && pusherCluster) {
       const pusher = new Pusher(pusherKey, {
         cluster: pusherCluster,
-      })
+      });
   
-      const channel = pusher.subscribe('chat-room'); 
+      const channel = pusher.subscribe("chat-room");
   
-      channel.bind("new-message", (data: any) => {
-        setMessages((prevMessages) => [...prevMessages, data])  // Add the message to the state
-      })
+      channel.bind("new-message", (data: MessageType) => {
+        setMessages((prevMessages) => {
+          // Check for duplicate messages
+          if (!prevMessages.find((msg) => msg.id === data.id)) {
+            return [...prevMessages, data];
+          }
+          return prevMessages;
+        });
+      });
   
       return () => {
-        channel.unbind_all()
-        channel.unsubscribe()
-      }
+        channel.unbind_all();
+        channel.unsubscribe();
+      };
     } else {
-      console.error("Pusher environment variables are missing!")
+      console.error("Pusher environment variables are missing!");
     }
-  }, [])
+  }, []);
+  
 
   // Scroll to bottom when a new message is added
   useEffect(() => {
@@ -74,7 +80,8 @@ export default function ChatBox() {
   }, [messages])
 
   const handleSendMessage = async (e: FormEvent) => {
-    e.preventDefault()
+    e.preventDefault();
+  
     if (user !== null) {
       if (newMessage.trim()) {
         const messageData: MessageType = {
@@ -86,20 +93,27 @@ export default function ChatBox() {
           createdAt: new Date().toISOString(),
           type: "public",
           roomName: "beginnersChat",
-          userProfileImage: user.personalInfo.photoURL
-        }
-
-        console.log(messageData)
+          userProfileImage: user.personalInfo.photoURL,
+        };
+  
+        // Optimistically update the messages state
+        setMessages((prevMessages) => [...prevMessages, messageData]);
+        setNewMessage("");
+  
         try {
-          await axios.post(`${process.env.NEXT_PUBLIC_API_URL}/send-message`, messageData)
-          await axios.post(`${process.env.NEXT_PUBLIC_API_URL}/chat`, messageData)
-          setNewMessage("")
+          // Send the message to the server
+          await axios.post(`${process.env.NEXT_PUBLIC_API_URL}/send-message`, messageData);
         } catch (error) {
-          console.error("Error sending message:", error)
+          console.error("Error sending message:", error);
+          // Optional: Remove the optimistically added message on error
+          setMessages((prevMessages) =>
+            prevMessages.filter((msg) => msg.id !== messageData.id)
+          );
         }
       }
     }
-  }
+  };
+  
 
   if (user === null)
     return (
