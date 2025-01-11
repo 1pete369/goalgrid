@@ -27,17 +27,21 @@ export default function ChatBox() {
   const { user } = useUserContext()
   const [messages, setMessages] = useState<MessageType[] | []>([])
   const [newMessage, setNewMessage] = useState("")
-  const chatEndRef = useRef<HTMLDivElement | null>(null)
-
-  const sortMessagesByDate = (messages: MessageType[]) =>
-    messages.sort((a, b) => new Date(a.createdAt).getTime() - new Date(b.createdAt).getTime());
+  const chatEndRef = useRef<HTMLDivElement | null>(null)  
+  const [loading, setLoading] = useState(false);
 
   // Fetch initial messages
   useEffect(() => {
-    axios
-      .get(`${process.env.NEXT_PUBLIC_API_URL}/chat`)
-      .then((response) => setMessages(sortMessagesByDate(response.data)))
-      .catch((error) => console.error("Error fetching messages:", error));
+    const fetchMessages = async () => {
+      try {
+        const response = await axios.get(`${process.env.NEXT_PUBLIC_API_URL}/chat`);
+        setMessages(response.data); // Assumes server returns sorted messages
+      } catch (error) {
+        console.error("Error fetching messages:", error);
+      }
+    };
+
+    fetchMessages();
   }, []);
 
   // Set up Pusher
@@ -50,7 +54,7 @@ export default function ChatBox() {
       const channel = pusher.subscribe("chat-room");
 
       channel.bind("new-message", (data: MessageType) => {
-        setMessages((prevMessages) => sortMessagesByDate([...prevMessages, data]));
+        setMessages((prev) => [...prev, data]);
       });
 
       return () => {
@@ -70,53 +74,55 @@ export default function ChatBox() {
   }, [messages]);
 
   // Handle sending messages
-  const handleSendMessage = async (e: FormEvent) => {
+  const handleSendMessage = async (e: React.FormEvent) => {
     e.preventDefault();
 
-    if (user !== null && newMessage.trim()) {
-      const tempMessageData: MessageType = {
-        username: user?.personalInfo.username,
-        message: newMessage,
-        name: user.personalInfo.name,
-        id: crypto.randomUUID(), // Temporary ID for optimistic updates
-        uid: user.uid,
-        createdAt: new Date().toISOString(),
-        type: "public",
-        roomName: "beginnersChat",
-        userProfileImage: user.personalInfo.photoURL,
-      };
+    if (!user || !newMessage.trim()) return;
 
-      // Optimistically add the message to the UI
-      setMessages((prevMessages) => sortMessagesByDate([...prevMessages, tempMessageData]));
-      setNewMessage("");
+    const tempMessage: MessageType = {
+      id: crypto.randomUUID(),
+      username: user.personalInfo.username,
+      name: user.personalInfo.name,
+      message: newMessage,
+      createdAt: new Date().toISOString(),
+      uid: user.uid,
+      type: "public",
+      roomName: "beginnersChat",
+      userProfileImage: user.personalInfo.photoURL,
+    };
 
-      try {
-        // Send the message to the backend
-        const response = await axios.post(`${process.env.NEXT_PUBLIC_API_URL}/chat`, tempMessageData);
+    // Optimistic UI update
+    setMessages((prev) => [...prev, tempMessage]);
+    setNewMessage(""); // Clear input field
+    setLoading(true);
 
-        // Update the message with the server's response (e.g., official ID, timestamp)
-        const confirmedMessage = response.data;
-        setMessages((prevMessages) => {
-          // Replace the temp message with the confirmed message
-          const filteredMessages = prevMessages.filter((msg) => msg.id !== tempMessageData.id);
-          return sortMessagesByDate([...filteredMessages, confirmedMessage]);
-        });
-      } catch (error) {
-        console.error("Error sending message:", error);
+    try {
+      const response = await axios.post(`${process.env.NEXT_PUBLIC_API_URL}/chat`, tempMessage);
+      const confirmedMessage = response.data;
 
-        // Remove the optimistic message on failure
-        setMessages((prevMessages) =>
-          prevMessages.filter((msg) => msg.id !== tempMessageData.id)
-        );
-      }
+      // Replace the temp message with the confirmed message
+      setMessages((prev) =>
+        prev.map((msg) => (msg.id === tempMessage.id ? confirmedMessage : msg))
+      );
+
+      // Notify other clients via Pusher
+      await axios.post(`${process.env.NEXT_PUBLIC_API_URL}/send-message`, confirmedMessage);
+    } catch (error) {
+      console.error("Error sending message:", error);
+      // Remove optimistic message on failure
+      setMessages((prev) => prev.filter((msg) => msg.id !== tempMessage.id));
+    } finally {
+      setLoading(false);
     }
   };
-  if (user === null)
+
+  if (user === null) {
     return (
       <div className="h-screen w-full flex justify-center items-center animate-pulse">
-        <p className="">Loading...</p>
+        <p>Loading...</p>
       </div>
-    )
+    );
+  }
 
   return (
     <div className="min-h-screen max-w-7xl w-full h-full p-4 mx-auto">
