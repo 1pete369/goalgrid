@@ -34,7 +34,7 @@ export default function ChatBox() {
     axios
       .get("http://localhost:3001/chat")
       .then((response) => setMessages(response.data))
-      .catch((error) => console.error("Error fetching messages:", error))
+      .catch((error) => console.error("Error fetching messages :", error))
 
     if (chatEndRef.current) {
       chatEndRef.current.scrollIntoView({ behavior: "smooth" })
@@ -51,7 +51,7 @@ export default function ChatBox() {
         cluster: pusherCluster,
       })
   
-      const channel = pusher.subscribe("chat-channel")
+      const channel = pusher.subscribe('chat-room'); 
   
       channel.bind("new-message", (data: any) => {
         setMessages((prevMessages) => [...prevMessages, data])  // Add the message to the state
