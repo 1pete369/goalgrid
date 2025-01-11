@@ -32,7 +32,7 @@ export default function ChatBox() {
   // Fetch initial messages
   useEffect(() => {
     axios
-      .get("http://localhost:3001/chat")
+      .get(`${process.env.NEXT_PUBLIC_API_URL}/chat`)
       .then((response) => setMessages(response.data))
       .catch((error) => console.error("Error fetching messages :", error))
 
