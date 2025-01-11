@@ -45,26 +45,35 @@ export default function ChatBox() {
   }, []);
 
   // Set up Pusher
-  useEffect(() => {
-    const pusherKey = process.env.NEXT_PUBLIC_PUSHER_KEY;
-    const pusherCluster = process.env.NEXT_PUBLIC_PUSHER_CLUSTER;
+ // Set up Pusher
+useEffect(() => {
+  const pusherKey = process.env.NEXT_PUBLIC_PUSHER_KEY;
+  const pusherCluster = process.env.NEXT_PUBLIC_PUSHER_CLUSTER;
 
-    if (pusherKey && pusherCluster) {
-      const pusher = new Pusher(pusherKey, { cluster: pusherCluster });
-      const channel = pusher.subscribe("chat-room");
+  if (pusherKey && pusherCluster) {
+    const pusher = new Pusher(pusherKey, { cluster: pusherCluster });
+    const channel = pusher.subscribe("chat-room");
 
-      channel.bind("new-message", (data: MessageType) => {
-        setMessages((prev) => [...prev, data]);
+    channel.bind("new-message", (data: MessageType) => {
+      setMessages((prev) => {
+        // Avoid duplicate messages by checking if the ID already exists
+        const messageExists = prev.some((msg) => msg.id === data.id);
+        if (!messageExists) {
+          return [...prev, data];
+        }
+        return prev;
       });
+    });
 
-      return () => {
-        channel.unbind_all();
-        channel.unsubscribe();
-      };
-    } else {
-      console.error("Pusher environment variables are missing!");
-    }
-  }, []);
+    return () => {
+      channel.unbind_all();
+      channel.unsubscribe();
+    };
+  } else {
+    console.error("Pusher environment variables are missing!");
+  }
+}, []);
+
 
   // Scroll to the bottom of the chat
   useEffect(() => {
