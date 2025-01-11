@@ -91,8 +91,8 @@ export default function ChatBox() {
 
         console.log(messageData)
         try {
-          await axios.post("http://localhost:3001/send-message", messageData)
-          await axios.post("http://localhost:3001/chat", messageData)
+          await axios.post(`${process.env.NEXT_PUBLIC_API_URL}/send-message`, messageData)
+          await axios.post(`${process.env.NEXT_PUBLIC_API_URL}/chat`, messageData)
           setNewMessage("")
         } catch (error) {
           console.error("Error sending message:", error)
