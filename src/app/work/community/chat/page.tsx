@@ -29,39 +29,30 @@ export default function ChatBox() {
   const [newMessage, setNewMessage] = useState("")
   const chatEndRef = useRef<HTMLDivElement | null>(null)
 
+  const sortMessagesByDate = (messages: MessageType[]) =>
+    messages.sort((a, b) => new Date(a.createdAt).getTime() - new Date(b.createdAt).getTime());
+
   // Fetch initial messages
   useEffect(() => {
     axios
       .get(`${process.env.NEXT_PUBLIC_API_URL}/chat`)
-      .then((response) => setMessages(response.data))
-      .catch((error) => console.error("Error fetching messages :", error))
+      .then((response) => setMessages(sortMessagesByDate(response.data)))
+      .catch((error) => console.error("Error fetching messages:", error));
+  }, []);
 
-    if (chatEndRef.current) {
-      chatEndRef.current.scrollIntoView({ behavior: "smooth" })
-    }
-  }, []) // Empty dependency array to ensure this runs only once on mount
-
+  // Set up Pusher
   useEffect(() => {
     const pusherKey = process.env.NEXT_PUBLIC_PUSHER_KEY;
     const pusherCluster = process.env.NEXT_PUBLIC_PUSHER_CLUSTER;
-  
+
     if (pusherKey && pusherCluster) {
-      const pusher = new Pusher(pusherKey, {
-        cluster: pusherCluster,
-      });
-  
+      const pusher = new Pusher(pusherKey, { cluster: pusherCluster });
       const channel = pusher.subscribe("chat-room");
-  
+
       channel.bind("new-message", (data: MessageType) => {
-        setMessages((prevMessages) => {
-          // Check for duplicate messages
-          if (!prevMessages.find((msg) => msg.id === data.id)) {
-            return [...prevMessages, data];
-          }
-          return prevMessages;
-        });
+        setMessages((prevMessages) => sortMessagesByDate([...prevMessages, data]));
       });
-  
+
       return () => {
         channel.unbind_all();
         channel.unsubscribe();
@@ -70,64 +61,56 @@ export default function ChatBox() {
       console.error("Pusher environment variables are missing!");
     }
   }, []);
-  
-  // Utility function to sort messages
-const sortMessagesByDate = (messages: MessageType[]) => {
-  return messages.sort((a, b) => new Date(a.createdAt).getTime() - new Date(b.createdAt).getTime());
-};
 
-
-  // Scroll to bottom when a new message is added
+  // Scroll to the bottom of the chat
   useEffect(() => {
     if (chatEndRef.current) {
-      chatEndRef.current.scrollIntoView({ behavior: "smooth" })
+      chatEndRef.current.scrollIntoView({ behavior: "smooth" });
     }
-  }, [messages])
+  }, [messages]);
+
+  // Handle sending messages
   const handleSendMessage = async (e: FormEvent) => {
     e.preventDefault();
-  
+
     if (user !== null && newMessage.trim()) {
       const tempMessageData: MessageType = {
         username: user?.personalInfo.username,
         message: newMessage,
         name: user.personalInfo.name,
-        id: crypto.randomUUID(), // Temporary ID
+        id: crypto.randomUUID(), // Temporary ID for optimistic updates
         uid: user.uid,
         createdAt: new Date().toISOString(),
         type: "public",
         roomName: "beginnersChat",
         userProfileImage: user.personalInfo.photoURL,
       };
-  
-      // Optimistically update the messages state
+
+      // Optimistically add the message to the UI
       setMessages((prevMessages) => sortMessagesByDate([...prevMessages, tempMessageData]));
       setNewMessage("");
-  
+
       try {
-        // Send the message to the server
+        // Send the message to the backend
         const response = await axios.post(`${process.env.NEXT_PUBLIC_API_URL}/chat`, tempMessageData);
-  
-        // Update the message with the server's response (e.g., if the server assigns an ID or timestamp)
+
+        // Update the message with the server's response (e.g., official ID, timestamp)
         const confirmedMessage = response.data;
         setMessages((prevMessages) => {
-          const filteredMessages = prevMessages.filter((msg) => msg.id !== tempMessageData.id); // Remove the temp message
+          // Replace the temp message with the confirmed message
+          const filteredMessages = prevMessages.filter((msg) => msg.id !== tempMessageData.id);
           return sortMessagesByDate([...filteredMessages, confirmedMessage]);
         });
-  
-        // Notify other clients via Pusher
-        await axios.post(`${process.env.NEXT_PUBLIC_API_URL}/send-message`, confirmedMessage);
       } catch (error) {
         console.error("Error sending message:", error);
-  
-        // Remove the optimistically added message on error
+
+        // Remove the optimistic message on failure
         setMessages((prevMessages) =>
           prevMessages.filter((msg) => msg.id !== tempMessageData.id)
         );
       }
     }
   };
-  
-
   if (user === null)
     return (
       <div className="h-screen w-full flex justify-center items-center animate-pulse">
