@@ -11,6 +11,7 @@ export default function BeginnersChatLandingpage({
   roomName: string
   setIsJoined: React.Dispatch<SetStateAction<boolean>>
 }) {
+  
   const handleJoinRoom = async () => {
     try {
       const response = await axios.patch(
