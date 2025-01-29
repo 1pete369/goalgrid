@@ -30,6 +30,8 @@ export type Subscription = {
 const Pricing = () => {
   const { user } = useUserContext()
   const [selectedPlan, setSelectedPlan] = useState<string | null>(null)
+  const [status, setStatus] = useState("")
+  const [isPurchasing, setIsPurchasing] = useState(false)
 
   useEffect(() => {
     if (user !== null) setSelectedPlan(user?.customData.subscription)
@@ -126,6 +128,7 @@ const Pricing = () => {
   }
 
   const handleCreateSubscription = async (pricingPlan: PricingPlan) => {
+    setIsPurchasing(true)
     setSelectedPlan(pricingPlan.plan) // Immediately update selected plan
     if (user !== null) {
       const { startDate, expiryDate } = calculateSubscriptionDates(pricingPlan)
@@ -147,6 +150,7 @@ const Pricing = () => {
           `${process.env.NEXT_PUBLIC_API_URL}/users/update-subscription-status/${user.uid}`,
           { plan: pricingPlan.plan }
         )
+        setIsPurchasing(false)
       } else {
         const subscriptionObject: Subscription = {
           id: crypto.randomUUID(),
@@ -167,6 +171,7 @@ const Pricing = () => {
           `${process.env.NEXT_PUBLIC_API_URL}/users/update-subscription-status/${user.uid}`,
           { plan: pricingPlan.plan }
         )
+        setIsPurchasing(false)
       }
     }
   }
@@ -182,20 +187,19 @@ const Pricing = () => {
       </section>
       <div className="flex flex-col gap-2 items-center sm:flex-wrap sm:flex-row sm:items-center sm:justify-center text-center text-lg tracking-wide text-white font-semibold bg-primary-500 py-2">
         <p> Current plan: {selectedPlan || "None"} </p>
-        {
-          selectedPlan!=="free" &&
-        <Button
-        onClick={() => handleCreateSubscription(freePricingPlan)}
-        disabled={selectedPlan==="free"}
-          className={`px-6 py-3 rounded-lg text-lg ${
-              selectedPlan==="free"
+        {selectedPlan !== "free" && (
+          <Button
+            onClick={() => handleCreateSubscription(freePricingPlan)}
+            disabled={selectedPlan === "free"}
+            className={`px-6 py-3 rounded-lg text-lg ${
+              selectedPlan === "free"
                 ? " text-white cursor-not-allowed"
                 : "bg-blue-600 text-white hover:bg-blue-700"
-                }`}
+            }`}
           >
-          Cancel subscription
-        </Button>
-              }
+            Cancel subscription
+          </Button>
+        )}
       </div>
       <section className="py-20 px-4">
         <div className="max-w-7xl mx-auto grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-8">
@@ -240,7 +244,11 @@ const Pricing = () => {
                       : "bg-blue-600 text-white hover:bg-blue-700"
                   }`}
                 >
-                  {isCurrentPlan ? "Current Plan" : "Get Started"}
+                  {isPurchasing
+                    ? "Purchasing..."
+                    : isCurrentPlan
+                    ? "Current Plan"
+                    : "Get Started"}
                 </Button>
               </div>
             )
