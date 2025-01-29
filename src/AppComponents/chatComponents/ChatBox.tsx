@@ -76,7 +76,7 @@ export default function ChatBox({ roomName }: ChatBoxProps) {
       uid: user.uid,
       type: "public"
     }
-
+    
     try {
       await axios.post(
         `${process.env.NEXT_PUBLIC_API_URL}/chat/send-message`,
@@ -89,26 +89,36 @@ export default function ChatBox({ roomName }: ChatBoxProps) {
   }
 
   useEffect(() => {
-    const pusherKey = process.env.NEXT_PUBLIC_PUSHER_KEY
-    const pusherCluster = process.env.NEXT_PUBLIC_PUSHER_CLUSTER
-
+    const pusherKey = process.env.NEXT_PUBLIC_PUSHER_KEY;
+    const pusherCluster = process.env.NEXT_PUBLIC_PUSHER_CLUSTER;
+  
     if (pusherKey && pusherCluster) {
       const pusher = new Pusher(pusherKey, {
-        cluster: pusherCluster
-      })
-
-      const channel = pusher.subscribe(roomName)
-      channel.bind("new-message", (data: MessageType) => {
-        setMessages((prevMessages) => [...prevMessages, data])
-      })
-
-      return () => {
-        pusher.unsubscribe(roomName)
-      }
-    }
-  }, [roomName])
-
+        cluster: pusherCluster,
+      });
   
+      const channel = pusher.subscribe(roomName);
+  
+      const handleNewMessage = (data: MessageType) => {
+        setMessages((prevMessages) => [...prevMessages, data]);
+      };
+  
+      channel.bind("new-message", handleNewMessage);
+  
+      return () => {
+        channel.unbind("new-message", handleNewMessage); // Unbind event before unsubscribing
+        pusher.unsubscribe(roomName);
+      };
+    }
+  }, [roomName]);
+  
+
+  useEffect(() => {
+    if (mediaUrl !== "" && mediaType !== "none") {
+      handleSendMediaMessage()
+    }
+  }, [mediaUrl, mediaType])
+
   useEffect(() => {
     if (user !== null) {
       async function loadMessages() {
