@@ -1,166 +1,96 @@
 "use client"
-
-import { auth } from "@/config/firebase"
+// context/UserContext.tsx
+import React, { createContext, useContext, useEffect, useState } from "react"
+import { useSession } from "next-auth/react"
 import { MainUserObject } from "@/types/userTypes"
-import { mapFirebaseUserToMainUserObject } from "@/utils/userMappeing"
 import {
   checkUser,
   createUser,
   fetchUser,
-  onBoardingStatus
+  onBoardingStatus,
+  updateLastLogin
 } from "@/utils/users"
-import { FirebaseError } from "firebase/app"
-import {
-  createUserWithEmailAndPassword,
-  GoogleAuthProvider,
-  onAuthStateChanged,
-  signInWithEmailAndPassword,
-  signInWithPopup,
-  signOut
-} from "firebase/auth"
 import { redirect } from "next/navigation"
-import React, {
-  createContext,
-  SetStateAction,
-  useContext,
-  useEffect,
-  useState
-} from "react"
+import { mapFirebaseUserToMainUserObject } from "@/utils/userMappeing"
 
-type UserContextType = {
+interface UserContextType {
   user: MainUserObject | null
-  handleGoogleLogin: () => Promise<void>
-  handleLogout: () => Promise<void>
-  handleEmailLogin: (email: string, password: string) => Promise<void>
-  handleEmailSignup: (email: string, password: string) => Promise<void>
-  profileIsLoading: boolean
-  mainError: string
-  setMainError: React.Dispatch<SetStateAction<string>>
+  loading: boolean
 }
 
-const userContext = createContext<UserContextType | null>(null)
+const UserContext = createContext<UserContextType>({
+  user: null,
+  loading: true
+})
 
-type UserDataProviderContextPropsType = {
-  children: React.ReactNode
-}
-
-export const UserDataProviderContext = ({
+export const UserProvider: React.FC<{ children: React.ReactNode }> = ({
   children
-}: UserDataProviderContextPropsType) => {
+}) => {
+  const { data: session } = useSession() // NextAuth session
   const [user, setUser] = useState<MainUserObject | null>(null)
-  const [profileIsLoading, setProfileIsLoading] = useState(false)
-  const [mainError, setMainError] = useState("")
-
-  const handleGoogleLogin = async () => {
-    try {
-      const provider = new GoogleAuthProvider()
-      await signInWithPopup(auth, provider)
-    } catch (error) {
-      console.log(error)
-    }
-  }
-
-  const handleEmailSignup = async (email: string, password: string) => {
-    try {
-      ;(await createUserWithEmailAndPassword(auth, email, password)).user
-      setMainError("")
-    } catch (error) {
-      console.log("Signup Error")
-      if (error instanceof FirebaseError) {
-        switch (error.code) {
-          case "auth/email-already-in-use":
-            setMainError("Email already exists!")
-            break
-          default:
-            setMainError("Signup failed, Please try again.")
-            break
-        }
-      } else {
-        setMainError("Signup failed, Please try again later.")
-      }
-    }
-  }
-
-  const handleEmailLogin = async (email: string, password: string) => {
-    try {
-      (await signInWithEmailAndPassword(auth, email, password)).user
-      setMainError("")
-    } catch (error) {
-      if (error instanceof FirebaseError) {
-        switch (error.code) {
-          case "auth/invalid-credential":
-            setMainError("Invalid email/password")
-            break
-          default:
-            setMainError("Login failed. Please try again.")
-        }
-      } else {
-        setMainError("An unexpected error occurred. Please try again.")
-      }
-      console.log("Login error:", error)
-    }
-  }
-
-  const handleLogout = async () => {
-    try {
-      await signOut(auth)
-      setUser(null)
-    } catch (error) {
-      console.log(error)
-    }
-  }
+  const [loading, setLoading] = useState(true)
 
   useEffect(() => {
-    const unsubscribe = onAuthStateChanged(auth, async (firebaseUser) => {
-      if (firebaseUser && !user) { // Avoid refetch if user is already set
-        const userExist = await checkUser(firebaseUser.uid);
+    const fetchUserData = async () => {
+      if (session?.user && user !== null) return
+
+      if (session?.user?.id) {
+        const userExist = await checkUser(session.user.id)
         if (userExist) {
-          setProfileIsLoading(true);
-          const MainUserObject = await fetchUser(firebaseUser.uid);
-          setUser(MainUserObject); // Persist user in state
-          const onBoardingStatusFlag = await onBoardingStatus(firebaseUser.uid);
-          if (!onBoardingStatusFlag) {
-            redirect("/onboarding");
+          setLoading(true)
+          let MainUserObject = await fetchUser(session.user.id)
+          MainUserObject = {
+            ...MainUserObject,
+            timings: {
+              ...MainUserObject.timings,
+              lastLoginAt: new Date().toISOString()
+            }
           }
-          setProfileIsLoading(false);
+          setUser(MainUserObject)
+          await updateLastLogin(session.user.id)
+          const onBoardingStatusFlag = await onBoardingStatus(session.user.id)
+          if (!onBoardingStatusFlag) {
+            redirect("/onboarding")
+          }
+          setLoading(false)
         } else {
-          const MainUserObject = await mapFirebaseUserToMainUserObject(firebaseUser);
-          setUser(MainUserObject); // Persist new user in state
-          await createUser(MainUserObject);
-          redirect("/onboarding");
+          if (
+            session.user.id != null &&
+            session.user.accountVerified != null &&
+            session.user.email != null &&
+            session.user.image != null &&
+            session.user.name != null &&
+            session.user.provider != null
+          ) {
+            // All fields are neither null nor undefined
+            const MainUserObject = await mapFirebaseUserToMainUserObject(
+              session.user.id,
+              session.user.email,
+              session.user.image,
+              session.user.name,
+              session.user.provider,
+              session.user.accountVerified
+            )
+            console.log("User Object Created", MainUserObject)
+            setUser(MainUserObject)
+            await createUser(MainUserObject)
+            redirect("/onboarding")
+          }
         }
-      } else if (!firebaseUser) {
-        setUser(null);
+      } else {
+        setUser(null)
       }
-    });
-  
-    return () => unsubscribe();
-  }, []); // Empty dependency array to run only once on mount
-  // Add `user` to the dependency array to run only when `user` changes
-  
+    }
+
+    fetchUserData()
+  }, [session])
 
   return (
-    <userContext.Provider
-      value={{
-        user,
-        handleGoogleLogin,
-        handleLogout,
-        profileIsLoading,
-        handleEmailLogin,
-        handleEmailSignup,
-        mainError,
-        setMainError
-      }}
-    >
+    <UserContext.Provider value={{ user, loading }}>
       {children}
-    </userContext.Provider>
+    </UserContext.Provider>
   )
 }
 
-export const useUserContext = () => {
-  const context = useContext(userContext)
-  if (context === null) {
-    throw new Error("user context must be used within the provider")
-  }
-  return context
-}
+// Custom hook to use the UserContext
+export const useUserContext = () => useContext(UserContext)

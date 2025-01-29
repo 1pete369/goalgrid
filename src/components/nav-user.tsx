@@ -20,10 +20,15 @@ import {
 import { useUserContext } from "@/contexts/UserDataProviderContext"
 import Link from "next/link"
 import { Button } from "./ui/button"
+import { signOut } from "next-auth/react"
 
 export function NavUser() {
   const { isMobile } = useSidebar()
-  const { user, handleLogout } = useUserContext()
+  const { user } = useUserContext()
+
+  const handleLogout = async () => {
+    await signOut({ redirect: true, callbackUrl: "/" })
+  }
 
   return (
     <SidebarMenu>
@@ -34,7 +39,7 @@ export function NavUser() {
           </Link>
         ) : (
           <div>
-              <Link href={"/"} className="w-full " >
+            <Link href={"/"} className="w-full ">
               <Button className="w-full flex items-center gap-2 mb-2">
                 <ArrowLeft size={20} />
               </Button>

@@ -1,10 +1,15 @@
-import React from 'react'
+import React, { SetStateAction } from 'react'
 import SignUpWithEmail from './components/SignUpWithEmail'
 import Image from 'next/image'
 import Google from './components/Google'
 import Link from 'next/link'
+import { Button } from '@/components/ui/button'
 
-export default function SignUpPage() {
+export default function SignUpPage({
+  setIsLogin
+}: {
+  setIsLogin: React.Dispatch<SetStateAction<boolean>>
+}) {
   return (
     <div className="flex items-center justify-center w-full min-h-[calc(100vh-75px)]">
       <div className="flex flex-col gap-5 items-center justify-center border-2 p-10 rounded">
@@ -32,9 +37,9 @@ export default function SignUpPage() {
         <Google />
         <div className="text-">
           already have an account?{" "}
-          <Link href={"/auth/login"} className="text-primary-800 underline">
+          <Button onClick={()=>setIsLogin(true)} className="text-primary-800 underline bg-transparent shadow-none hover:bg-transparent hover:shadow-none">
             Login
-          </Link>
+          </Button>
         </div>
       </div>
     </div>

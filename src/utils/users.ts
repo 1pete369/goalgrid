@@ -10,7 +10,7 @@ export async function checkUser(uid: string) {
     ).data
     return response.exist
   } catch (error) {
-    // console.log(error)
+    console.log(error)
   }
 }
 
@@ -36,7 +36,7 @@ export async function createUser(user: MainUserObject) {
         `${process.env.NEXT_PUBLIC_API_URL}/users/create-user`,
         { user }
       )
-      // console.log(response.data)
+      console.log(response.data)
     } catch (error) {
       // console.log(error)
     }
@@ -97,6 +97,18 @@ export async function updateOnBoardingDataToUser(
     // console.log("OnBoarding Response", response.data)
   } catch (error) {
     console.error("Error updating onBoardingData:", error)
+  }
+}
+
+export const updateLastLogin = async (userId: string) => {
+  // console.log("Last login updating:");
+  try {
+    const response = await axios.patch(
+      `${process.env.NEXT_PUBLIC_API_URL}/users/updateLastLogin/${userId}`
+    )
+    // console.log("Last login updated:", response.data);
+  } catch (error) {
+    console.error("Failed to update last login:", error)
   }
 }
 

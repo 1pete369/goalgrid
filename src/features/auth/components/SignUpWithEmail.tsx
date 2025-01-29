@@ -1,27 +1,24 @@
 "use client"
 
-import { useUserContext } from "@/contexts/UserDataProviderContext"
 import {
   validateConfirmPassword,
   validateEmail,
   validatePassword
 } from "@/utils/validators/authFormValidators"
+import { signIn } from "next-auth/react"
+import { useRouter } from "next/navigation"
 import { ChangeEvent, FormEvent, useEffect, useState } from "react"
 
 export default function SignUpWithEmail() {
   const [email, setEmail] = useState("")
   const [password, setPassword] = useState("")
   const [confirmPassword, setConfirmPassword] = useState("")
-
+  const [loading, setLoading] = useState(false)
+  const [mainError, setMainError] = useState("")
   const [emailError, setEmailError] = useState("")
   const [passwordError, setPasswordError] = useState("")
   const [confirmPassworError, setConfirmPasswordError] = useState("")
-
-  const { mainError, setMainError, handleEmailSignup } = useUserContext()
-
-  useEffect(() => {
-    setMainError("")
-  }, [])
+  const router = useRouter()
 
   const handleEmail = (e: ChangeEvent<HTMLInputElement>) => {
     e.preventDefault()
@@ -36,7 +33,7 @@ export default function SignUpWithEmail() {
   }
   const handlePassword = (e: ChangeEvent<HTMLInputElement>) => {
     e.preventDefault()
-    const password = e.target.value
+    const password = e.target.value.trim()
     setPassword(password)
     const error = validatePassword(password)
     if (error !== "") {
@@ -60,7 +57,32 @@ export default function SignUpWithEmail() {
 
   const handleSignUpWithEmail = async (e: FormEvent) => {
     e.preventDefault()
-    await handleEmailSignup(email, password)
+    if (emailError || passwordError) return
+    setLoading(true)
+
+    try {
+      const result = await signIn("credentials", {
+        email,
+        password,
+        type: "register",
+        redirect: false
+      })
+      setLoading(false)
+
+      console.log("signup result:", result)
+
+      if (result?.error) {
+        setMainError(result.error)
+      } else {
+        // On successful login, redirect to homepage
+         const callbackUrl = new URL(window.location.href).searchParams.get("callbackUrl") || "/"
+         router.push(callbackUrl)
+      }
+    } catch (error) {
+      setLoading(false)
+      setMainError("An error occurred while logging in. Please try again.")
+      console.error("Login error:", error) // Log the error to the console
+    }
   }
 
   return (
@@ -124,7 +146,7 @@ export default function SignUpWithEmail() {
           type="submit"
           className="px-4 py-2 w-full bg-primary-800 text-white rounded-full hover:bg-primary-500 focus:ring-2 focus:ring-black focus:outline-none transition-all min-w-[240px]"
         >
-          Signup
+          {loading ? "Loading..." : "Signup"}
         </button>
         {mainError !== "" && (
           <p className="text-error text-sm mt-1">{mainError}</p>

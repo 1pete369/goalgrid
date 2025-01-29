@@ -1,8 +1,11 @@
 import type { Metadata } from "next"
 import "./globals.css"
-import { UserDataProviderContext } from "@/contexts/UserDataProviderContext"
 import NavbarWrapper from "@/AppComponents/NavbarWrapper"
 import { Toaster } from "@/components/ui/toaster"
+import { SessionProvider } from "next-auth/react"
+import { Providers } from "./providers"
+import { UserProvider } from "@/contexts/UserDataProviderContext"
+import { UserProfileProvider } from "@/contexts/UserProfileProviderContext"
 
 export const metadata: Metadata = {
   title: "Create Next App",
@@ -11,17 +14,22 @@ export const metadata: Metadata = {
 
 export default function RootLayout({
   children
-}: Readonly<{
+}: {
   children: React.ReactNode
-}>) {
+}) {
   return (
     <html lang="en">
       <body suppressHydrationWarning={true}>
-        <UserDataProviderContext>
-          <NavbarWrapper />
-          {children}
-          <Toaster />
-        </UserDataProviderContext>
+        {/* Wrap the whole layout in the SessionProvider */}
+        <Providers>
+          <UserProvider>
+            <NavbarWrapper />
+            <UserProfileProvider>
+              {children}
+              <Toaster />
+            </UserProfileProvider>
+          </UserProvider>
+        </Providers>
       </body>
     </html>
   )

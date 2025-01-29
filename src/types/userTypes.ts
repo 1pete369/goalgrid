@@ -24,7 +24,9 @@ export type MainUserObject = {
     },
     streak : number,
     goals : string[],
-    days : string []
+    days : string [],
+    friends: string[],
+    subscription : string
   },
   updates : {
     profileUpdatedAt : Date

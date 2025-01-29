@@ -1,5 +1,6 @@
 "use client"
-import { useUserContext } from "@/contexts/UserDataProviderContext"
+
+import { useSession } from "next-auth/react"
 import Link from "next/link"
 import { usePathname } from "next/navigation"
 import React, { useEffect, useState } from "react"
@@ -13,27 +14,27 @@ export default function Navbar({
 }) {
   const [path, setPath] = useState<string | null>(null)
   const pathname = usePathname()
-  const { user } = useUserContext()
+  const { data: session } = useSession() // Retrieve session data
+  const user = session?.user // Get the user object from the session
 
   useEffect(() => {
-    const pathName = pathname.split("/")[1];
+    const pathName = pathname.split("/")[1]
     if (pathName !== path) {
-      setPath(pathName); // Only update if path has changed
+      setPath(pathName) // Only update if path has changed
     }
-    setIsMenuOpen(false);
-  }, [pathname, path, setIsMenuOpen]);
+    setIsMenuOpen(false)
+  }, [pathname, path, setIsMenuOpen])
 
   useEffect(() => {
     if (isMenuOpen) {
-      document.body.style.overflow = "hidden";
+      document.body.style.overflow = "hidden"
     } else {
-      document.body.style.overflow = "auto";
+      document.body.style.overflow = "auto"
     }
     return () => {
-      document.body.style.overflow = "auto"; // Clean up on unmount or menu close
-    };
-  }, [isMenuOpen]);  // Only trigger when isMenuOpen changes
-  
+      document.body.style.overflow = "auto" // Clean up on unmount or menu close
+    }
+  }, [isMenuOpen]) // Only trigger when isMenuOpen changes
 
   return (
     <div className="text-black">
@@ -44,8 +45,8 @@ export default function Navbar({
               href={"/"}
               className={`inline-block px-4 py-1.5 rounded ${
                 path === ""
-                  ? " underline"
-                  : " hover:text-primary-500 hover:underline"
+                  ? "underline"
+                  : "hover:text-primary-500 hover:underline"
               }`}
             >
               Home
@@ -56,8 +57,8 @@ export default function Navbar({
               href={"/work"}
               className={`inline-block px-4 py-1.5 rounded ${
                 path === "work"
-                  ? " underline"
-                  : " hover:text-primary-500 hover:underline"
+                  ? "underline"
+                  : "hover:text-primary-500 hover:underline"
               }`}
             >
               Work
@@ -68,8 +69,8 @@ export default function Navbar({
               href={"/donate"}
               className={`inline-block px-4 py-1.5 rounded ${
                 path === "donate"
-                  ? " underline"
-                  : " hover:text-primary-500 hover:underline"
+                  ? "underline"
+                  : "hover:text-primary-500 hover:underline"
               }`}
             >
               Donate
@@ -80,18 +81,42 @@ export default function Navbar({
               href={"/feedback"}
               className={`inline-block px-4 py-1.5 rounded ${
                 path === "feedback"
-                  ? " underline"
-                  : " hover:text-primary-500 hover:underline"
+                  ? "underline"
+                  : "hover:text-primary-500 hover:underline"
               }`}
             >
               Feedback
             </Link>
           </li>
-          {user === null && (
+          <li>
+            <Link
+              href={"/pricing"}
+              className={`inline-block px-4 py-1.5 rounded ${
+                path === "pricing"
+                  ? "underline"
+                  : "hover:text-primary-500 hover:underline"
+              }`}
+            >
+              Pricing
+            </Link>
+          </li>
+          <li>
+            <Link
+              href={"/friends"}
+              className={`inline-block px-4 py-1.5 rounded ${
+                path === "friends"
+                  ? "underline"
+                  : "hover:text-primary-500 hover:underline"
+              }`}
+            >
+              Friends
+            </Link>
+          </li>
+          {!user && (
             <li>
-              <Link href={"/auth/signup"}>
+              <Link href={"/auth/login"}>
                 <button className="text-white inline-block px-4 py-1.5 rounded-full bg-primary-800">
-                  SignUp
+                  Get started
                 </button>
               </Link>
             </li>
@@ -106,8 +131,8 @@ export default function Navbar({
                 href={"/"}
                 className={`inline-block px-4 py-1.5 rounded ${
                   path === ""
-                    ? " underline"
-                    : " hover:text-primary-500 hover:underline"
+                    ? "underline"
+                    : "hover:text-primary-500 hover:underline"
                 }`}
               >
                 Home
@@ -118,8 +143,8 @@ export default function Navbar({
                 href={"/work"}
                 className={`inline-block px-4 py-1.5 rounded ${
                   path === "work"
-                    ? " underline"
-                    : " hover:text-primary-500 hover:underline"
+                    ? "underline"
+                    : "hover:text-primary-500 hover:underline"
                 }`}
               >
                 Work
@@ -130,8 +155,8 @@ export default function Navbar({
                 href={"/donate"}
                 className={`inline-block px-4 py-1.5 rounded ${
                   path === "donate"
-                    ? " underline"
-                    : " hover:text-primary-500 hover:underline"
+                    ? "underline"
+                    : "hover:text-primary-500 hover:underline"
                 }`}
               >
                 Donate
@@ -142,18 +167,42 @@ export default function Navbar({
                 href={"/feedback"}
                 className={`inline-block px-4 py-1.5 rounded ${
                   path === "feedback"
-                    ? " underline"
-                    : " hover:text-primary-500 hover:underline"
+                    ? "underline"
+                    : "hover:text-primary-500 hover:underline"
                 }`}
               >
                 Feedback
               </Link>
             </li>
-            {user === null && (
+            <li>
+              <Link
+                href={"/pricing"}
+                className={`inline-block px-4 py-1.5 rounded ${
+                  path === "pricing"
+                    ? "underline"
+                    : "hover:text-primary-500 hover:underline"
+                }`}
+              >
+                Pricing
+              </Link>
+            </li>
+            <li>
+              <Link
+                href={"/friends"}
+                className={`inline-block px-4 py-1.5 rounded ${
+                  path === "friends"
+                    ? "underline"
+                    : "hover:text-primary-500 hover:underline"
+                }`}
+              >
+                Friends
+              </Link>
+            </li>
+            {!user && (
               <li>
-                <Link href={"/auth/signup"}>
-                  <button className=" text-white inline-block px-4 py-1.5 rounded-full bg-primary-800">
-                    SignUp
+                <Link href={"/auth/login"}>
+                  <button className="text-white inline-block px-4 py-1.5 rounded-full bg-primary-800">
+                    Get started
                   </button>
                 </Link>
               </li>

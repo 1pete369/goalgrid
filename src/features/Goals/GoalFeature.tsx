@@ -166,89 +166,91 @@ export default function GoalFeature() {
 
   return (
     <div className="container min-h-[cal(100vh)] md:px-24 p-4 pt-6 min-w-full">
-      <header className="text-4xl font-semibold my-3">
-        Hello, {user?.personalInfo.name.split(" ")[0]}!
-        <p className="text-lg text-neutral-500">Create Goals here!</p>
-      </header>
-      <section>
-        <Dialog open={isDialogOpen} onOpenChange={setIsDialogOpen}>
-          <DialogTrigger asChild>
-            <Button className="font-semibold text-lg">
-              <Plus />
-              Add new Goal!
-            </Button>
-          </DialogTrigger>
-          <DialogContent className="sm:max-w-[425px]">
-            <DialogHeader>
-              <DialogTitle>Add new Goal!</DialogTitle>
-            </DialogHeader>
-            <div className="flex flex-col">
-              <div className="">
-                <Label htmlFor="name" className="text-right">
-                  Name
-                </Label>
-                <Input
-                  id="name"
-                  className="col-span-3"
-                  value={goalName}
-                  onChange={handleGoalName}
-                />
-                {goalNameError !== "" && (
-                  <p className="text-error text-sm">{goalNameError}</p>
-                )}
-              </div>
-              <div className="">
-                <Label htmlFor="description" className="text-right">
-                  Description
-                </Label>
-                <Input
-                  id="description"
-                  className="col-span-3"
-                  value={goalDescription}
-                  onChange={handleGoalDescription}
-                />
-                {goalDescriptionError !== "" && (
-                  <p className="text-error text-sm">{goalDescriptionError}</p>
-                )}
-              </div>
-              <div className="flex justify-between">
-                <div className="mt-4">
-                  <Select
-                    value={goalCategory}
-                    onValueChange={(value) => setGoalCategory(value)}
-                  >
-                    <SelectTrigger className="w-[180px]">
-                      <SelectValue placeholder="Goal Category" />
-                    </SelectTrigger>
-                    <SelectContent>
-                      <SelectGroup className="">
-                        <SelectLabel>Goal Category</SelectLabel>
-                        {preDefinedGoalCategories.map((category) => {
-                          return (
-                            <SelectItem key={category} value={category}>
-                              {category}
-                            </SelectItem>
-                          )
-                        })}
-                      </SelectGroup>
-                    </SelectContent>
-                  </Select>
+      <header className="text-4xl font-semibold my-3 md:flex gap-20">
+        <div>
+          Hello, {user?.personalInfo.name.split(" ")[0]}!
+          <p className="text-lg text-neutral-500">Create Goals here!</p>
+        </div>
+        <section>
+          <Dialog open={isDialogOpen} onOpenChange={setIsDialogOpen}>
+            <DialogTrigger asChild>
+              <Button className="font-semibold text-lg">
+                <Plus />
+                Add new Goal!
+              </Button>
+            </DialogTrigger>
+            <DialogContent className="sm:max-w-[425px]">
+              <DialogHeader>
+                <DialogTitle>Add new Goal!</DialogTitle>
+              </DialogHeader>
+              <div className="flex flex-col">
+                <div className="">
+                  <Label htmlFor="name" className="text-right">
+                    Name
+                  </Label>
+                  <Input
+                    id="name"
+                    className="col-span-3"
+                    value={goalName}
+                    onChange={handleGoalName}
+                  />
+                  {goalNameError !== "" && (
+                    <p className="text-error text-sm">{goalNameError}</p>
+                  )}
+                </div>
+                <div className="">
+                  <Label htmlFor="description" className="text-right">
+                    Description
+                  </Label>
+                  <Input
+                    id="description"
+                    className="col-span-3"
+                    value={goalDescription}
+                    onChange={handleGoalDescription}
+                  />
+                  {goalDescriptionError !== "" && (
+                    <p className="text-error text-sm">{goalDescriptionError}</p>
+                  )}
+                </div>
+                <div className="flex justify-between">
+                  <div className="mt-4">
+                    <Select
+                      value={goalCategory}
+                      onValueChange={(value) => setGoalCategory(value)}
+                    >
+                      <SelectTrigger className="w-[180px]">
+                        <SelectValue placeholder="Goal Category" />
+                      </SelectTrigger>
+                      <SelectContent>
+                        <SelectGroup className="">
+                          <SelectLabel>Goal Category</SelectLabel>
+                          {preDefinedGoalCategories.map((category) => {
+                            return (
+                              <SelectItem key={category} value={category}>
+                                {category}
+                              </SelectItem>
+                            )
+                          })}
+                        </SelectGroup>
+                      </SelectContent>
+                    </Select>
+                  </div>
                 </div>
               </div>
-            </div>
-            <DialogFooter>
-              <Button
-                disabled={!canCreateGoal}
-                type="submit"
-                className="w-[200px] mx-auto"
-                onClick={handleCreateGoal}
-              >
-                Add
-              </Button>
-            </DialogFooter>
-          </DialogContent>
-        </Dialog>
-      </section>
+              <DialogFooter>
+                <Button
+                  disabled={!canCreateGoal}
+                  type="submit"
+                  className="w-[200px] mx-auto"
+                  onClick={handleCreateGoal}
+                >
+                  Add
+                </Button>
+              </DialogFooter>
+            </DialogContent>
+          </Dialog>
+        </section>
+      </header>
       <section className=" flex flex-col gap-4 mt-4">
         {Array.isArray(goals) && goals.length > 0 ? (
           goals.map((goal) => {

@@ -1,7 +1,6 @@
 "use client"
 import { Button } from "@/components/ui/button"
 import { Progress } from "@/components/ui/progress"
-import { useUserContext } from "@/contexts/UserDataProviderContext"
 import { useToast } from "@/hooks/use-toast"
 import { onBoardingDataType } from "@/types/userTypes"
 import { onBoardingStatus, updateOnBoardingDataToUser } from "@/utils/users"
@@ -11,12 +10,15 @@ import GetStartedCard from "../../AppComponents/cards/GetStartedCard"
 import ProfessionCard from "../../AppComponents/cards/ProfessionCard"
 import ReferralSourceCard from "../../AppComponents/cards/ReferralSourceCard"
 import UsingForCard from "../../AppComponents/cards/UsingForCard"
+import { useSession } from "next-auth/react"
+import { useUserContext } from "@/contexts/UserDataProviderContext"
 
 export function OnBoarding() {
   const searchParams = useSearchParams()
   const router = useRouter()
 
   const {user} = useUserContext()
+
   const { toast } = useToast()
 
   const initialStep = parseInt(searchParams.get("step") || "1", 10)

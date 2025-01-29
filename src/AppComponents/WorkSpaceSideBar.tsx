@@ -57,8 +57,12 @@ const data = {
               url: "/work/personal/rewards"
             },
             {
+              title: "Timer",
+              url: "/work/personal/timer"
+            },
+            {
               title: "Personal Journal",
-              url: "/work/personal/journal"
+              url: "/work/personal/journals"
             },
             {
               title: "Insights",
@@ -147,13 +151,22 @@ const data = {
           ]
         },
         {
-          title: "Community Resources",
+          title: "Community chats",
           url: "#",
           icon : Folder,
           items: [
             {
               title: "Beginner's Chat",
-              url: "/work/community/chat"
+              url: "/work/community/beginners-chat"
+            },{
+              title: "Daily wins",
+              url: "/work/community/daily-wins"
+            },{
+              title: "Public journals",
+              url: "/work/community/public-journals"
+            },{
+              title: "Community Feedback",
+              url: "/work/community/community-feedback"
             },
             {
               title: "Community Help",

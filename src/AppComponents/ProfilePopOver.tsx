@@ -1,37 +1,74 @@
 "use client"
 
-import React from "react"
+import React, { use, useEffect, useState } from "react"
 import {
   Popover,
   PopoverContent,
   PopoverTrigger
 } from "@/components/ui/popover"
-import { useUserContext } from "@/contexts/UserDataProviderContext"
 import Image from "next/image"
 import { Button } from "@/components/ui/button"
 import ReactCountryFlag from "react-country-flag"
 import Link from "next/link"
+import { signOut } from "next-auth/react"
+import { useUserContext } from "@/contexts/UserDataProviderContext"
+import { format, parseISO } from "date-fns"
+
+import { Badge } from "@/components/ui/badge"
 
 export default function ProfilePopOver() {
-  const { user, handleLogout } = useUserContext()
+  const { user } = useUserContext()
+
+  const [badgeColor, setBadgeColor] = useState("gray")
+
+  const handleLogout = async () => {
+    await signOut({ redirect: true, callbackUrl: "/" })
+  }
+
+  useEffect(() => {
+    if (user !== null) {
+      const getBadgeColor = (plan: string) => {
+        switch (plan) {
+          case "free":
+            return "gray"
+          case "personal":
+            return "green"
+          case "community":
+            return "blue"
+          case "premium":
+            return "yellow"
+          case "diamond":
+            return "purple"
+          default:
+            return "gray"
+        }
+      }
+      const color = getBadgeColor(user.customData.subscription)
+      setBadgeColor(color)
+    }
+  }, [user])
+
+  if (user === null) {
+    return <p>Loading...</p>
+  }
 
   return (
     <Popover>
       <PopoverTrigger>
         {/* Profile Picture */}
         <Image
-          src={user?.personalInfo.photoURL as string}
+          src={user?.personalInfo?.photoURL as string}
           height={40}
           width={40}
           alt="profile-photo"
           className="rounded-full cursor-pointer border-2 border-gray-300 hover:border-primary-500 transition"
         />
       </PopoverTrigger>
-      <PopoverContent className="flex flex-col p-4 w-72 mr-4 space-y-4 shadow-lg rounded-lg bg-neutral-100 text-gray-800">
+      <PopoverContent className="flex flex-col p-4 w-72 mr-4 space-y-4 shadow-lg rounded-lg text-gray-800">
         {/* User Info */}
         <div className="flex items-center space-x-3">
           <Image
-            src={user?.personalInfo.photoURL as string}
+            src={user?.personalInfo?.photoURL as string}
             height={60}
             width={60}
             alt="profile-photo"
@@ -39,15 +76,42 @@ export default function ProfilePopOver() {
           />
           <div className="flex flex-col">
             <h2 className="text-lg font-semibold text-primary-800 underline">
-              <Link href={"/profile"}>
-              {user?.personalInfo.name}
-              </Link>
+              <Link href={"/profile"}>{user?.personalInfo.name}</Link>
             </h2>
             <p className="text-sm text-gray-500">
               {user?.personalInfo.username}
             </p>
             <p className="text-sm text-gray-500">{user?.personalInfo.email}</p>
+            <Badge
+              className={`${badgeColor === "gray" ? "bg-gray-500" : ""} ${
+                badgeColor === "blue" ? "bg-blue-500" : ""
+              } ${badgeColor === "yellow" ? "bg-yellow-500" : ""} ${
+                badgeColor === "purple" ? "bg-purple-500" : ""
+              } max-w-fit`}
+            >
+              {user?.customData.subscription}
+            </Badge>
           </div>
+        </div>
+
+        <div className="flex flex-col text-sm">
+          <p className="flex gap-2">
+            <span className="font-semibold underline text-sm">CreatedAt:</span>
+            <span className="text-slate-600">
+              {format(parseISO(user.timings.createdAt), "MMM dd, yyyy hh:mm a")}
+            </span>
+          </p>
+          <p className="flex gap-2">
+            <span className="font-semibold underline text-sm">
+              LastLoginAt:
+            </span>
+            <span className="text-slate-600">
+              {format(
+                parseISO(user.timings.lastLoginAt),
+                "MMM dd, yyyy hh:mm a"
+              )}
+            </span>
+          </p>
         </div>
 
         {/* Country & Timezone */}

@@ -1,10 +1,10 @@
 "use client"
 
-import { useUserContext } from "@/contexts/UserDataProviderContext"
 import Link from "next/link"
-
+import { useSession } from "next-auth/react"
 export default function Home() {
-  const { user } = useUserContext()
+
+const {  data : session } = useSession()
 
   return (
     <div className="bg-gray-100 text-gray-800 min-h-screen select-none">
@@ -17,9 +17,9 @@ export default function Home() {
         <p className="text-lg mb-6">
           Stay accountable, achieve your goals, and join a motivated community
         </p>
-        {user === null ? (
+        {session?.user === null ? (
           <Link
-            href="/auth/signup"
+            href="/auth/login"
             className="bg-white text-primary-500 px-6 py-3 rounded-lg shadow-lg font-semibold hover:bg-gray-100 transition"
           >
             Get Started
@@ -94,9 +94,9 @@ export default function Home() {
         <p className="text-lg mb-6">
           Take the first step towards a more organized, goal-driven life.
         </p>
-        {user === null ? (
+        {session?.user === null ? (
           <Link
-            href="/auth/signup"
+            href="/auth/login"
             className="bg-white text-primary-500 px-6 py-3 rounded-lg shadow-lg font-semibold hover:bg-gray-100 transition"
           >
             Join Now

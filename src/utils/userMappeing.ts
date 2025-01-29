@@ -1,35 +1,37 @@
 import { MainUserObject } from "@/types/userTypes"
-import { User as FirebaseUser } from "firebase/auth"
 import { getTimeZoneAndCountryCode } from "./timeZone"
 
+
+
 export const mapFirebaseUserToMainUserObject = async (
-  firebaseUser: FirebaseUser
+  id: string,
+  email: string ,
+  image: string ,
+  name: string ,
+  provider: string,
+  accountVerified: boolean
 ) => {
   const placeHoldForUserName = `_${crypto.randomUUID().slice(1, 10)}`
 
   const data=getTimeZoneAndCountryCode()
 
-  const isGoogleProvider =
-    firebaseUser.providerData[0].providerId === "google.com" ? true : false
-
   const MainUserObject: MainUserObject = {
-    uid: firebaseUser.uid,
+    uid: id,
     personalInfo: {
-      email: firebaseUser.email || "",
-      name: isGoogleProvider ? firebaseUser.displayName?.toLowerCase()! : "",
-      username: isGoogleProvider
-        ? firebaseUser.displayName
-            ?.replace(/\s+/g, "")
+      email: email as string || "",
+      name: name!=="" ? name?.toLowerCase()!  : "",
+      username: name!==""
+        ? name?.replace(/\s+/g, "")
             .toLowerCase()
             .concat(placeHoldForUserName)!
         : "",
-      photoURL: isGoogleProvider
-        ? firebaseUser.photoURL as string
-        : `https://picsum.photos/seed/${firebaseUser.uid}/200`,
-      provider: isGoogleProvider
+      photoURL: name!==""
+        ? image as string
+        : `https://picsum.photos/seed/${id}/200`,
+      provider: provider==="google"
           ? "google"
-          : "email",
-      isEmailVerified: firebaseUser.emailVerified,
+          : "credentials",
+      isEmailVerified: accountVerified,
       dob: "",
       profession: "",
       intendedUseCases: [],
@@ -47,14 +49,16 @@ export const mapFirebaseUserToMainUserObject = async (
       },
       streak: 0,
       goals: [],
-      days: []
+      days: [],
+      friends : [],
+      subscription : "free"
     },
     updates: {
       profileUpdatedAt: new Date()
     },
     timings: {
-      createdAt: firebaseUser.metadata.creationTime!,
-      lastLoginAt: firebaseUser.metadata.lastSignInTime!
+      createdAt: new Date().toISOString()!,
+      lastLoginAt: new Date().toISOString()!
     }
   }
 

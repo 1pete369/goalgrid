@@ -1,26 +1,28 @@
-"use client"
-import { useUserContext } from "@/contexts/UserDataProviderContext"
-import Image from "next/image"
-import { usePathname } from "next/navigation"
-import { useState } from "react"
-import Navbar from "./Navbar"
-import ProfilePopOver from "./ProfilePopOver"
+"use client";
+
+import { useSession } from "next-auth/react";
+import Image from "next/image";
+import { usePathname } from "next/navigation";
+import { useState } from "react";
+import Navbar from "./Navbar";
+import ProfilePopOver from "./ProfilePopOver";
 
 export default function NavbarWrapper() {
-  const [isMenuOpen, setIsMenuOpen] = useState(false)
-  const {user} = useUserContext()
+  const [isMenuOpen, setIsMenuOpen] = useState(false);
+  const { data: session } = useSession(); // Retrieve session data from next-auth
+  const user = session?.user; // Get the user object from the session
 
-  const pathName = usePathname()
+  const pathName = usePathname();
 
-  const canNavbarSet = pathName.split("/")[1]==="work"
+  const canNavbarSet = pathName.split("/")[1] === "work";
 
   if (canNavbarSet) {
-    return null;  // Ensures nothing is rendered if the route is "/work"
+    return null; // Ensures nothing is rendered if the route is "/work"
   }
 
   return (
     <div className="sticky top-0 z-50 bg-white/10 backdrop-blur-sm backdrop:bg-white/10 text-neutral-300">
-      <div className=" container mx-auto p-4 md:px-24 flex justify-between items-center">
+      <div className="container mx-auto p-4 md:px-24 flex justify-between items-center">
         <div className="flex gap-1">
           <button
             className="md:hidden p-1 bg-black rounded-sm"
@@ -43,13 +45,10 @@ export default function NavbarWrapper() {
           />
         </div>
         <div className="flex gap-4 items-center">
-          <Navbar isMenuOpen={isMenuOpen} setIsMenuOpen={setIsMenuOpen}/>
-          {
-            user && 
-          <ProfilePopOver />
-          }
+          <Navbar isMenuOpen={isMenuOpen} setIsMenuOpen={setIsMenuOpen} />
+          {user && <ProfilePopOver />} {/* Render ProfilePopOver only if user is authenticated */}
         </div>
       </div>
     </div>
-  )
+  );
 }

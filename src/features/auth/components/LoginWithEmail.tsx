@@ -1,53 +1,66 @@
 "use client"
 
-import { useUserContext } from "@/contexts/UserDataProviderContext"
-import {
-  validateEmail,
-  validatePassword
-} from "@/utils/validators/authFormValidators"
-import { ChangeEvent, FormEvent, useEffect, useState } from "react"
+import { signIn } from "next-auth/react"
+import { validateEmail, validatePassword } from "@/utils/validators/authFormValidators"
+import { ChangeEvent, FormEvent, useState } from "react"
+import { useRouter } from "next/navigation"
+
 export default function LoginWithEmail() {
   const [email, setEmail] = useState("")
   const [password, setPassword] = useState("")
   const [emailError, setEmailError] = useState("")
   const [passwordError, setPasswordError] = useState("")
+  const [mainError, setMainError] = useState("")
   const [loading, setLoading] = useState(false)
-
-  const { mainError, setMainError, handleEmailLogin } = useUserContext()
-
-  useEffect(() => {
-    setMainError("")
-  }, [])
+  const router = useRouter() // Next.js router to handle programmatic navigation
 
   const handleEmail = (e: ChangeEvent<HTMLInputElement>) => {
     e.preventDefault()
     const email = e.target.value
     setEmail(email)
     const error = validateEmail(email)
-    if (error !== "") {
-      setEmailError(error)
-    } else {
-      setEmailError(error)
-    }
+    setEmailError(error)
   }
 
   const handlePassword = (e: ChangeEvent<HTMLInputElement>) => {
     e.preventDefault()
-    const password = e.target.value
+    const password = e.target.value.trim()
     setPassword(password)
     const error = validatePassword(password)
-    if (error !== "") {
-      setPasswordError(error)
-    } else {
-      setPasswordError(error)
-    }
+    setPasswordError(error)
+    setMainError("")
   }
 
   const handleLoginWithEmail = async (e: FormEvent) => {
     e.preventDefault()
+    if (emailError || passwordError) return
     setLoading(true)
-    await handleEmailLogin(email, password)
-    setLoading(false)
+
+    try {
+      const result = await signIn("credentials", {
+        email,
+        password,
+        type: "login",
+        redirect: false,
+      })
+      setLoading(false)
+
+      console.log("SignIn result:", result)
+
+      if (result?.error) {
+        setMainError("Invalid email or password. Please try again.")
+      } else {
+        // Get the callback URL from query parameters (if it exists)
+        const callbackUrl = new URL(window.location.href).searchParams.get("callbackUrl") || "/"
+        
+        // Redirect the user to the callback URL or fallback to homepage if not provided
+        router.push(callbackUrl)
+      }
+    } catch (error) {
+      setLoading(false)
+      setMainError("An error occurred while logging in. Please try again.")
+      console.error("Login error:", error) // Log the error to the console
+    }
   }
 
   return (
@@ -69,9 +82,7 @@ export default function LoginWithEmail() {
             value={email}
             onChange={(e) => handleEmail(e)}
           />
-          {emailError !== "" && (
-            <p className="text-error text-sm">{emailError}</p>
-          )}
+          {emailError !== "" && <p className="text-error text-sm">{emailError}</p>}
         </div>
         <div>
           <label htmlFor="password" className="hidden">
@@ -86,9 +97,7 @@ export default function LoginWithEmail() {
             value={password}
             onChange={(e) => handlePassword(e)}
           />
-          {passwordError !== "" && (
-            <p className="text-error text-sm">{passwordError}</p>
-          )}
+          {passwordError !== "" && <p className="text-error text-sm">{passwordError}</p>}
         </div>
         <button
           type="submit"
@@ -96,9 +105,7 @@ export default function LoginWithEmail() {
         >
           {loading ? "Loading..." : "Login"}
         </button>
-        {mainError !== "" && (
-          <p className="text-error text-sm mt-1">{mainError}</p>
-        )}
+        {mainError !== "" && <p className="text-error text-sm mt-1">{mainError}</p>}
       </form>
     </div>
   )

@@ -1,28 +1,29 @@
-"use client"
-import { useEditor, EditorContent } from "@tiptap/react"
-import StarterKit from "@tiptap/starter-kit"
-import TextAlign from "@tiptap/extension-text-align"
-import ToolBar from "./ToolBar"
-import Heading from "@tiptap/extension-heading"
-import Highlight from "@tiptap/extension-highlight"
-import Image from "@tiptap/extension-image"
-import BulletList from "@tiptap/extension-bullet-list"
-import OrderedList from "@tiptap/extension-ordered-list"
-import ImageResize from "tiptap-extension-resize-image"
-import Underline from "@tiptap/extension-underline"
-import { Button } from "../../components/ui/button"
-import { useState, useEffect } from "react"
-import { Input } from "@/components/ui/input"
-import { useToast } from "@/hooks/use-toast"
+"use client";
+import { useEditor, EditorContent } from "@tiptap/react";
+import StarterKit from "@tiptap/starter-kit";
+import TextAlign from "@tiptap/extension-text-align";
+import ToolBar from "./ToolBar";
+import Heading from "@tiptap/extension-heading";
+import Highlight from "@tiptap/extension-highlight";
+import Image from "@tiptap/extension-image";
+import BulletList from "@tiptap/extension-bullet-list";
+import OrderedList from "@tiptap/extension-ordered-list";
+import ImageResize from "tiptap-extension-resize-image";
+import Underline from "@tiptap/extension-underline";
+import { Button } from "../../components/ui/button";
+import { useState, useEffect } from "react";
+import { Input } from "@/components/ui/input";
+import { useToast } from "@/hooks/use-toast";
+import { usePathname } from "next/navigation";
 
 type TextEditorPropsType = {
-  editorContent: string
-  setEditorContent: React.Dispatch<React.SetStateAction<string>>
-  name: string
-  setName: React.Dispatch<React.SetStateAction<string>>
-  onSubmit: (name: string, content: string) => void // Custom submission logic
-  type: "private" | "community" // Define type of feature
-}
+  editorContent: string;
+  setEditorContent: React.Dispatch<React.SetStateAction<string>>;
+  name: string;
+  setName: React.Dispatch<React.SetStateAction<string>>;
+  onSubmit: (name: string, content: string) => void;
+  type: "note" | "journal";
+};
 
 export default function TextEditor({
   editorContent,
@@ -30,18 +31,15 @@ export default function TextEditor({
   name,
   setName,
   onSubmit,
-  type
+  type,
 }: TextEditorPropsType) {
-  const [nameError, setNameError] = useState("")
-  const [contentError, setContentError] = useState("")
-  // const [isSubmitted,setIsSubmitted] = useState(false)
+  const [nameError, setNameError] = useState("");
+  const [contentError, setContentError] = useState("");
+  const [isFocused, setIsFocused] = useState(false);
+  const pathname = usePathname();
+  const isEdit = pathname.split("/")[5] === "edit";
 
-  const { toast } = useToast()
-
-  useEffect(() => {
-    const savedContent = localStorage.getItem("EditorData")
-    if (savedContent) setEditorContent(savedContent)
-  }, [setEditorContent])
+  const { toast } = useToast();
 
   const editor = useEditor({
     extensions: [
@@ -52,45 +50,70 @@ export default function TextEditor({
       BulletList.configure({ HTMLAttributes: { class: "list-disc ml-3" } }),
       Highlight,
       Image.configure({ inline: true, allowBase64: true }),
-      ImageResize,
-      Underline
+      ImageResize, // Keep the ImageResize extension enabled
+      Underline,
     ],
     content: editorContent,
     editorProps: {
       attributes: {
         class:
-          "prose w-full h-full max-w-3xl mx-auto py-2 px-3 overflow-y-auto focus:outline-none"
-      }
+          "prose w-full h-full max-w-3xl mx-auto py-2 px-3 overflow-y-auto focus:outline-none",
+      },
     },
     onUpdate: ({ editor }) => {
-      const content = editor.getHTML()
-      setEditorContent(content)
-      localStorage.setItem("EditorData", content)
+      if (!isFocused) {
+        const content = editor.getHTML();
+        setEditorContent(content); // Update content only if not focused
+      }
+    },
+    onFocus: () => {
+      setIsFocused(true); // Set focused state to true
+    },
+    onBlur: () => {
+      if(editor){
+        // Prevent resetting image sizes
+        const content = editor.getHTML();
+        setEditorContent(content); // Save current content including image sizes
+        setIsFocused(false); // Mark editor as unfocused
+      }
+    },
+  });
+
+  useEffect(() => {
+    if (editor && editorContent && !isFocused) {
+      editor.commands.setContent(editorContent); // Prevent overwriting when focused
     }
-  })
+  }, [editor, editorContent, isFocused]);
 
   const validateAndSubmit = () => {
-    const nameErr = name.trim().length === 0 ? "Name is required" : ""
-    const contentErr = editor && editor.isEmpty ? "Content is empty" : ""
-    setNameError(nameErr)
-    setContentError(contentErr)
+    const nameErr = name.trim().length === 0 ? "Name is required" : "";
+    const contentErr = editor && editor.isEmpty ? "Content is empty" : "";
+    setNameError(nameErr);
+    setContentError(contentErr);
     if (!nameErr && !contentErr) {
-      onSubmit(name, editorContent) // Pass data to the parent component or API
-      console.log(`Submitting ${type} note:`, { name, editorContent })
-      toast({ description: "Note saved!" })
+      onSubmit(name, editorContent); // Pass data to the parent component or API
+      toast({
+        description: isEdit
+          ? type === "note"
+            ? "Note updated!"
+            : "Journal updated!"
+          : type === "note"
+          ? "Note saved!"
+          : "Journal saved!",
+      });
     }
-  }
+  };
 
   return (
-    <div className="relative"> 
+    <div className="relative">
       {editor && (
-        <div className="flex flex-col items-center w-full ">
+        <div className="flex flex-col items-center w-full whitespace-normal break-words">
           <ToolBar editor={editor} className="w-full max-w-3xl mb-4" />
           <div className="w-full max-w-3xl mt-2">
             <Input
               type="text"
               value={name}
-              placeholder="Enter Name!"
+              placeholder="Enter Name"
               required
               onChange={(e) => setName(e.target.value)}
               className="mb-2"
@@ -101,7 +124,7 @@ export default function TextEditor({
             <div className="w-full max-w-3xl mt-2 h-[400px] border-solid border-2 rounded-lg overflow-hidden focus:ring-0">
               <EditorContent
                 editor={editor}
-                className="h-full overflow-auto  focus:outline-none"
+                className="h-full overflow-auto focus:outline-none"
               />
             </div>
             {contentError && (
@@ -112,10 +135,10 @@ export default function TextEditor({
             className="mt-4 w-full max-w-xs py-2 text-lg text-white"
             onClick={validateAndSubmit}
           >
-            Save
+            {isEdit ? "Update" : "Save"}
           </Button>
         </div>
       )}
     </div>
-  )
+  );
 }

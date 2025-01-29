@@ -77,7 +77,7 @@ function reducer(state: CategoryType[], action: Action): CategoryType[] {
         }
         return category
       })
-      case "MarkDone" : 
+    case "MarkDone":
     default:
       return state
   }
@@ -96,9 +96,8 @@ const createTodo = (name: string, uid: string, categoryId: string): Todo => {
 }
 
 export default function TodoFeature() {
-
   const { user } = useUserContext()
-
+  
   const [categoryName, setCategoryName] = useState("")
   const [categoryDueDate, setCategoryDueDate] = useState("")
   const [dueDateError, setDueDateError] = useState("")
@@ -120,7 +119,7 @@ export default function TodoFeature() {
 
   useEffect(() => {
     async function fetchCategories() {
-      if(user!==null){
+      if (user !== null) {
         const categories = await getCategories(user.uid)
         dispatch({ type: "LoadCategories", categories })
       }
@@ -140,9 +139,8 @@ export default function TodoFeature() {
         ...prev,
         [categoryId]: ""
       }))
-      
-      await postTodo(newTodo, user?.uid, categoryId)
 
+      await postTodo(newTodo, user?.uid, categoryId)
     }
   }
 
@@ -191,7 +189,7 @@ export default function TodoFeature() {
         dueDate: categoryDueDate,
         categoryTodos: [],
         categoryColor: listColor,
-        completed : false
+        completed: false
       }
       dispatch({ type: "AddCategory", category: categoryObject })
       await createCategory(categoryObject)
@@ -223,147 +221,154 @@ export default function TodoFeature() {
     }))
   }
 
-  if (user === null) return <div className="h-screen w-full flex justify-center items-center"><p className="">Loading...</p></div>
+  if (user === null)
+    return (
+      <div className="h-screen w-full flex justify-center items-center">
+        <p className="">Loading...</p>
+      </div>
+    )
 
   return (
     <div className="container min-h-[cal(100vh)] md:px-24 p-4 pt-6 min-w-full">
-      <header className="text-4xl font-semibold my-3">
+      <header className="text-4xl font-semibold my-3 md:flex gap-20">
+        <div>
         Hello, {user?.personalInfo.name.split(" ")[0]}!
         <p className="text-lg text-neutral-500">Create Todos here!</p>
-      </header>
-      <section>
-        <Dialog open={isDialogOpen} onOpenChange={setIsDialogOpen}>
-          <DialogTrigger asChild>
-            <Button className="font-semibold text-lg">
-              <Plus />
-              Add new List!
-            </Button>
-          </DialogTrigger>
-          <DialogContent className="sm:max-w-[425px]">
-            <DialogHeader>
-              <DialogTitle>Add new Category!</DialogTitle>
-            </DialogHeader>
-            <div className="flex flex-col">
-              <div className="">
-                <Label htmlFor="name" className="text-right">
-                  Name
-                </Label>
-                <Input
-                  id="name"
-                  className="col-span-3"
-                  onChange={(e) => handleCategoryName(e)}
-                />
-              </div>
-              <div className="">
-                <Label htmlFor="due-date" className="text-right">
-                  Due Date
-                </Label>
-                <div className="flex gap-4">
-                  <Input
-                    id="due-date"
-                    type="date"
-                    className="col-span-3"
-                    onChange={(e) => handleCategoryDueDate(e)}
-                    value={categoryDueDate}
-                  />
-                  <Button
-                    className="bg-black/5 text-black hover:bg-black/10"
-                    onClick={handleTodayDate}
-                  >
-                    Today
-                  </Button>
-                </div>
-                {dueDateError !== "" && (
-                  <p className="text-error text-sm">{dueDateError}</p>
-                )}
-              </div>
-              <div className="mt-4">
-                <RadioGroup
-                  value={listColor}
-                  onValueChange={handleColorChange}
-                  className="flex gap-4"
-                >
-                  <div className="flex items-center">
-                    <RadioGroupItem
-                      id="#e5ffe6"
-                      value="#e5ffe6"
-                      className=" hidden"
-                    />
-                    <label
-                      htmlFor="#e5ffe6"
-                      className={`h-6 w-6 cursor-pointer rounded-sm bg-[#e5ffe6] ${
-                        listColor === "#e5ffe6" && "border-2 border-black"
-                      }`}
-                    ></label>
-                  </div>
-                  <div className="flex items-center">
-                    <RadioGroupItem
-                      id="#fff6e7"
-                      value="#fff6e7"
-                      className=" hidden"
-                    />
-                    <label
-                      htmlFor="#fff6e7"
-                      className={`h-6 w-6 cursor-pointer rounded-sm bg-[#fff6e7] ${
-                        listColor === "#fff6e7" && "border-2 border-black"
-                      }`}
-                    ></label>
-                  </div>
-                  <div className="flex items-center">
-                    <RadioGroupItem
-                      id="#f3e4f7"
-                      value="#f3e4f7"
-                      className=" hidden"
-                    />
-                    <label
-                      htmlFor="#f3e4f7"
-                      className={`h-6 w-6 cursor-pointer rounded-sm bg-[#f3e4f7] ${
-                        listColor === "#f3e4f7" && "border-2 border-black"
-                      }`}
-                    ></label>
-                  </div>
-                  <div className="flex items-center">
-                    <RadioGroupItem
-                      id="#edbbb4"
-                      value="#edbbb4"
-                      className=" hidden"
-                    />
-                    <label
-                      htmlFor="#edbbb4"
-                      className={`h-6 w-6 cursor-pointer rounded-sm bg-[#edbbb4] ${
-                        listColor === "#edbbb4" && "border-2 border-black"
-                      }`}
-                    ></label>
-                  </div>
-                  <div className="flex items-center">
-                    <RadioGroupItem
-                      id="#ececec"
-                      value="#ececec"
-                      className=" hidden"
-                    />
-                    <label
-                      htmlFor="#ececec"
-                      className={`h-6 w-6 cursor-pointer rounded-sm bg-[#ececec] ${
-                        listColor === "#ececec" && "border-2 border-black"
-                      }`}
-                    ></label>
-                  </div>
-                </RadioGroup>
-              </div>
-            </div>
-            <DialogFooter>
-              <Button
-                disabled={!canAddCategory}
-                type="submit"
-                className="w-[200px] mx-auto"
-                onClick={handleAddNewCategory}
-              >
-                Add
+        </div>
+        <section>
+          <Dialog open={isDialogOpen} onOpenChange={setIsDialogOpen}>
+            <DialogTrigger asChild>
+              <Button className="font-semibold text-lg">
+                <Plus />
+                Add new List!
               </Button>
-            </DialogFooter>
-          </DialogContent>
-        </Dialog>
-      </section>
+            </DialogTrigger>
+            <DialogContent className="sm:max-w-[425px]">
+              <DialogHeader>
+                <DialogTitle>Add new Category!</DialogTitle>
+              </DialogHeader>
+              <div className="flex flex-col">
+                <div className="">
+                  <Label htmlFor="name" className="text-right">
+                    Name
+                  </Label>
+                  <Input
+                    id="name"
+                    className="col-span-3"
+                    onChange={(e) => handleCategoryName(e)}
+                  />
+                </div>
+                <div className="">
+                  <Label htmlFor="due-date" className="text-right">
+                    Due Date
+                  </Label>
+                  <div className="flex gap-4">
+                    <Input
+                      id="due-date"
+                      type="date"
+                      className="col-span-3"
+                      onChange={(e) => handleCategoryDueDate(e)}
+                      value={categoryDueDate}
+                    />
+                    <Button
+                      className="bg-black/5 text-black hover:bg-black/10"
+                      onClick={handleTodayDate}
+                    >
+                      Today
+                    </Button>
+                  </div>
+                  {dueDateError !== "" && (
+                    <p className="text-error text-sm">{dueDateError}</p>
+                  )}
+                </div>
+                <div className="mt-4">
+                  <RadioGroup
+                    value={listColor}
+                    onValueChange={handleColorChange}
+                    className="flex gap-4"
+                  >
+                    <div className="flex items-center">
+                      <RadioGroupItem
+                        id="#e5ffe6"
+                        value="#e5ffe6"
+                        className=" hidden"
+                      />
+                      <label
+                        htmlFor="#e5ffe6"
+                        className={`h-6 w-6 cursor-pointer rounded-sm bg-[#e5ffe6] ${
+                          listColor === "#e5ffe6" && "border-2 border-black"
+                        }`}
+                      ></label>
+                    </div>
+                    <div className="flex items-center">
+                      <RadioGroupItem
+                        id="#fff6e7"
+                        value="#fff6e7"
+                        className=" hidden"
+                      />
+                      <label
+                        htmlFor="#fff6e7"
+                        className={`h-6 w-6 cursor-pointer rounded-sm bg-[#fff6e7] ${
+                          listColor === "#fff6e7" && "border-2 border-black"
+                        }`}
+                      ></label>
+                    </div>
+                    <div className="flex items-center">
+                      <RadioGroupItem
+                        id="#f3e4f7"
+                        value="#f3e4f7"
+                        className=" hidden"
+                      />
+                      <label
+                        htmlFor="#f3e4f7"
+                        className={`h-6 w-6 cursor-pointer rounded-sm bg-[#f3e4f7] ${
+                          listColor === "#f3e4f7" && "border-2 border-black"
+                        }`}
+                      ></label>
+                    </div>
+                    <div className="flex items-center">
+                      <RadioGroupItem
+                        id="#edbbb4"
+                        value="#edbbb4"
+                        className=" hidden"
+                      />
+                      <label
+                        htmlFor="#edbbb4"
+                        className={`h-6 w-6 cursor-pointer rounded-sm bg-[#edbbb4] ${
+                          listColor === "#edbbb4" && "border-2 border-black"
+                        }`}
+                      ></label>
+                    </div>
+                    <div className="flex items-center">
+                      <RadioGroupItem
+                        id="#ececec"
+                        value="#ececec"
+                        className=" hidden"
+                      />
+                      <label
+                        htmlFor="#ececec"
+                        className={`h-6 w-6 cursor-pointer rounded-sm bg-[#ececec] ${
+                          listColor === "#ececec" && "border-2 border-black"
+                        }`}
+                      ></label>
+                    </div>
+                  </RadioGroup>
+                </div>
+              </div>
+              <DialogFooter>
+                <Button
+                  disabled={!canAddCategory}
+                  type="submit"
+                  className="w-[200px] mx-auto"
+                  onClick={handleAddNewCategory}
+                >
+                  Add
+                </Button>
+              </DialogFooter>
+            </DialogContent>
+          </Dialog>
+        </section>
+      </header>
       <div className="min-h-[600px] rounded-sm shadow-sm mt-4 flex flex-wrap justify-center md:justify-normal gap-4">
         {Array.isArray(state) && state.length > 0 ? (
           state.map((category: CategoryType) => {
@@ -373,7 +378,9 @@ export default function TodoFeature() {
                 key={category.id}
               >
                 <header className="flex justify-between items-center p-0">
-                  <div className="font-semibold text-lg w-full truncate">{category.name}</div>
+                  <div className="font-semibold text-lg w-full truncate">
+                    {category.name}
+                  </div>
                   <Button
                     className="bg-transparent shadow-none hover:bg-transparent w-1 h-auto"
                     onClick={() => handleDeleteCategory(category.id)}
@@ -398,7 +405,6 @@ export default function TodoFeature() {
                           <div className="flex items-center space-x-2">
                             <Checkbox
                               id={todo.id}
-
                               onCheckedChange={() =>
                                 handleToggleTodo(category.id, todo)
                               }

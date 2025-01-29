@@ -9,10 +9,12 @@ export function validateEmail(email: string) {
 }
 
 export function validatePassword(password: string){
+  if(password.trim()){
     if(password.length<8){
-        return "Password must be atleast 8 chars"
+      return "Password must be atleast 8 chars"
     }
-    return ""
+  }
+  return ""
 }
 
 export function validateConfirmPassword(password: string, confirmPassword : string){

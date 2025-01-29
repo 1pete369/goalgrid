@@ -110,17 +110,16 @@ export default function ToolBar({ editor }: any) {
   const AddImagePopover = () => {
     const handleAddImage = (url: string) => {
       if (url) {
-        editor.chain().focus().setImage({ src: url, alt: "Image" }).run()
-        const nextPos = editor.state.selection.$from + 1
-
-        editor.chain().focus().setTextSelection(10).run()
+        // Insert the image followed by a line break
+        editor.chain().focus().insertContent(`<img src="${url}" alt="Image" /><br />`).run();
       }
-      setImageUrl("")
-      setIsPopoverOpen(false)
-    }
-
+      setImageUrl("");
+      setIsPopoverOpen(false);
+    };
+    
+    
     const handleImageUrl = (e: ChangeEvent<HTMLInputElement>) => {
-      setImageUrl(e.target.value)
+      setImageUrl(e.target.value.trim())
     }
 
     return (

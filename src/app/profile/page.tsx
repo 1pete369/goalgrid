@@ -1,30 +1,34 @@
-
 "use client"
 import React from "react"
 import Image from "next/image"
 import Link from "next/link"
 import ReactCountryFlag from "react-country-flag"
+import { signOut } from "next-auth/react"
 import { useUserContext } from "@/contexts/UserDataProviderContext"
+import { formatDate } from "@/utils/basics"
+import { format, parseISO } from "date-fns"
 
 export default function Page() {
-  const { user, handleLogout, profileIsLoading } = useUserContext()
+  const { user, loading } = useUserContext()
+
+  const handleLogout = async () => {
+    await signOut({ redirect: false })
+  }
+
+  if (user === null) return <p>Loading...</p>
 
   return (
     <div className="text-lg p-4 w-full space-y-2">
       <span className="text-xl font-semibold">Profile page</span>
       {user === null ? (
-        profileIsLoading ? (
-          <p>Loading...</p>
-        ) : (
-          <p>User not logged in! </p>
-        )
+        <p>Loading...</p>
       ) : (
         <div className="flex flex-col gap-10 justify-between p-4 shadow-md rounded-sm max-w-lg border-2 border-solid box-border ">
           <div className="flex gap-1 flex-col leading-8">
             <div className=" flex justify-between mr-6">
               <h2 className="underline">User Details</h2>
               <div className="h-10 overflow-hidden">
-                {user.personalInfo?.photoURL && (
+                {user.personalInfo?.photoURL ? (
                   <Image
                     src={user.personalInfo.photoURL}
                     width={40}
@@ -32,6 +36,8 @@ export default function Page() {
                     className="rounded-sm"
                     alt="User profile picture"
                   />
+                ) : (
+                  <p>No profile picture available</p> // Or use a default image
                 )}
               </div>
             </div>
@@ -53,25 +59,25 @@ export default function Page() {
                 {user.personalInfo?.email}
               </span>
             </p>
-            {/* <p className="flex gap-2"><span className=" font-semibold underline">Uid:</span><span className=" text-slate-600 ">{user.personalInfo?.uid}</span></p> */}
+            <p className="flex gap-2"><span className=" font-semibold underline">Uid:</span><span className=" text-slate-600 ">{user.personalInfo?.photoURL as string}</span></p>
             <p className="flex gap-2">
               <span className=" font-semibold underline">Provider:</span>
               <span className=" text-slate-600 ">
                 {user.personalInfo?.provider}
               </span>
             </p>
-            {/* <p className="flex gap-2">
+            <p className="flex gap-2">
               <span className=" font-semibold underline">CreatedAt:</span>
               <span className=" text-slate-600 ">
-                {formatDate(user.timings.createdAt)}
+                {format(parseISO(user.timings.createdAt), "MMM dd, yyyy hh:mm a")}
               </span>
             </p>
             <p className="flex gap-2">
               <span className=" font-semibold underline">LastLoginAt:</span>
               <span className=" text-slate-600 ">
-                {formatDate(user.timings.lastLoginAt)}
+                {format(parseISO(user.timings.lastLoginAt), "MMM dd, yyyy hh:mm a")}
               </span>
-            </p> */}
+            </p>
             <p className="flex gap-2">
               <span className=" font-semibold underline">TimeZone:</span>
               <span className=" text-slate-600 ">
@@ -109,8 +115,6 @@ export default function Page() {
               )}
             </div>
           </div>
-          {/* <Image src={"/svgviewer-output.svg"} alt="Grid Logo" width={600} height={200} />
-          <img src="/grid.svg" alt="Grid Logo" width="600" height="200" loading="lazy" decoding="async" /> */}
         </div>
       )}
     </div>

@@ -1,16 +1,18 @@
 "use client"
 
-import { useUserContext } from '@/contexts/UserDataProviderContext'
-import LoginPage from '@/features/auth/LoginPage'
-import { redirect } from 'next/navigation'
-import React, { useEffect } from 'react'
+import LoginPage from "@/features/auth/LoginPage"
+import SignUpPage from "@/features/auth/SignUpPage"
+import { useState } from "react"
 
 export default function page() {
-  const {user} = useUserContext()
-  useEffect(()=>{
-    if(user!==null){
-      redirect('/')
+  const [isLogin, setIsLogin] = useState(true)
+
+  return (
+    <>
+    {isLogin ? 
+      <LoginPage setIsLogin={setIsLogin}/>:
+      <SignUpPage setIsLogin={setIsLogin}/>
     }
-  },[user])
-  return <LoginPage />
+    </>
+  )
 }

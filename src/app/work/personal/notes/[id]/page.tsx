@@ -2,25 +2,30 @@
 "use client"
 
 import { useRouter } from "next/router"
-import { useEffect, useState } from "react"
+import { use, useEffect, useState } from "react"
 import { Note } from "@/types/noteFeatureTypes"
 import { useParams } from "next/navigation"
 import Link from "next/link"
 import { Button } from "@/components/ui/button"
 import { BiLeftArrow } from "react-icons/bi"
 import { ArrowLeft } from "lucide-react"
+import { getNote } from "@/utils/notes"
 
-export default function FullNote() {
-  const { id } = useParams() // Get the note ID from the URL
+export default function FullNote({params} : {params :Promise<{ id: string }>}) {
+  const { id } = use(params)
   const [note, setNote] = useState<Note | null>(null)
+  const [loading,setLoading] = useState(false)
 
   useEffect(() => {
-    if (id) {
-      const savedNotes = JSON.parse(localStorage.getItem("notes") || "[]")
-      const currentNote = savedNotes.find((note: Note) => note.id === id)
-      setNote(currentNote || null)
-      console.log(currentNote)
+    async function loadNote(){
+      if (id) {
+        setLoading(true)
+        const noteFetched = await getNote(id)
+        setNote(noteFetched)
+        setLoading(false)
+      }
     }
+    loadNote()
   }, [id])
 
   if (!note) return <p>Note not found.</p>
