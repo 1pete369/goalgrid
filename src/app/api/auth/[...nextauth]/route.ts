@@ -9,7 +9,7 @@ import {
   sessionUserType,
 } from "./authAction";
 
-export const authOptions: AuthOptions = {
+ const authOptions: AuthOptions = {
   providers: [
     // Google Provider
     GoogleProvider({
