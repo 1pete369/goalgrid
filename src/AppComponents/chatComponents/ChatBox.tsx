@@ -46,9 +46,6 @@ export default function ChatBox({ roomName }: ChatBoxProps) {
     console.log(messageData)
 
     try {
-
-      // setMessages((prevMessages) => [...prevMessages, messageData]);
-      
       await axios.post(
         `${process.env.NEXT_PUBLIC_API_URL}/chat/send-message`,
         messageData
@@ -63,9 +60,12 @@ export default function ChatBox({ roomName }: ChatBoxProps) {
   }
 
   const handleSendMessage = async (e: React.FormEvent) => {
-    e.preventDefault();
-    if (user === null || !newMessage.trim()) return;
-  
+    e.preventDefault()
+
+    if (user === null) return
+
+    if (!newMessage.trim()) return
+
     const messageData: MessageType = {
       id: crypto.randomUUID(),
       message: newMessage,
@@ -74,52 +74,41 @@ export default function ChatBox({ roomName }: ChatBoxProps) {
       roomName,
       createdAt: new Date().toISOString(),
       uid: user.uid,
-      type: "public",
-    };
-  
-    try {
-      // **Update local state immediately for instant UI update**
-      // setMessages((prevMessages) => [...prevMessages, messageData]);
-  
-      await axios.post(`${process.env.NEXT_PUBLIC_API_URL}/chat/send-message`, messageData);
-      setNewMessage("");
-    } catch (error) {
-      console.error("Error sending message:", error);
+      type: "public"
     }
-  };
-  
+
+    try {
+      await axios.post(
+        `${process.env.NEXT_PUBLIC_API_URL}/chat/send-message`,
+        messageData
+      )
+      setNewMessage("")
+    } catch (error) {
+      console.error("Error sending message:", error)
+    }
+  }
 
   useEffect(() => {
-    const pusherKey = process.env.NEXT_PUBLIC_PUSHER_KEY;
-    const pusherCluster = process.env.NEXT_PUBLIC_PUSHER_CLUSTER;
-  
+    const pusherKey = process.env.NEXT_PUBLIC_PUSHER_KEY
+    const pusherCluster = process.env.NEXT_PUBLIC_PUSHER_CLUSTER
+
     if (pusherKey && pusherCluster) {
       const pusher = new Pusher(pusherKey, {
-        cluster: pusherCluster,
-      });
-  
-      const channel = pusher.subscribe(roomName);
-  
-      const handleNewMessage = (data: MessageType) => {
-        setMessages((prevMessages) => [...prevMessages, data]);
-      };
-  
-      channel.bind("new-message", handleNewMessage);
-  
+        cluster: pusherCluster
+      })
+
+      const channel = pusher.subscribe(roomName)
+      channel.bind("new-message", (data: MessageType) => {
+        setMessages((prevMessages) => [...prevMessages, data])
+      })
+
       return () => {
-        // channel.unbind("new-message", handleNewMessage); // Unbind event before unsubscribing
-        pusher.unsubscribe(roomName);
-      };
+        pusher.unsubscribe(roomName)
+      }
     }
-  }, [roomName]);
+  }, [roomName])
+
   
-
-  useEffect(() => {
-    if (mediaUrl !== "" && mediaType !== "none") {
-      handleSendMediaMessage()
-    }
-  }, [mediaUrl, mediaType])
-
   useEffect(() => {
     if (user !== null) {
       async function loadMessages() {
