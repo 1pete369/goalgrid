@@ -134,6 +134,7 @@ const Pricing = () => {
     } else {
       setIsPurchasing(true)
     }
+    setSelectedPlan(pricingPlan.plan) // Immediately update selected plan
     if (user !== null) {
       const { startDate, expiryDate } = calculateSubscriptionDates(pricingPlan)
 
@@ -178,7 +179,6 @@ const Pricing = () => {
         )
         setIsPurchasing(false)
       }
-      setSelectedPlan(pricingPlan.plan) // Immediately update selected plan
     }
   }
 
