@@ -36,6 +36,8 @@ export default function BeginnersChatLandingpage({
         <p className="mt-4">
           Whether you're looking for advice, tips, or just a friendly chat, this
           is the place for you!
+          <br />
+          Find the person with same Mindset!!
         </p>
       </div>
       <div className="flex justify-center mt-6">
