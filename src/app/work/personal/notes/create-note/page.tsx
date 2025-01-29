@@ -7,7 +7,7 @@ import { createNote } from "@/utils/notes"
 import { redirect } from "next/navigation"
 import React, { use, useState } from "react"
 
-export default function page() {
+export default function Page() {
   const [editorContent, setEditorContent] = useState("")
   const [name, setName] = useState("")
   const { user } = useUserContext()
@@ -41,7 +41,7 @@ export default function page() {
         name={name}
         setName={setName}
         onSubmit={onSubmit}
-        type="private"
+        type="note"
       />
     </div>
   )

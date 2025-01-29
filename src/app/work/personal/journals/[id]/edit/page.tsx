@@ -2,14 +2,12 @@
 import TextEditor from "@/AppComponents/TextEditor/TextEditor"
 import { useUserContext } from "@/contexts/UserDataProviderContext"
 import { Journal } from "@/types/journalTypes"
-import { Note } from "@/types/noteFeatureTypes"
 import { getTodayDate } from "@/utils/basics"
 import { getJournal, updateJournal } from "@/utils/journals"
-import { updateNote } from "@/utils/notes"
 import { redirect } from "next/navigation"
 import { use, useEffect, useState } from "react"
 
-export default function page({ params }: { params: Promise<{ id: string }> }) {
+export default function Page({ params }: { params: Promise<{ id: string }> }) {
   const [editorContent, setEditorContent] = useState("")
   const [name, setName] = useState("")
   const [journalId, setJournalId] = useState("")

@@ -8,6 +8,7 @@ import { useUserContext } from "@/contexts/UserDataProviderContext"
 import { Media } from "@/types/mediaType"
 import axios from "axios"
 import { Plus, Upload } from "lucide-react"
+import Image from "next/image"
 import React, { SetStateAction, useState } from "react"
 
 type PropsType = {
@@ -145,7 +146,9 @@ const FileUpload = ({ setMediaType, setMediaUrl }: PropsType) => {
           <div className="mb-4 relative">
             <p className="m-2 line-clamp-1">{selectedFile.name}</p>
             {selectedFile.type.startsWith("image/") ? (
-              <img
+              <Image 
+                height={200}
+                width={200}
                 src={previewUrl}
                 alt="Preview"
                 className="rounded-lg w-full h-48 object-cover"

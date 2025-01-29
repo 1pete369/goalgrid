@@ -8,7 +8,7 @@ import axios from "axios"
 import { redirect } from "next/navigation"
 import React, { use, useEffect, useState } from "react"
 
-export default function page({ params }: { params: Promise<{ id: string }> }) {
+export default function Page({ params }: { params: Promise<{ id: string }> }) {
   const [editorContent, setEditorContent] = useState("")
   const [name, setName] = useState("")
   const [noteId, setNoteId] = useState("")

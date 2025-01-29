@@ -27,12 +27,12 @@ import { Label } from "@/components/ui/label"
 import { ChangeEvent, useState } from "react"
 
 export default function ToolBar({ editor }: any) {
-  if (!editor) return null
-
+  
   const [isPopoverOpen, setIsPopoverOpen] = useState(false)
-
+  
   const [imageUrl, setImageUrl] = useState("")
-
+  
+  if (!editor) return null
   const Options = [
     {
       icon: <Heading1 className="size-4" />,

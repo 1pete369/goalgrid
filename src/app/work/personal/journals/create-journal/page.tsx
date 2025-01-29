@@ -7,7 +7,7 @@ import { createJournal } from "@/utils/journals"
 import { redirect } from "next/navigation"
 import React, { useState } from "react"
 
-export default function page() {
+export default function Page() {
   const [editorContent, setEditorContent] = useState("")
   const [name, setName] = useState("")
   const { user } = useUserContext()
