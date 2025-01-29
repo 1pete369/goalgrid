@@ -47,7 +47,7 @@ export default function ChatBox({ roomName }: ChatBoxProps) {
 
     try {
 
-      setMessages((prevMessages) => [...prevMessages, messageData]);
+      // setMessages((prevMessages) => [...prevMessages, messageData]);
       
       await axios.post(
         `${process.env.NEXT_PUBLIC_API_URL}/chat/send-message`,
@@ -79,7 +79,7 @@ export default function ChatBox({ roomName }: ChatBoxProps) {
   
     try {
       // **Update local state immediately for instant UI update**
-      setMessages((prevMessages) => [...prevMessages, messageData]);
+      // setMessages((prevMessages) => [...prevMessages, messageData]);
   
       await axios.post(`${process.env.NEXT_PUBLIC_API_URL}/chat/send-message`, messageData);
       setNewMessage("");
