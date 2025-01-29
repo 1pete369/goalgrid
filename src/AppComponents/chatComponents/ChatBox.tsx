@@ -106,10 +106,10 @@ export default function ChatBox({ roomName }: ChatBoxProps) {
   
       channel.bind("new-message", handleNewMessage);
   
-      return () => {
-        // channel.unbind("new-message", handleNewMessage); // Unbind event before unsubscribing
-        pusher.unsubscribe(roomName);
-      };
+      // return () => {
+      //   // channel.unbind("new-message", handleNewMessage); // Unbind event before unsubscribing
+      //   pusher.unsubscribe(roomName);
+      // };
     }
   }, [roomName]);
   
