@@ -32,6 +32,7 @@ const Pricing = () => {
   const [selectedPlan, setSelectedPlan] = useState<string | null>(null)
   const [status, setStatus] = useState("")
   const [isPurchasing, setIsPurchasing] = useState(false)
+  const [isCancelling, setIsCancelling] = useState(false)
 
   useEffect(() => {
     if (user !== null) setSelectedPlan(user?.customData.subscription)
@@ -128,8 +129,11 @@ const Pricing = () => {
   }
 
   const handleCreateSubscription = async (pricingPlan: PricingPlan) => {
-    setIsPurchasing(true)
-    setSelectedPlan(pricingPlan.plan) // Immediately update selected plan
+    if (pricingPlan.plan === "free") {
+      setIsCancelling(true)
+    } else {
+      setIsPurchasing(true)
+    }
     if (user !== null) {
       const { startDate, expiryDate } = calculateSubscriptionDates(pricingPlan)
 
@@ -150,6 +154,7 @@ const Pricing = () => {
           `${process.env.NEXT_PUBLIC_API_URL}/users/update-subscription-status/${user.uid}`,
           { plan: pricingPlan.plan }
         )
+        setIsCancelling(false)
         setIsPurchasing(false)
       } else {
         const subscriptionObject: Subscription = {
@@ -173,6 +178,7 @@ const Pricing = () => {
         )
         setIsPurchasing(false)
       }
+      setSelectedPlan(pricingPlan.plan) // Immediately update selected plan
     }
   }
 
@@ -244,10 +250,10 @@ const Pricing = () => {
                       : "bg-blue-600 text-white hover:bg-blue-700"
                   }`}
                 >
-                  {isPurchasing
-                    ? "Purchasing..."
-                    : isCurrentPlan
-                    ? "Current Plan"
+                  {isCurrentPlan
+                    ? isPurchasing
+                      ? "Purchasing..."
+                      : "Current Plan"
                     : "Get Started"}
                 </Button>
               </div>
