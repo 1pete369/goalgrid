@@ -53,7 +53,7 @@ export default function ChatBox({ roomName }: ChatBoxProps) {
           setJoinedUsersData(joinedUsersData.data.users)
 
           const response = await axios.get(
-            `${process.env.NEXT_PUBLIC_API_URL}/chat/get-messages/${roomName}`
+            `${process.env.NEXT_PUBLIC_API_URL}/chats/get-messages/${roomName}`
           )
           const messages: MessageType[] = response.data.messages
           setMessages(messages)
