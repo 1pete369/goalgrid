@@ -8,8 +8,11 @@ import axios from "axios"
 import { Room } from "@/types/roomTypes"
 import MessageList from "./MessageList"
 import { ChatBoxProps, MessageType } from "./types"
-import Pusher from "pusher-js"
+import { Socket } from "socket.io-client"
 import ChatInput from "./ChatInput"
+import { io } from "socket.io-client"
+
+let socket: Socket
 
 export default function ChatBox({ roomName }: ChatBoxProps) {
   const { user } = useUserContext()
@@ -20,106 +23,19 @@ export default function ChatBox({ roomName }: ChatBoxProps) {
   const [mediaUrl, setMediaUrl] = useState("")
   const [popoverClose, setPopOverClose] = useState(false)
   const myId = user?.uid
-  //   const { friendList, refreshFriendList } = useFetchUsersAndFriends(myId)
 
   const me = user?.personalInfo.username
 
-  const handleSendMediaMessage = async () => {
-    if (user === null || (mediaType === "" && mediaUrl === "")) return
-
-    const messageData: MessageType = {
-      id: crypto.randomUUID(),
-      message: newMessage,
-      mediaUrl: mediaUrl,
-      mediaType:
-        mediaType === "image"
-          ? "image"
-          : mediaType === "video"
-          ? "video"
-          : "none",
-      roomName,
-      createdAt: new Date().toISOString(),
-      uid: user.uid,
-      type: "public"
-    }
-
-    console.log(messageData)
-
-    try {
-      await axios.post(
-        `${process.env.NEXT_PUBLIC_API_URL}/chat/send-message`,
-        messageData
-      )
-      setNewMessage("")
-      setPopOverClose(false)
-      setMediaType("none")
-      setMediaUrl("")
-    } catch (error) {
-      console.error("Error sending message:", error)
-    }
-  }
-
-  const handleSendMessage = async (e: React.FormEvent) => {
-    e.preventDefault()
-
-    if (user === null) return
-
-    if (!newMessage.trim()) return
-
-    const messageData: MessageType = {
-      id: crypto.randomUUID(),
-      message: newMessage,
-      mediaUrl: "",
-      mediaType: "none",
-      roomName,
-      createdAt: new Date().toISOString(),
-      uid: user.uid,
-      type: "public"
-    }
-    
-    try {
-      await axios.post(
-        `${process.env.NEXT_PUBLIC_API_URL}/chat/send-message`,
-        messageData
-      )
-      setNewMessage("")
-    } catch (error) {
-      console.error("Error sending message:", error)
-    }
-  }
-
   useEffect(() => {
-    const pusherKey = process.env.NEXT_PUBLIC_PUSHER_KEY;
-    const pusherCluster = process.env.NEXT_PUBLIC_PUSHER_CLUSTER;
-  
-    if (pusherKey && pusherCluster) {
-      const pusher = new Pusher(pusherKey, {
-        cluster: pusherCluster,
-      });
-  
-      const channel = pusher.subscribe(roomName);
-  
-      const handleNewMessage = (data: MessageType) => {
-        setMessages((prevMessages) => [...prevMessages, data]);
-      };
-  
-      channel.bind("new-message", handleNewMessage);
-  
-      return () => {
-        channel.unbind("new-message", handleNewMessage); // Unbind event before unsubscribing
-        pusher.unsubscribe(roomName);
-      };
-    }
-  }, [roomName]);
-  
+    // Initialize Socket.IO connection to the server
+    socket = io(process.env.NEXT_PUBLIC_API_URL || "http://localhost:3001")
 
-  useEffect(() => {
-    if (mediaUrl !== "" && mediaType !== "none") {
-      handleSendMediaMessage()
-    }
-  }, [mediaUrl, mediaType])
+    // Listen for incoming messages via Socket.IO
+    socket.on("chatMessage", (message: MessageType) => {
+      setMessages((prevMessages) => [...prevMessages, message])
+    })
 
-  useEffect(() => {
+    // Load existing messages and room data
     if (user !== null) {
       async function loadMessages() {
         try {
@@ -147,7 +63,82 @@ export default function ChatBox({ roomName }: ChatBoxProps) {
       }
       loadMessages()
     }
+
+    return () => {
+      // Disconnect from Socket.IO when component unmounts
+      socket.disconnect()
+    }
   }, [user, roomName])
+
+  const handleSendMediaMessage = async () => {
+    if (user === null || (mediaType === "" && mediaUrl === "")) return
+
+    const messageData: MessageType = {
+      id: crypto.randomUUID(),
+      message: newMessage,
+      mediaUrl: mediaUrl,
+      mediaType:
+        mediaType === "image"
+          ? "image"
+          : mediaType === "video"
+          ? "video"
+          : "none",
+      roomName,
+      createdAt: new Date().toISOString(),
+      uid: user.uid,
+      type: "public"
+    }
+
+    try {
+      await axios.post(
+        `${process.env.NEXT_PUBLIC_API_URL}/chat/send-message`,
+        messageData
+      )
+      socket.emit("sendMessage", messageData) // Send message via socket.io
+      setNewMessage("")
+      setPopOverClose(false)
+      setMediaType("none")
+      setMediaUrl("")
+    } catch (error) {
+      console.error("Error sending message:", error)
+    }
+  }
+
+  const handleSendMessage = async (e: React.FormEvent) => {
+    e.preventDefault()
+
+    if (user === null) return
+
+    if (!newMessage.trim()) return
+
+    const messageData: MessageType = {
+      id: crypto.randomUUID(),
+      message: newMessage,
+      mediaUrl: "",
+      mediaType: "none",
+      roomName,
+      createdAt: new Date().toISOString(),
+      uid: user.uid,
+      type: "public"
+    }
+
+    try {
+      await axios.post(
+        `${process.env.NEXT_PUBLIC_API_URL}/chat/send-message`,
+        messageData
+      )
+      socket.emit("sendMessage", messageData) // Send message via socket.io
+      setNewMessage("")
+    } catch (error) {
+      console.error("Error sending message:", error)
+    }
+  }
+
+  useEffect(() => {
+    if (mediaUrl !== "" && mediaType !== "none") {
+      handleSendMediaMessage()
+    }
+  }, [mediaUrl, mediaType])
 
   return (
     <div className="min-h-screen max-w-7xl w-full h-full p-4 mx-auto">
