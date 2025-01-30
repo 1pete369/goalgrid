@@ -1,91 +1,154 @@
 "use client"
 
 import { useUserContext } from "@/contexts/UserDataProviderContext"
+import { useFetchUsersAndFriends } from "@/hooks/useFetchUsersAndFriends"
+import React, { useEffect, useState, useRef } from "react"
+import ChatHeader from "./ChatHeader"
 import axios from "axios"
-import { useEffect, useState } from "react"
+import { Room } from "@/types/roomTypes"
+import MessageList from "./MessageList"
+import { ChatBoxProps, MessageType } from "./types"
+import ChatInput from "./ChatInput"
 import io, { Socket } from "socket.io-client"
 
-let socket: Socket
-
-const ChatBox = ({roomName} : {roomName: string}) => {
-  const [message, setMessage] = useState("")
-  const [messages, setMessages] = useState<any[]>([])
+export default function ChatBox({ roomName }: ChatBoxProps) {
   const { user } = useUserContext()
+  const [messages, setMessages] = useState<any[]>([])
+  const [newMessage, setNewMessage] = useState("")
+  const [joinedUsersData, setJoinedUsersData] = useState<any[]>([])
+  const [mediaType, setMediaType] = useState("none")
+  const [mediaUrl, setMediaUrl] = useState("")
+  const [popoverClose, setPopOverClose] = useState(false)
+  const myId = user?.uid
+
+  const me = user?.personalInfo.username
+
+  const socketRef = useRef<Socket | null>(null) // Using a ref to store the socket instance
 
   useEffect(() => {
-    // Connect to the server when the component mounts
-    socket = io("https://goal-grid-render.onrender.com") // Make sure this matches your server URL
+    // Initialize socket only once when the component mounts
+    socketRef.current = io(process.env.NEXT_PUBLIC_API_URL) // Single connection
 
     // Listen for incoming chat messages
-    socket.on("chatMessage", (message: any) => {
-      setMessages((prevMessages) => [...prevMessages, message])
+    socketRef.current.on("chatMessage", (message: any) => {
+      setMessages((prevMessages) => [...(prevMessages || []), message]) // Ensuring prevMessages is an array
     })
-
-    async function loadMessages() {
-        const response= await axios.get(`${process.env.NEXT_PUBLIC_API_URL}/chats/get-messages/${roomName}`)
-        const messagesFetched= response.data.data
-        setMessages(messagesFetched)
-    }
-    loadMessages()
-
-    // Cleanup when the component is unmounted
+    
     return () => {
-      socket.disconnect()
+      // Disconnect from the socket when component unmounts
+      socketRef.current?.disconnect()
     }
-  }, [])
+  }, []) // Empty dependency array means this runs only once
 
-  const sendMessage = () => {
-    if (message.trim()) {
-      const socket = io("https://goal-grid-render.onrender.com")
+  useEffect(() => {
+    if (!user) return
 
-      const messageData={
-        message,
-        uid: user?.uid, // User ID
-        roomName: roomName, // Room Name (if applicable)
-        type: "public", // "public" or "private"
-        mediaUrl: "", // Media URL (optional)
-        mediaType: "none" // Media Type (image, video, none)
+    // Load existing messages and room data
+    async function loadMessages() {
+      try {
+        const responseForRoomData = await axios.get(
+          `${process.env.NEXT_PUBLIC_API_URL}/rooms/get-room-by-name/${roomName}`
+        )
+        const roomData: Room = responseForRoomData.data.room
+        const joinedUsersIds = roomData.usersJoined
+
+        const joinedUsersData = await axios.post(
+          `${process.env.NEXT_PUBLIC_API_URL}/users/get-users-by-ids`,
+          { userIds: joinedUsersIds }
+        )
+
+        setJoinedUsersData(joinedUsersData.data.users)
+
+        const response = await axios.get(
+          `${process.env.NEXT_PUBLIC_API_URL}/chats/get-messages/${roomName}`
+        )
+        const messagesFetched: any[] = response.data.data
+        setMessages(messagesFetched)
+      } catch (error) {
+        console.error("Error loading messages:", error)
       }
+    }
 
-      socket.emit("sendMessage",messageData)
-      setMessage("")
+    loadMessages()
+  }, [user, roomName])
+
+  const handleSendMessage = async (e: React.FormEvent) => {
+    e.preventDefault()
+
+    if (user === null || !newMessage.trim()) return
+
+    const messageData: any = {
+      id: crypto.randomUUID(),
+      message: newMessage,
+      mediaUrl: "",
+      mediaType: "none",
+      roomName,
+      createdAt: new Date().toISOString(),
+      uid: user.uid,
+      type: "public"
+    }
+
+    try {
+      // Check if socket is initialized and emit the message
+      if (socketRef.current) {
+        socketRef.current.emit("sendMessage", messageData)
+      }
+      setNewMessage("")
+    } catch (error) {
+      console.error("Error sending message:", error)
     }
   }
 
+  const handleSendMediaMessage = async () => {
+    if (user === null || (mediaType === "" && mediaUrl === "")) return
+
+    try {
+      const messageData: any = {
+        id: crypto.randomUUID(),
+        message: newMessage,
+        mediaUrl: mediaUrl,
+        mediaType: mediaType === "image" ? "image" : mediaType === "video" ? "video" : "none",
+        roomName,
+        createdAt: new Date().toISOString(),
+        uid: user.uid,
+        type: "public"
+      }
+      // Check if socket is initialized and emit media message
+      if (socketRef.current) {
+        socketRef.current.emit("sendMessage", messageData)
+      }
+      setNewMessage("")
+      setPopOverClose(false)
+      setMediaType("none")
+      setMediaUrl("")
+    } catch (error) {
+      console.error("Error sending media message:", error)
+    }
+  }
+
+  useEffect(() => {
+    if (mediaUrl !== "" && mediaType !== "none") {
+      handleSendMediaMessage()
+    }
+  }, [mediaUrl, mediaType])
+
   return (
-    <div className="flex flex-col items-center justify-center min-h-screen bg-gray-100 p-4 w-full">
-      <h1 className="text-4xl font-bold text-blue-600 mb-8">Real-time Chat App</h1>
-
-      <div className="w-full max-w-md bg-white p-6 rounded-lg shadow-lg">
-        <div className="mb-4">
-          <h2 className="text-2xl font-semibold">Messages</h2>
-          <div className="max-h-60 overflow-y-auto mt-2">
-            {messages.map((msg, index) => (
-              <div key={index} className="p-2 my-2 bg-gray-200 rounded-lg">
-                {msg.message}
-              </div>
-            ))}
-          </div>
-        </div>
-
-        <div className="flex items-center space-x-2">
-          <input
-            type="text"
-            value={message}
-            onChange={(e) => setMessage(e.target.value)}
-            placeholder="Type a message..."
-            className="flex-1 p-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500"
-          />
-          <button
-            onClick={sendMessage}
-            className="px-4 py-2 bg-blue-500 text-white rounded-lg hover:bg-blue-600 focus:outline-none"
-          >
-            Send
-          </button>
-        </div>
-      </div>
+    <div className="min-h-screen max-w-7xl w-full h-full p-4 mx-auto">
+      <ChatHeader roomName={roomName} />
+      <MessageList
+        messages={messages}
+        me={me as string}
+        joinedUsersData={joinedUsersData}
+      />
+      <ChatInput
+        handleSendMessage={handleSendMessage}
+        setNewMessage={setNewMessage}
+        newMessage={newMessage}
+        setMediaType={setMediaType}
+        setMediaUrl={setMediaUrl}
+        setPopOverClose={setPopOverClose}
+        popoverClose={popoverClose}
+      />
     </div>
   )
 }
-
-export default ChatBox
