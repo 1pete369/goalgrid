@@ -55,7 +55,7 @@ const Home = () => {
 
   return (
     <div className="flex flex-col items-center justify-center min-h-screen bg-gray-100 p-4">
-      <h1 className="text-4xl font-bold text-blue-600 mb-8">Real-time Chat</h1>
+      <h1 className="text-4xl font-bold text-blue-600 mb-8">Real-time Chat App</h1>
 
       <div className="w-full max-w-md bg-white p-6 rounded-lg shadow-lg">
         <div className="mb-4">
