@@ -82,15 +82,26 @@ export default function ProfilePopOver() {
               {user?.personalInfo.username}
             </p>
             <p className="text-sm text-gray-500">{user?.personalInfo.email}</p>
-            <Badge
-              className={`${badgeColor === "gray" ? "bg-gray-500" : ""} ${
-                badgeColor === "blue" ? "bg-blue-500" : ""
-              } ${badgeColor === "yellow" ? "bg-yellow-500" : ""} ${
-                badgeColor === "purple" ? "bg-purple-500" : ""
-              } max-w-fit`}
-            >
-              {user?.customData.subscription}
-            </Badge>
+            <div className="flex gap-2">
+              <Badge
+                className={`${badgeColor === "gray" ? "bg-gray-500" : ""} ${
+                  badgeColor === "blue" ? "bg-blue-500" : ""
+                } ${badgeColor === "yellow" ? "bg-yellow-500" : ""} ${
+                  badgeColor === "purple" ? "bg-purple-500" : ""
+                } max-w-fit`}
+              >
+                {user?.customData.subscription}
+              </Badge>
+              <Badge
+                className={`${badgeColor === "gray" ? "bg-gray-500" : ""} ${
+                  badgeColor === "blue" ? "bg-blue-500" : ""
+                } ${badgeColor === "yellow" ? "bg-yellow-500" : ""} ${
+                  badgeColor === "purple" ? "bg-purple-500" : ""
+                } max-w-fit`}
+              >
+                {user?.personalInfo.provider}
+              </Badge>
+            </div>
           </div>
         </div>
 

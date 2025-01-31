@@ -1,6 +1,5 @@
 import { NextResponse } from "next/server";
 import { withAuth } from "next-auth/middleware";
-import axios from "axios";
 
 // 🔥 Define allowed plans for different routes
 const PLAN_ACCESS: { [key: string]: string[] } = {
@@ -20,15 +19,9 @@ export default withAuth(
     const userId = token.sub; // User ID from session
     const path = req.nextUrl.pathname; // Current route
 
+    const userPlan : string = (typeof token.subscriptionPlan==="string") ? token.subscriptionPlan : "free"; // Default to "free" if subscriptionPlan is not set
+
     try {
-      // 🔥 Fetch user's subscription plan from your Express API
-      const response = await axios.get(
-        `${process.env.NEXT_PUBLIC_API_URL}/subscriptions/check-subscription-status/${userId}`
-      );
-      console.log("response at server", response.data);
-
-      const userPlan = response.data?.plan; // e.g., "free", "basic", "pro", "premium", "diamond"
-
       // ❌ Check if the current route matches the plan requirements
       if (
         (path.startsWith("/work/personal") && !PLAN_ACCESS["/work/personal"].includes(userPlan)) ||
@@ -38,7 +31,7 @@ export default withAuth(
         return NextResponse.redirect(new URL("/pricing", req.url)); // Redirect to pricing page if not allowed
       }
     } catch (error) {
-      console.error("Error fetching subscription:", error);
+      console.error("Error in subscription check:", error);
       return NextResponse.redirect(new URL("/error", req.url)); // Redirect on error
     }
 

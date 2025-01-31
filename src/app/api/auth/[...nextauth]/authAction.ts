@@ -9,7 +9,6 @@ export type sessionUserType = {
   accountVerified: boolean
 }
 
-
 export type credentialsUserType = {
   id: string
   email: string
@@ -19,7 +18,6 @@ export type credentialsUserType = {
   accountVerified: boolean
   hashedPassword: string
 }
-
 
 export const createUserCredentials = async (
   newCredentialUserObject: sessionUserType
@@ -45,5 +43,26 @@ export const findUserByEmail = async (email: string) => {
     return response.data
   } catch (error) {
     console.log(error)
+  }
+}
+
+export const fetchUserSubscription = async (uid: string) => {
+  try {
+    console.log("subscription plan fetching")
+    const subscriptionResponse = await axios.get(
+      `${process.env.NEXT_PUBLIC_API_URL}/subscriptions/check-subscription-status/${uid}`
+    )
+    // Check if no subscription was found
+    if (subscriptionResponse.data.message === "No Subscription found") {
+      return "free" // Return default "free" plan
+    }
+    
+    // Return the plan as a string (it should already be a string)
+    const subscriptionPlan = subscriptionResponse.data?.plan || "free" // Default to "free"
+    console.log("subscription plan fetched",subscriptionPlan)
+    return subscriptionPlan
+  } catch (error) {
+    console.error(error)
+    return "free" // Return default "free" plan in case of an error
   }
 }

@@ -106,7 +106,7 @@ export const updateLastLogin = async (userId: string) => {
     const response = await axios.patch(
       `${process.env.NEXT_PUBLIC_API_URL}/users/updateLastLogin/${userId}`
     )
-    // console.log("Last login updated:", response.data);
+    console.log("Last login updated:", response.data);
   } catch (error) {
     console.error("Failed to update last login:", error)
   }

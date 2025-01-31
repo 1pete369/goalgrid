@@ -6,6 +6,8 @@ import { useUserContext } from "@/contexts/UserDataProviderContext"
 import axios from "axios"
 import { addMonths, format } from "date-fns"
 import React from "react"
+import { signIn } from "next-auth/react"
+import { useSession } from "next-auth/react"
 
 type PricingPlan = {
   id: number
@@ -33,7 +35,8 @@ const Pricing = () => {
   const [status, setStatus] = useState("")
   const [isPurchasing, setIsPurchasing] = useState(false)
   const [isCancelling, setIsCancelling] = useState(false)
-
+  const { data: session, update } = useSession()
+  
   useEffect(() => {
     if (user !== null) setSelectedPlan(user?.customData.subscription)
   }, [user])
@@ -117,6 +120,19 @@ const Pricing = () => {
     }
   ]
 
+
+  
+  async function updateSubscription() {
+    try {
+      console.log("updating..")
+      await update() // Refresh session manually
+      console.log("updated")
+      console.log("Session updated successfully.")
+    } catch (error) {
+      console.error("Error updating session:", error)
+    }
+  }
+  
   const calculateSubscriptionDates = (pricingPlan: PricingPlan) => {
     const now = new Date()
     const startDate = format(now, "yyyy-MM-dd HH:mm:ss")
@@ -155,6 +171,7 @@ const Pricing = () => {
           `${process.env.NEXT_PUBLIC_API_URL}/users/update-subscription-status/${user.uid}`,
           { plan: pricingPlan.plan }
         )
+        await updateSubscription()
         setIsCancelling(false)
         setIsPurchasing(false)
       } else {
@@ -177,6 +194,9 @@ const Pricing = () => {
           `${process.env.NEXT_PUBLIC_API_URL}/users/update-subscription-status/${user.uid}`,
           { plan: pricingPlan.plan }
         )
+
+        await updateSubscription()
+
         setIsPurchasing(false)
       }
     }

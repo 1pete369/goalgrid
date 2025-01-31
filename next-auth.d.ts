@@ -16,6 +16,7 @@ declare module "next-auth" {
       id: string
       provider: string
       accountVerified: boolean
+      subscriptionPlan: string; // Add subscriptionPlan to the Session type
     } & DefaultSession["user"]
   }
 
@@ -23,5 +24,6 @@ declare module "next-auth" {
     id: string
     provider: string
     accountVerified: boolean
+    subscriptionPlan: string; // Add subscriptionPlan to the User type
   }
 }
