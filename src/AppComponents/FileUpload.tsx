@@ -139,95 +139,72 @@ const FileUpload = ({ setMediaType, setMediaUrl }: PropsType) => {
   }
   
   return (
-    <Card className="max-w-md w-[380px] rounded shadow-none border-none mx-auto">
-      <CardContent className="p-2">
-        {/* Image Preview */}
-        {previewUrl && selectedFile && (
-          <div className="mb-4 relative">
-            <p className="m-2 line-clamp-1">{selectedFile.name}</p>
-            {selectedFile.type.startsWith("image/") ? (
-              <Image 
-                height={200}
-                width={200}
-                src={previewUrl}
-                alt="Preview"
-                className="rounded-lg w-full h-48 object-cover"
-              />
-            ) : (
-              <div className="flex rounded-lg w-full h-48 justify-center items-center">
-                <video
-                  className="w-auto h-48"
-                  src={previewUrl}
-                  autoPlay
-                  loop
-                  muted
-                  controls={false}
-                />
-              </div>
-            )}
-            <Button
-              variant={"destructive"}
-              className="absolute right-1 top-9"
-              onClick={() => setPreviewUrl(null)}
-            >
-              <Plus className="rotate-45" />
-            </Button>
-          </div>
-        )}
-        {/* File Input */}
-        <div className="rounded-lg flex flex-col gap-4">
-          <div className="flex gap-4">
-            <label
-              htmlFor="file-input"
-              className="cursor-pointer flex justify-center items-center bg-black text-white py-2 px-4 rounded-lg"
-            >
-              <Upload size={16} className="" />
-            </label>
-            <input
-              type="file"
-              accept="image/jpeg,image/png,image/webp,image/gif,video/mp4,video/webm"
-              id="file-input"
-              className="hidden"
-              onChange={handleFileChange}
-              //   multiple
+    <Card className="max-w-md w-full p-4 rounded-lg shadow-md mx-auto">
+    <CardContent className="p-2 flex flex-col items-center">
+      {/* Image/Video Preview */}
+      {previewUrl && selectedFile && (
+        <div className="relative w-full">
+          <p className="text-center text-sm truncate">{selectedFile.name}</p>
+          {selectedFile.type.startsWith("image/") ? (
+            <Image
+              height={200}
+              width={200}
+              src={previewUrl}
+              alt="Preview"
+              className="rounded-lg w-full h-48 object-contain"
             />
-            {/* Upload Button */}
-            <Button
-              onClick={handleUpload}
-              disabled={
-                !selectedFile ||
-                !previewUrl ||
-                isUploading ||
-                statusMessage === "uploaded"
-              }
-              className="w-full relative overflow-hidden"
-            >
-              <p
-                className={`${
-                  isUploading || statusMessage === "uploaded"
-                    ? "text-black animate-pulse"
-                    : "text-white"
-                } z-10`}
-              >
-                {/* {isUploading && statusMessage !== ""
-                  ? statusMessage
-                  : "Upload Image"} */}
-                {statusMessage === "" ? "upload Image" : statusMessage}
-              </p>
-              {statusMessage !== "" && (
-                <Progress
-                  value={progress}
-                  className={`${
-                    isUploading ? "bg-green-100" : "bg-black"
-                  } isolate absolute h-full w-full rounded-none `}
-                  color="bg-success"
-                />
-              )}
-            </Button>
-          </div>
+          ) : (
+            <div className="flex rounded-lg w-full h-48 justify-center items-center">
+              <video
+                className="w-auto h-48"
+                src={previewUrl}
+                autoPlay
+                loop
+                muted
+                controls={false}
+              />
+            </div>
+          )}
+          <Button
+            variant="destructive"
+            className="absolute right-2 top-2"
+            onClick={() => {
+              setPreviewUrl(null)
+              setSelectedFile(null)
+            }}
+          >
+            <Plus className="rotate-45" />
+          </Button>
         </div>
-      </CardContent>
-    </Card>
+      )}
+
+      {/* File Input & Upload */}
+      <div className="w-full flex flex-col items-center gap-4 mt-4">
+        <label htmlFor="file-input" className="cursor-pointer flex items-center bg-black text-white py-2 px-4 rounded-lg">
+          <Upload size={16} />
+        </label>
+        <input
+          type="file"
+          accept="image/jpeg,image/png,image/webp,image/gif,video/mp4,video/webm"
+          id="file-input"
+          className="hidden"
+          onChange={handleFileChange}
+        />
+        <Button
+          onClick={handleUpload}
+          disabled={!selectedFile || isUploading || statusMessage === "Uploaded"}
+          className="w-full relative overflow-hidden"
+        >
+          <p className={`z-10 ${isUploading ? "text-black animate-pulse" : "text-white"}`}>
+            {statusMessage || "Upload Image"}
+          </p>
+          {statusMessage !== "" && (
+            <Progress value={progress} className={`absolute h-full w-full ${isUploading ? "bg-green-100" : "bg-black"}`} />
+          )}
+        </Button>
+      </div>
+    </CardContent>
+  </Card>
   )
 }
 

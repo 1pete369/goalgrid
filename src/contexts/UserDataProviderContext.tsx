@@ -1,5 +1,6 @@
 "use client"
 // context/UserContext.tsx
+import { differenceInHours, parseISO } from "date-fns";
 import React, { createContext, useContext, useEffect, useState } from "react"
 import { useSession } from "next-auth/react"
 import { MainUserObject } from "@/types/userTypes"
@@ -20,7 +21,7 @@ interface UserContextType {
 
 const UserContext = createContext<UserContextType>({
   user: null,
-  loading: true
+  loading: true,
 })
 
 export const UserProvider: React.FC<{ children: React.ReactNode }> = ({
@@ -30,34 +31,39 @@ export const UserProvider: React.FC<{ children: React.ReactNode }> = ({
   const [user, setUser] = useState<MainUserObject | null>(null)
   const [loading, setLoading] = useState(true)
 
+
+  const shouldUpdateLastLogin = (lastLoginAt?: string) => {
+    if (!lastLoginAt) return true; // If lastLoginAt is missing, update it
+    return differenceInHours(new Date(), parseISO(lastLoginAt)) >= 1; // Update only if 1 hour has passed
+  };
+  
   const fetchUserData = async () => {
     if (!session?.user?.id) {
       setUser(null);
+      setLoading(false);
       return;
     }
-  
-    // If user already exists and session exists, check for subscription change
-    if (user && session.user.subscriptionPlan) {
-      if (user.customData?.subscription === session.user.subscriptionPlan) {
-        // No subscription change, no need to refetch
-        return;
-      }
-    }
-  
+
     setLoading(true);
   
     const userExist = await checkUser(session.user.id);
     if (userExist) {
       let MainUserObject = await fetchUser(session.user.id);
-      MainUserObject = {
-        ...MainUserObject,
-        timings: {
-          ...MainUserObject.timings,
-          lastLoginAt: new Date().toISOString(),
-        },
-      };
-      setUser(MainUserObject);
-      await updateLastLogin(session.user.id);
+      
+      // Only update last login if 1 hour has passed
+      if (shouldUpdateLastLogin(MainUserObject.timings?.lastLoginAt)) {
+        MainUserObject = {
+          ...MainUserObject,
+          timings: {
+            ...MainUserObject.timings,
+            lastLoginAt: new Date().toISOString(),
+          },
+        };
+        setUser(MainUserObject);
+        await updateLastLogin(session.user.id);
+      } else {
+        setUser(MainUserObject);
+      }
   
       const onBoardingStatusFlag = await onBoardingStatus(session.user.id);
       if (!onBoardingStatusFlag) {
@@ -78,11 +84,10 @@ export const UserProvider: React.FC<{ children: React.ReactNode }> = ({
   
     setLoading(false);
   };
-  
+
   useEffect(() => {
     fetchUserData();
   }, [session]); // Runs when session updates (refresh or login)
-  
 
   return (
     <UserContext.Provider value={{ user, loading }}>
