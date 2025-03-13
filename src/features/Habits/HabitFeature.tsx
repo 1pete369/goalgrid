@@ -1,16 +1,24 @@
 "use client"
-import { Button } from "@/components/ui/button"
-// import Confetti from "react-confetti"
-import { debounce } from "lodash"
+import { getTodayDate, getYesterdayDate } from "@/utils/basics"
 
+import Greetings from "@/AppComponents/Greetings"
+import FullPageLoading from "@/AppComponents/loaders/FullPageLoading"
 import {
-  Dialog,
-  DialogContent,
-  DialogFooter,
-  DialogHeader,
-  DialogTitle,
-  DialogTrigger
-} from "@/components/ui/dialog"
+  DropdownMenu,
+  DropdownMenuContent,
+  DropdownMenuLabel,
+  DropdownMenuTrigger
+} from "@/components/ui/dropdown-menu"
+import { useUserContext } from "@/contexts/UserDataProviderContext"
+import { Goal } from "@/types/goalFeatureTypes"
+import { Habit } from "@/types/habitFeatureTypes"
+import { getGoalByID, getGoals, updateGoal } from "@/utils/goals"
+import { getHabits, updateHabit } from "@/utils/habits"
+import { useEffect, useRef, useState } from "react"
+import HabitCard from "./HabitFeatureComponents/HabitCardComponents/HabitCard"
+import HabitFeatureForm from "./HabitFeatureComponents/HabitFeatureForm"
+import useHabitHandler from "./HabitFeatureComponents/useHabitHandler"
+
 import {
   Select,
   SelectContent,
@@ -20,573 +28,370 @@ import {
   SelectTrigger,
   SelectValue
 } from "@/components/ui/select"
-import { Input } from "@/components/ui/input"
-import { Label } from "@/components/ui/label"
-import { useUserContext } from "@/contexts/UserDataProviderContext"
-import {
-  formatDate,
-  getLastCompletedDate,
-  getTodayDate,
-  getYesterdayDate
-} from "@/utils/basics"
-import { Calendar, Link, Link2, Plus } from "lucide-react"
-import React, { ChangeEvent, useEffect, useState } from "react"
-import {
-  validateHabitDescription,
-  validateHabitName
-} from "@/utils/validators/habitFormValidatoers"
-import { Habit } from "@/types/habitFeatureTypes"
-import { Checkbox } from "@/components/ui/checkbox"
-import { Progress } from "@/components/ui/progress"
-import Image from "next/image"
-import { getHabits, postHabit, updateHabit } from "@/utils/habits"
-import { Goal } from "@/types/goalFeatureTypes"
-import {
-  getGoalByID,
-  getGoals,
-  updateGoal,
-  updateGoalDuration
-} from "@/utils/goals"
-import { Card, CardContent, CardFooter, CardHeader } from "@/components/ui/card"
+import { useToast } from "@/hooks/use-toast"
+import HabitsSkeleton from "@/skeletons/HabitSkeleton"
+import { ArrowDownIcon, ArrowUpIcon, EllipsisVertical } from "lucide-react"
 
 export default function HabitFeature() {
-  const { user } = useUserContext()
   const [habits, setHabits] = useState<Habit[] | []>([])
-  const [habitName, setHabitName] = useState("")
-  const [habitDuration, setHabitDuration] = useState("")
-  const [habitDescription, setHabitDescription] = useState("")
-  const [habitCategory, setHabitCategory] = useState("")
-  const [linkedGoal, setLinkedGoal] = useState("")
   const [loading, setLoading] = useState(false)
-
-  const [categoryLocked, setCategoryLocked] = useState(false)
-
-  const [today, setToday] = useState("")
-
-  const [habitNameError, setHabitNameError] = useState("")
-  const [habitDescriptionError, setHabitDescriptionError] = useState("")
-  const [canCreateHabit, setCanCreateHabit] = useState(false)
-
-  const [isDialogOpen, setIsDialogOpen] = useState(false)
+  const { user } = useUserContext()
+  const { toast } = useToast()
   const [goals, setGoals] = useState<Goal[] | []>([])
+  const fetchedRef = useRef(false) // ✅ Track if data is already fetched
+
+  const { handleCompleteHabit } = useHabitHandler(habits, setHabits) // Use the custom hook
+
   const [groupedHabits, setGroupedHabits] = useState<Record<string, Habit[]>>(
     {}
   )
+  const [sortBy, setSortBy] = useState<"duration" | "category">("duration") // Default: Streak duration
+  const [sortOrder, setSortOrder] = useState<"asc" | "desc">("desc") // Default: Descending
 
-  const preDefinedHabitCategories = [
-    "Productivity",
-    "Fitness",
-    "Health",
-    "Learning",
-    "Self-Improvement",
-    "Hobbies",
-    "Mental Health",
-    "Creativity",
-    "Work"
-  ]
+  async function updateMissedStreaks(habitsData: Habit[]) {
+    const yesterday = getYesterdayDate()
+    const todayISO = new Date().toISOString().split("T")[0]
 
-  const preDefinedHabitDurations = [
-    { label: "7 days", value: 7 },
-    { label: "21 days", value: 21 },
-    { label: "30 days", value: 30 },
-    { label: "66 days", value: 66 },
-    { label: "90 days", value: 90 }
-  ]
-
-  const createHabitObject = (
-    habitName: string,
-    habitDuration: string,
-    habitCategory: string,
-    habitDescription: string
-  ) => {
-    // if(user===null) return
-    const todayDate = getTodayDate()
-    const habit: Habit = {
-      uid: user?.uid as string,
-      id: crypto.randomUUID(),
-      name: habitName,
-      description: habitDescription,
-      category: habitCategory,
-      startDate: todayDate,
-      duration: habitDuration,
-      streak: {
-        current: 0,
-        best: 0
-      },
-      progress: {
-        totalCompleted: 0,
-        completionRate: 0
-      },
-      dailyTracking: {},
-      status: "active",
-      linkedGoal: linkedGoal
-    }
-    return habit
-  }
-
-  const handleHabitName = (e: ChangeEvent<HTMLInputElement>) => {
-    e.preventDefault()
-    const habitName = e.target.value
-    setHabitName(habitName)
-    const error = validateHabitName(habitName.trim())
-    if (error !== "") {
-      setHabitNameError(error)
-    } else {
-      setHabitNameError(error)
-    }
-  }
-
-  const handleHabitDescription = (e: ChangeEvent<HTMLInputElement>) => {
-    e.preventDefault()
-    const habitDescription = e.target.value
-    setHabitDescription(habitDescription)
-    const error = validateHabitDescription(habitDescription)
-    if (error !== "") {
-      setHabitDescriptionError(error)
-    } else {
-      setHabitDescriptionError(error)
-    }
-  }
-
-  const handleCreateHabit = async () => {
-    const habitCreated: Habit = createHabitObject(
-      habitName,
-      habitDuration,
-      habitCategory,
-      habitDescription
+    const lastUpdate = JSON.parse(
+      localStorage.getItem("isMissedHabitStreakUpdatedToday") || "{}"
     )
-    console.log(habitCreated)
-
-    setHabits((habits) => [...habits, habitCreated])
-    await postHabit(habitCreated)
-    if (habitCreated.linkedGoal !== "") {
-      await updateGoalDuration(linkedGoal, parseInt(habitDuration))
+    if (lastUpdate.date === todayISO) {
+      console.log("✅ Streak check already done today.")
+      return habitsData
     }
 
-    setIsDialogOpen(false)
-    setHabitName("")
-    setHabitDuration("")
-    setHabitDescription("")
-    setLinkedGoal("")
-    setHabitCategory("")
-    setCategoryLocked(false)
-  }
+    console.log("🔄 Checking for missed streaks...")
+    const habitsToUpdate = habitsData.filter(
+      (habit) => !habit.dailyTracking[yesterday] && habit.startDate !== todayISO && habit.status!=="completed"
+    )
 
-  const handleSetHabitCategory = (value: string) => {
-    setHabitCategory(value)
-  }
+    if (habitsToUpdate.length === 0) {
+      console.log("✅ No streaks to reset.")
+      localStorage.setItem(
+        "isMissedHabitStreakUpdatedToday",
+        JSON.stringify({ date: todayISO })
+      )
+      return habitsData
+    }
 
-  const handleSetHabitDuration = (value: string) => {
-    setHabitDuration(value)
-  }
-  const handleSetLinkedGoal = async (value: string) => {
-    const goal: Goal = await getGoalByID(value)
-    setLinkedGoal(value)
-    setHabitCategory(goal.category)
-    setCategoryLocked(true)
-  }
+    console.log(`🔄 Resetting streaks for ${habitsToUpdate.length} habits...`)
 
-  const handleCompleteHabit = debounce(async (habit: Habit) => {
-    const completedHabitId = habit.id
-    const today = getTodayDate()
-
-    // Optimistic UI update: Update state immediately
-    const updatedHabits = habits.map((habit) => {
-      if (habit.id === completedHabitId) {
-        const isTodayCompleted = habit.dailyTracking[today] || false
-        const updatedDailyTracking = {
-          ...habit.dailyTracking,
-          [today]: !isTodayCompleted
-        }
-
-        let streak = habit.streak.current
-        const lastCompletedDate = getLastCompletedDate(habit.dailyTracking)
-
-        // Calculate streak
-        if (lastCompletedDate) {
-          const lastDate = new Date(lastCompletedDate)
-          const todayDate = new Date(today)
-          const daysDifference = Math.floor(
-            (todayDate.getTime() - lastDate.getTime()) / (1000 * 60 * 60 * 24)
-          )
-
-          if (daysDifference > 1) {
-            streak = 1
-          } else if (!isTodayCompleted && updatedDailyTracking[today]) {
-            streak += 1
-          } else if (isTodayCompleted && !updatedDailyTracking[today]) {
-            streak -= 1
-          }
-        } else {
-          streak = updatedDailyTracking[today] ? 1 : 0
-        }
-
-        // Calculate completion rate
-        const completedDays =
-          Object.values(updatedDailyTracking).filter(Boolean).length
-        const totalDays = parseInt(habit.duration)
-        const completionRate = (completedDays / totalDays) * 100
-
-        return {
+    const updatedHabits = await Promise.all(
+      habitsToUpdate.map(async (habit) => {
+        const updatedHabit = {
           ...habit,
-          dailyTracking: updatedDailyTracking,
-          progress: {
-            totalCompleted: completedDays,
-            completionRate: completionRate
-          },
           streak: {
-            current: streak,
-            best: Math.max(streak, habit.streak.best)
-          }
+            current: 0,
+            best: Math.max(habit.streak.best, habit.streak.current)
+          },
+          dailyTracking: { ...habit.dailyTracking, [yesterday]: false }
         }
-      }
-      return habit
+
+        if (!habit.dailyTracking[todayISO]) {
+          updatedHabit.dailyTracking[todayISO] = false
+        }
+
+        try {
+          await updateHabit(updatedHabit)
+          console.log(`✅ Habit "${habit.name}" streak reset.`)
+        } catch (err) {
+          console.error(`❌ Failed to update "${habit.name}":`, err)
+        }
+        return updatedHabit
+      })
+    )
+
+    localStorage.setItem(
+      "isMissedHabitStreakUpdatedToday",
+      JSON.stringify({ date: todayISO })
+    )
+
+    console.log("✅ Streak updates completed!")
+
+    return habitsData.map((habit) =>
+      habitsToUpdate.some((updated) => updated.id === habit.id)
+        ? updatedHabits.find((updated) => updated.id === habit.id) || habit
+        : habit
+    )
+  }
+
+  async function updateHabitsStatus(habitsData : Habit[]) {
+    const todayDate = getTodayDate() // Get today's date in YYYY-MM-DD format
+
+    console.log("todayDate", todayDate)
+
+    // Filter habits that need updating
+    const updatedHabits: Habit[] = habitsData.map((habit) => {
+      return habit.endDate === todayDate
+        ? { ...habit, status: "completed" }
+        : habit
     })
 
-    // Optimistic state update (UI updates immediately)
-    setHabits(updatedHabits)
+    console.log("updatedHabits ", updatedHabits)
+    // Update state first
 
-    // Find the changed habit
-    const changedHabit = updatedHabits.find(
-      (habit) => habit.id === completedHabitId
+    // Filter only habits that were actually updated
+    const habitsToUpdate = updatedHabits.filter(
+      (habit) => habit.endDate === todayDate && habit.status==="active"
     )
 
-    if (changedHabit) {
-      // Update the habit asynchronously
-      await updateHabit(changedHabit)
+    console.log("habits to update", habitsToUpdate)
+
+    if (habitsToUpdate.length > 0) {
+      try {
+        // Send API request for all updated habits
+        await Promise.all(
+          habitsToUpdate.map((habit) => updateHabit(habit)) // ✅ Call the correct function
+        )
+        console.log("✅ All habits updated successfully in the database!")
+      } catch (error) {
+        console.error("❌ Failed to update habits in the database:", error)
+      }
+    } else {
+      console.log("⚡ No habits needed updating today.")
+    }
+    setHabits(updatedHabits)
+  }
+
+  async function fetchAndProcessHabits(
+    userId: string,
+    setHabits: Function,
+    fetchedRef: React.MutableRefObject<boolean>
+  ) {
+    console.log("🚀 Fetching habits...")
+
+    let result = await getHabits(userId)
+    if(result.success){
+      let habitsData : Habit[]= result.data
+      console.log(habitsData)
+      
+      habitsData = await updateMissedStreaks(habitsData)
+      
+      setHabits(habitsData)
+      await updateHabitsStatus(habitsData)
+      setGroupedHabits(groupHabitsByCategory(habitsData))
+      fetchedRef.current = true
+    }
+  }
+
+  async function updateTheGoalData(
+    habit: Habit,
+    updatedHabits?: Habit[],
+    isDeleted?: boolean
+  ) {
+    if (!habit.linkedGoal) return
+    let habitsUsing = habits
+    if (isDeleted === false) {
+      if (updatedHabits) {
+        habitsUsing = updatedHabits
+      }
     }
 
-    // If the habit is linked to a goal, update the goal too
-    if (changedHabit?.linkedGoal !== "") {
-      const linkedGoalId = changedHabit?.linkedGoal
+    const goalId = habit.linkedGoal
+    const result = await getGoalByID(goalId)
+    if (result.success) {
+      const linkedGoal = result.data
+      if (!linkedGoal) return
 
-      // Fetch the linked goal and update it
-      const linkedGoal = await getGoalByID(linkedGoalId as string)
-      const linkedHabits = updatedHabits.filter(
-        (habit) => habit.linkedGoal === linkedGoalId
-      )
+      const linkedHabits = isDeleted
+        ? habitsUsing.filter(
+            (h) => h.linkedGoal === goalId && h.id !== habit.id
+          )
+        : habitsUsing.filter((h) => h.linkedGoal === goalId)
 
-      // Calculate total progress and completion rate
+      console.log(linkedHabits)
       const totalProgress = linkedHabits.reduce(
-        (sum, habit) => sum + habit.progress.completionRate,
+        (sum, h) => sum + h.progress.completionRate,
         0
       )
-
       const totalCompleted = linkedHabits.reduce(
-        (sum, habit) => sum + habit.progress.totalCompleted,
+        (sum, h) => sum + h.progress.totalCompleted,
         0
       )
+      const goalCompletionRate = linkedHabits.length
+        ? totalProgress / linkedHabits.length
+        : 0
 
-      const goalCompletionRate = totalProgress / linkedHabits.length || 0
-
-      // Update the goal
-      const updatedGoal: Goal = {
+      const updatedGoal = {
         ...linkedGoal,
         progress: {
-          totalCompleted: totalCompleted,
+          totalCompleted,
           completionRate: goalCompletionRate
         }
       }
 
-      // Update the goal asynchronously
       await updateGoal(updatedGoal)
     }
-  }, 100) // Debounce to prevent rapid re-triggering
-
-  // Use the debounced function when handling checkbox click
-  const handleCheckboxClick = (habit: Habit) => {
-    handleCompleteHabit(habit)
   }
 
-  const groupHabitsByCategory = (habits: Habit[]): Record<string, Habit[]> => {
-    return habits.reduce((grouped, habit) => {
-      if (!grouped[habit.category]) {
-        grouped[habit.category] = []
-      }
-      grouped[habit.category].push(habit)
-      return grouped
+  const groupHabitsByCategory = (habits: Habit[]) => {
+    // Group habits by category
+    return habits.reduce((acc, habit) => {
+      if (!habit.category)
+        return acc // Skip habits without categories
+      ;(acc[habit.category] ||= []).push(habit) // Group by category
+      return acc
     }, {} as Record<string, Habit[]>)
   }
 
-  useEffect(() => {
-    if (Array.isArray(habits) && habits.length > 0) {
-      setGroupedHabits(groupHabitsByCategory(habits))
-      setTimeout(() => {
-        setLoading(false)
-      }, 1000)
-    } else {
-      setGroupedHabits({})
-    }
-  }, [habits])
+  const sortHabits = (habits: Habit[], sortBy: string, sortOrder: string) => {
+    const sortedHabits = [...habits]
+
+    sortedHabits.sort((a, b) => {
+      if (sortBy === "duration") {
+        return sortOrder === "asc"
+          ? Number(a.duration) - Number(b.duration)
+          : Number(b.duration) - Number(a.duration)
+      }
+
+      if (sortBy === "category") {
+        return sortOrder === "asc"
+          ? a.category.localeCompare(b.category)
+          : b.category.localeCompare(a.category)
+      }
+
+      return 0 // Default: no sorting
+    })
+
+    return sortedHabits
+  }
+
+  const handleSortChange = (value: "duration" | "category") => {
+    setSortBy(value)
+    setSortOrder("asc") // You can set this to any default order or leave it as "asc"
+  }
 
   useEffect(() => {
-    if (user !== null) {
-      async function fetchHabits() {
+    if (habits.length > 0) {
+      // Sort the habits based on the current sort criteria and order
+      const sortedHabits = sortHabits(habits, sortBy, sortOrder)
+
+      // Update the grouped habits while maintaining the sort order
+      setGroupedHabits(groupHabitsByCategory(sortedHabits))
+    }
+  }, [habits, sortBy, sortOrder])
+
+  useEffect(() => {
+    if (user !== null && !fetchedRef.current) {
+      fetchedRef.current = true
+
+      async function fetchData() {
         setLoading(true)
-        const habits = await getHabits(user?.uid as string)
-        setHabits(habits)
+        await fetchAndProcessHabits(user?.uid as string, setHabits, fetchedRef)
+        const result = await getGoals(user?.uid as string)
+        if (result.success) {
+          const goals: Goal[] = result.data
+          setGoals(goals)
+        }
         setLoading(false)
       }
-      fetchHabits()
-      async function fetchGoals() {
-        const goals = await getGoals(user?.uid as string)
-        setGoals(goals)
-      }
-      fetchGoals()
+      fetchData()
     }
-
-    const date = getTodayDate()
-    setToday(date)
   }, [user])
 
-  useEffect(() => {
-    async function fetchGoals() {
-      const goals = await getGoals(user?.uid as string)
-      setGoals(goals)
-    }
-    fetchGoals()
-  }, [isDialogOpen])
-
-  useEffect(() => {
-    if (
-      habitNameError === "" &&
-      habitDescriptionError === "" &&
-      habitName !== "" &&
-      habitDuration !== "" &&
-      habitCategory !== ""
-    ) {
-      setCanCreateHabit(true)
-    } else {
-      setCanCreateHabit(false)
-    }
-  }, [
-    habitNameError,
-    habitDescriptionError,
-    habitName,
-    habitDuration,
-    habitCategory
-  ])
-
-  if (user === null)
-    return (
-      <div className="h-screen w-full flex justify-center items-center">
-        <p className="">Loading...</p>
-      </div>
-    )
-
+  if (user === null) return <FullPageLoading />
   return (
-    <div className="container md:px-24 p-4 pt-6 min-w-full">
-      <header className="text-4xl font-semibold my-3 md:flex gap-20">
-        <div>
-          Hello, {user?.personalInfo.name.split(" ")[0]}!
-          <p className="text-lg text-neutral-500">Create Habits here!</p>
-        </div>
-        <section>
-          <Dialog open={isDialogOpen} onOpenChange={setIsDialogOpen}>
-            <DialogTrigger asChild>
-              <Button className="font-semibold text-lg">
-                <Plus />
-                Add new Habit!
-              </Button>
-            </DialogTrigger>
-            <DialogContent className="sm:max-w-[425px]">
-              <DialogHeader>
-                <DialogTitle>Add new Habit!</DialogTitle>
-              </DialogHeader>
-              <div className="flex flex-col">
-                <div className="">
-                  <Label htmlFor="name" className="text-right">
-                    Name
-                  </Label>
-                  <Input
-                    id="name"
-                    className="col-span-3"
-                    value={habitName}
-                    onChange={handleHabitName}
-                  />
-                  {habitNameError !== "" && (
-                    <p className="text-error text-sm">{habitNameError}</p>
-                  )}
-                </div>
-                {/* <div className="">
-                  <Label htmlFor="description" className="text-right">
-                    Description
-                  </Label>
-                  <Input
-                    id="description"
-                    className="col-span-3"
-                    value={habitDescription}
-                    onChange={handleHabitDescription}
-                    placeholder="Optional"
-                  />
-                  {habitDescriptionError !== "" && (
-                    <p className="text-error text-sm">
-                      {habitDescriptionError}
-                    </p>
-                  )}
-                </div> */}
-                <div className="flex justify-between">
-                  <div className="mt-4">
-                    <Select
-                      value={habitDuration}
-                      onValueChange={(value) => handleSetHabitDuration(value)}
-                    >
-                      <SelectTrigger className="w-[180px]">
-                        <SelectValue placeholder="Habit Duration" />
-                      </SelectTrigger>
-                      <SelectContent>
-                        <SelectGroup className="">
-                          <SelectLabel>Habit Duration</SelectLabel>
-                          {preDefinedHabitDurations.map((duration, i) => {
-                            return (
-                              <SelectItem
-                                key={i}
-                                value={duration.value.toString()}
-                              >
-                                {duration.label}
-                              </SelectItem>
-                            )
-                          })}
-                        </SelectGroup>
-                      </SelectContent>
-                    </Select>
-                  </div>
-                  <div className="mt-4">
-                    <Select
-                      value={habitCategory}
-                      onValueChange={(value) => handleSetHabitCategory(value)}
-                      disabled={categoryLocked}
-                    >
-                      <SelectTrigger className="w-[180px]">
-                        <SelectValue placeholder="Habit Category" />
-                      </SelectTrigger>
-                      <SelectContent>
-                        <SelectGroup className="">
-                          <SelectLabel>Habit Category</SelectLabel>
-                          {preDefinedHabitCategories.map((category) => {
-                            return (
-                              <SelectItem key={category} value={category}>
-                                {category}
-                              </SelectItem>
-                            )
-                          })}
-                        </SelectGroup>
-                      </SelectContent>
-                    </Select>
-                  </div>
-                </div>
-                <div className="mt-4">
-                  <Select
-                    value={linkedGoal}
-                    onValueChange={(value) => handleSetLinkedGoal(value)}
-                  >
-                    <SelectTrigger className="">
-                      <SelectValue placeholder="Link habit to a goal! (Optional)" />
-                    </SelectTrigger>
-                    <SelectContent>
-                      <SelectGroup className="">
-                        <SelectLabel>Link a Goal!</SelectLabel>
-                        {Array.isArray(goals) &&
-                          goals.length > 0 &&
-                          goals.map((goal, i) => {
-                            return (
-                              <SelectItem key={i} value={goal.id}>
-                                {goal.name}
-                              </SelectItem>
-                            )
-                          })}
-                      </SelectGroup>
-                    </SelectContent>
-                  </Select>
-                </div>
-              </div>
-              <DialogFooter>
-                <Button
-                  disabled={!canCreateHabit}
-                  type="submit"
-                  className="w-[200px] mx-auto"
-                  onClick={handleCreateHabit}
-                >
-                  Add
-                </Button>
-              </DialogFooter>
-            </DialogContent>
-          </Dialog>
-        </section>
-      </header>
-      <section className="flex flex-col mt-4 gap-6">
-        {loading && (
-          <div className="min-h-dvh w-full flex justify-center items-center">
-            <p className=" animate-pulse">Loading...</p>
+    <div className="container min-h-screen md:px-16 p-4 pt-20">
+      <div className="flex md:flex-row gap-2 md:gap-4 items-center justify-between ">
+        <div className="flex gap-5 items-center">
+          <Greetings feature="habits" />
+          <div className=" gap-4 items-center hidden lg:flex flex-row">
+            <Select value={sortBy} onValueChange={handleSortChange}>
+              <SelectTrigger className="p-2 py-4 border rounded w-[200px]">
+                <SelectValue placeholder="Sort By" />
+              </SelectTrigger>
+              <SelectContent>
+                <SelectGroup>
+                  <SelectLabel>Sort By</SelectLabel>
+                  {/* <SelectItem value="streak">Streak</SelectItem>{" "} */}
+                  {/* ✅ New Streak Option */}
+                  <SelectItem value="duration">Duration (Days)</SelectItem>{" "}
+                  {/* ✅ Sort by Habit Duration */}
+                  <SelectItem value="category">Category</SelectItem>
+                  {/* <SelectItem value="createdAt">Created At</SelectItem> */}
+                </SelectGroup>
+              </SelectContent>
+            </Select>
+            <button
+              onClick={() => setSortOrder(sortOrder === "asc" ? "desc" : "asc")}
+              className="p-2 border rounded"
+            >
+              {sortOrder === "asc" ? (
+                <ArrowUpIcon size={16} className="" />
+              ) : (
+                <ArrowDownIcon size={16} className="" />
+              )}
+            </button>
           </div>
-        )}
-        {Object.entries(groupedHabits).length > 0 ? (
+        </div>
+        <div className="flex gap-1">
+          <HabitFeatureForm
+            goals={goals}
+            habits={habits}
+            setHabits={setHabits}
+            updateTheGoalData={updateTheGoalData}
+          />
+          <DropdownMenu>
+            <DropdownMenuTrigger className="lg:hidden">
+              <EllipsisVertical size={20} />
+            </DropdownMenuTrigger>
+            <DropdownMenuContent className="mr-4">
+              <DropdownMenuLabel>Sorting</DropdownMenuLabel>
+              <div className=" gap-4 items-center flex flex-row">
+                <Select value={sortBy} onValueChange={handleSortChange}>
+                  <SelectTrigger className="p-2 py-4 border rounded w-[200px]">
+                    <SelectValue placeholder="Sort By" />
+                  </SelectTrigger>
+                  <SelectContent>
+                    <SelectGroup>
+                      <SelectLabel>Sort By</SelectLabel>
+                      {/* <SelectItem value="streak">Streak</SelectItem>{" "} */}
+                      {/* ✅ New Streak Option */}
+                      <SelectItem value="duration">
+                        Duration (Days)
+                      </SelectItem>{" "}
+                      {/* ✅ Sort by Habit Duration */}
+                      <SelectItem value="category">Category</SelectItem>
+                      {/* <SelectItem value="createdAt">Created At</SelectItem> */}
+                    </SelectGroup>
+                  </SelectContent>
+                </Select>
+                <button
+                  onClick={() =>
+                    setSortOrder(sortOrder === "asc" ? "desc" : "asc")
+                  }
+                  className="p-2 border rounded"
+                >
+                  {sortOrder === "asc" ? (
+                    <ArrowUpIcon size={16} className="" />
+                  ) : (
+                    <ArrowDownIcon size={16} className="" />
+                  )}
+                </button>
+              </div>
+            </DropdownMenuContent>
+          </DropdownMenu>
+        </div>
+      </div>
+
+      {/* ✅ Sorting Controls */}
+      <section className="flex flex-col mt-4 space-y-6">
+        {loading ? (
+          <HabitsSkeleton />
+        ) : Object.entries(groupedHabits).length > 0 ? (
           Object.entries(groupedHabits).map(([category, categoryHabits]) => (
             <div key={category}>
-              <h2 className="text-xl font-semibold mb-2">{category}</h2>
-              <div className="grid gap-4 md:grid-cols-2 lg:grid-cols-3 mt-4">
-                {categoryHabits.map((habit) => (
-                  <Card
-                    className="w-full rounded-t-sm rounded-b-none shadow-md hover:shadow-lg flex flex-col justify-between overflow-hidden gap-2"
-                    key={habit.id}
-                  >
-                    <CardHeader className="relative flex flex-row py-2 px-4 justify-between items-center">
-                      <div className="flex items-center gap-1">
-                        <span className="text-sm text-gray-500">
-                          {habit.streak.current}
-                        </span>
-                        <Image
-                          src={"/flame.png"}
-                          height={15}
-                          width={15}
-                          alt="streak"
-                          // className="h-5 w-5"
-                        />
-                      </div>
-                      <p className="text-sm text-gray-500 underline">
-                        {habit.progress.totalCompleted}/{habit.duration} days
-                      </p>
-                      {/* Linked Goal Icon */}
-                      {habit.linkedGoal !== "" && (
-                        <Image
-                          src={"/goalLink.png"}
-                          sizes="10"
-                          width={25}
-                          height={25}
-                          className="absolute -top-5 -right-3"
-                          alt="linkedGoal"
-                        />
-                      )}
-                    </CardHeader>
-                    <CardContent className="p-0 px-4 mb-1">
-                      <div className="flex gap-3 items-center">
-                        <Checkbox
-                          id={habit.id}
-                          onCheckedChange={() => handleCheckboxClick(habit)}
-                          checked={habit.dailyTracking[getTodayDate()] || false}
-                          className="h-6 w-6 rounded-sm border-green-500 data-[state=checked]:bg-green-500 /data-[state=checked]:text-black "
-                        />
-                        <Label
-                          htmlFor={habit.id}
-                          className="text-base font-semibold tracking-wide line-clamp-1 w-full cursor-pointer"
-                        >
-                          {habit.name.toWellFormed()}
-                        </Label>
-                        {/* {habit.description && (
-                            <p className="text-neutral-500 text-sm break-all">
-                              {habit.description.toWellFormed()}
-                            </p>
-                          )} */}
-                      </div>
-                    </CardContent>
-                    <CardFooter className="p-0 m-0 relative ">
-                      <Progress
-                        value={habit.progress.completionRate}
-                        className="w-full h-2 rounded-none bg-green-50"
-                        color="bg-success"
-                      />
-                    </CardFooter>
-                  </Card>
+              <h2 className="text-base font-semibold mb-2">{category}</h2>
+              <div className="flex flex-col md:flex-row flex-wrap  gap-4">
+                {categoryHabits.map((habit, i) => (
+                  <HabitCard
+                    goals={goals}
+                    key={i}
+                    habit={habit}
+                    handleCheckboxClick={handleCompleteHabit}
+                    setHabits={setHabits}
+                    updateTheGoalData={updateTheGoalData}
+                  />
                 ))}
               </div>
             </div>

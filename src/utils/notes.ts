@@ -3,10 +3,8 @@ import axios from "axios"
 
 export const getNotes = async (uid: string) => {
   try {
-    const response = await axios.get(
-      `${process.env.NEXT_PUBLIC_API_URL}/notes/get-notes/${uid}`
-    )
-    return response.data.notes
+    const response = await axios.get(`/api/notes?uid=${uid}`)
+    return response.data
   } catch (error) {
     console.log(error)
   }
@@ -14,13 +12,10 @@ export const getNotes = async (uid: string) => {
 
 export const getNote = async (noteId: string) => {
   try {
-    const response = await axios.get(
-      `${process.env.NEXT_PUBLIC_API_URL}/notes/get-note/${noteId}`
-    )
-    console.log("Note", response.data.note)
-    return response.data.note
-
-
+    console.log("Get note called")
+    const response = await axios.get(`/api/notes/${noteId}`)
+    console.log("Note", response.data)
+    return response.data
   } catch (error) {
     console.log(error)
   }
@@ -28,11 +23,8 @@ export const getNote = async (noteId: string) => {
 
 export const createNote = async (noteObj: Note) => {
   try {
-    const response = await axios.post(
-      `${process.env.NEXT_PUBLIC_API_URL}/notes/create-note`,
-      { noteObj }
-    )
-    console.log(response.data.noteCreated)
+    const response = await axios.post("/api/notes", { noteObj })
+    console.log(response.data)
   } catch (error) {
     console.log(error)
   }
@@ -40,10 +32,7 @@ export const createNote = async (noteObj: Note) => {
 
 export const updateNote = async (noteObj: Note) => {
   try {
-    const response = await axios.patch(
-      `${process.env.NEXT_PUBLIC_API_URL}/notes/update-note/${noteObj.id}`,
-      { noteObj }
-    )
+    const response = await axios.patch(`/api/notes/${noteObj.id}`, { noteObj })
     console.log(response.data)
   } catch (error) {
     console.log(error)
@@ -52,9 +41,8 @@ export const updateNote = async (noteObj: Note) => {
 
 export const deleteNote = async (noteId: string) => {
   try {
-    const response = await axios.delete(
-      `${process.env.NEXT_PUBLIC_API_URL}/notes/delete-note/${noteId}`)
-    console.log(response.data.noteDeleted)
+    const response = await axios.delete(`/api/notes/${noteId}`)
+    console.log(response.data)
   } catch (error) {
     console.log(error)
   }

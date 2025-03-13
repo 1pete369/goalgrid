@@ -59,7 +59,7 @@ export default function ReferralSourceCard({
   }
 
   return (
-    <Card className="w-full border-none shadow-none min-h-[600px] divide-y-3 divide-primary-800">
+    <Card className="w-full border-none shadow-none min-h-[600px] dark:bg-transparent">
       <CardHeader>
         <CardTitle className="text-2xl">
           Where are you from? How did you hear about the app?
@@ -78,7 +78,7 @@ export default function ReferralSourceCard({
               className={`${
                 referralSourceOption === "youtube" &&
                 "border-2 border-primary-800 box-border"
-              } rounded-sm px-4 py-6  min-w-[200px] flex items-center gap-2 hover:border-primary-300 hover:scale-105 transition-all hover:shadow-lg border-2`}
+              } rounded-sm px-4 py-6   min-w-[200px] flex items-center gap-2  border-2`}
             >
               <RadioGroupItem className="hidden" value="youtube" id="r1" />
               <Image
@@ -96,7 +96,7 @@ export default function ReferralSourceCard({
               className={`${
                 referralSourceOption === "instagram" &&
                 "border-2 border-primary-800 box-border"
-              } rounded-sm px-4 py-6  min-w-[200px] flex items-center gap-2 hover:border-primary-300 hover:scale-105 transition-all hover:shadow-lg border-2`}
+              } rounded-sm px-4 py-6   min-w-[200px] flex items-center gap-2  border-2`}
             >
               <RadioGroupItem className="hidden" value="instagram" id="r2" />
               <Image
@@ -114,7 +114,7 @@ export default function ReferralSourceCard({
               className={`${
                 referralSourceOption === "google" &&
                 "border-2 border-primary-800 box-border"
-              } rounded-sm px-4 py-6  min-w-[200px] flex items-center gap-2 hover:border-primary-300 hover:scale-105 transition-all hover:shadow-lg border-2`}
+              } rounded-sm px-4 py-6   min-w-[200px] flex items-center gap-2  border-2`}
             >
               <RadioGroupItem className="hidden" value="google" id="r3" />
               <Image src={"/google.png"} height={30} width={30} alt="google" />
@@ -127,7 +127,7 @@ export default function ReferralSourceCard({
               className={`${
                 referralSourceOption === "friends/family" &&
                 "border-2 border-primary-800 box-border"
-              } rounded-sm px-4 py-6  min-w-[200px] flex items-center gap-2 hover:border-primary-300 hover:scale-105 transition-all hover:shadow-lg border-2`}
+              } rounded-sm px-4 py-6   min-w-[200px] flex items-center gap-2  border-2`}
             >
               <RadioGroupItem
                 className="hidden"
@@ -144,7 +144,7 @@ export default function ReferralSourceCard({
               className={`${
                 referralSourceOption === "other" &&
                 "border-2 border-primary-800 box-border"
-              } rounded-sm px-4 py-6  min-w-[200px] flex items-center gap-2 hover:border-primary-300 hover:scale-105 transition-all hover:shadow-lg border-2`}
+              } rounded-sm px-4 py-6   min-w-[200px] flex items-center gap-2  border-2`}
             >
               <RadioGroupItem className="hidden" value="other" id="r5" />
               <Image

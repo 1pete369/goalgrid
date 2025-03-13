@@ -1,71 +1,59 @@
 import { Goal } from "@/types/goalFeatureTypes"
 import axios from "axios"
+import { handleApiError } from "./handleApiError"
+import { ApiResponse } from "@/types/apiErrorType"
 
-export async function postGoal(goal: Goal) {
+// Create a new goal
+export async function postGoal(goal: Goal): Promise<ApiResponse<any>> {
   try {
-    const response = (
-      await axios.post(
-        `${process.env.NEXT_PUBLIC_API_URL}/goals/create-goal/${goal.uid}`,
-        { goal }
-      )
-    ).data
-    console.log(response)
+    const response = await axios.post(`/api/goals`, { goal })
+    return { success: true, data: response.data }
   } catch (error) {
-    console.log(error)
+    return handleApiError(error)
   }
 }
 
-export async function updateGoal(goal: Goal) {
+// Update an existing goal
+export async function updateGoal(goal: Goal): Promise<ApiResponse<any>> {
   try {
-    const response = (
-      await axios.patch(
-        `${process.env.NEXT_PUBLIC_API_URL}/goals/update-goal-status/${goal.id}`,
-        { goal }
-      )
-    ).data
-    console.log(response)
+    const response = await axios.patch(`/api/goals/${goal.id}`, { goal })
+    return { success: true, data: response.data }
   } catch (error) {
-    console.log(error)
+    return handleApiError(error)
   }
 }
 
-export async function updateGoalDuration(goalId: string, duration : number) {
+// Fetch all goals for a user
+export async function getGoals(uid: string): Promise<ApiResponse<any>> {
   try {
-    const response = (
-      await axios.patch(
-        `${process.env.NEXT_PUBLIC_API_URL}/goals/update-goal-duration/${goalId}`,
-        { duration }
-      )
-    ).data
-    console.log(response)
+    const response = await axios.get(`/api/goals?uid=${uid}`)
+    return { success: true, data: response.data }
   } catch (error) {
-    console.log(error)
+    return handleApiError(error)
   }
 }
 
-
-export async function getGoals(uid: string) {
+// Fetch a single goal by ID
+export async function getGoalByID(goalId: string): Promise<ApiResponse<any>> {
   try {
-    const response = await axios.get(
-      `${process.env.NEXT_PUBLIC_API_URL}/goals/get-goals/${uid}`
-    )
-    console.log(response.data)
-    const goals = response.data.goals
-    return goals
+    const response = await axios.get(`/api/goals/${goalId}`)
+    return { success: true, data: response.data }
   } catch (error) {
-    console.log(error)
+    return handleApiError(error)
   }
 }
 
-
-export async function getGoalByID(goalId : string) {
+// Delete a goal by ID
+export async function deleteGoal(
+  goalId: string,
+  linkedHabits: string[]
+): Promise<ApiResponse<any>> {
   try {
-    const response = await axios.get(
-      `${process.env.NEXT_PUBLIC_API_URL}/goals/get-goal/${goalId}`
-    )
-    console.log(response.data)
-    return response.data.goal
+    const response = await axios.delete(`/api/goals/${goalId}`, {
+      data: { linkedHabits }
+    })
+    return { success: true, data: response.data }
   } catch (error) {
-    console.log(error)
+    return handleApiError(error)
   }
 }

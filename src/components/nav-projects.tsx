@@ -48,7 +48,7 @@ export function NavProjects({
                 <span>{item.name}</span>
               </a>
             </SidebarMenuButton>
-            <DropdownMenu>
+            <DropdownMenu defaultOpen>
               <DropdownMenuTrigger asChild>
                 <SidebarMenuAction showOnHover>
                   <MoreHorizontal />

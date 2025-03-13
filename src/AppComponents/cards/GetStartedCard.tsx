@@ -94,7 +94,7 @@ export default function GetStartedCard({
   }
 
   return (
-    <Card className="w-full border-none shadow-none min-h-[600px]">
+    <Card className="w-full border-none shadow-none min-h-[600px] dark:bg-transparent">
       <CardHeader>
         <CardTitle className="text-2xl">Let's Get Started!!</CardTitle>
         <CardDescription className="text-lg">
@@ -106,7 +106,7 @@ export default function GetStartedCard({
           <Label htmlFor="name">Name</Label>
           <Input
             id="name"
-            className={`rounded-sm border-2 outline-none px-2 py-1.5 placeholder:text-neutral-500 text-black w-60 ring-0 focus-visible:ring-0 ${
+            className={`rounded-sm border-2 outline-none px-2 py-1.5 placeholder:text-slate-500 w-60 ring-0 focus-visible:ring-0 ${
               nameError === "" ? "border-primary-800" : "border-error"
             }`}
             placeholder="Enter name"
@@ -121,7 +121,7 @@ export default function GetStartedCard({
           <Label htmlFor="username">Username</Label>
           <Input
             id="username"
-            className={`placeholder:normal-case lowercase rounded-sm border-2 outline-none px-2 py-1.5 placeholder:text-neutral-500 text-black w-60 ring-0 focus-visible:ring-0 ${
+            className={`placeholder:normal-case lowercase rounded-sm border-2 outline-none px-2 py-1.5 placeholder:text-slate-500 w-60 ring-0 focus-visible:ring-0 ${
               usernameError === "" ? "border-primary-800" : "border-error"
             }`}
             placeholder="Enter username"
@@ -139,7 +139,7 @@ export default function GetStartedCard({
             id="date-of-birth"
             value={dob}
             onChange={(e) => handleDob(e)}
-            className={`rounded-sm border-2 outline-none pr-0 py-1.5 placeholder:text-neutral-500 text-black w-60 ring-0 focus-visible:ring-0 text-sm ${
+            className={`rounded-sm border-2 outline-none pr-0 py-1.5 placeholder:text-slate-500 w-60 ring-0 focus-visible:ring-0 text-sm  ${
               dobError === "" ? "border-primary-800" : "border-error"
             }`}
           />
@@ -157,7 +157,7 @@ export default function GetStartedCard({
                 htmlFor="r1"
                 className={`${
                   gender === "male" && "border-2 border-primary-800 box-border"
-                } rounded-sm px-4 py-1 w-[116px] flex items-center gap-2 hover:scale-105 transition-all hover:shadow-lg border-2`}
+                } rounded-sm px-4 py-1 w-[116px] flex items-center gap-2 border-2`}
               >
                 <RadioGroupItem className="hidden" value="male" id="r1" />
                 <Image src={"/male.png"} height={25} width={25} alt="male" />
@@ -170,7 +170,7 @@ export default function GetStartedCard({
                 className={`${
                   gender === "female" &&
                   "border-2 border-primary-800 box-border"
-                } rounded-sm px-4 py-1 w-[116px] flex items-center gap-2 hover:scale-105 transition-all hover:shadow-lg border-2`}
+                } rounded-sm px-4 py-1 w-[116px] flex items-center gap-2 border-2`}
               >
                 <RadioGroupItem className="hidden" value="female" id="r2" />
                 <Image

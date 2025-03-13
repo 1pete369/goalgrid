@@ -14,6 +14,22 @@ export function getTodayDate() {
   return todayDate;
 }
 
+export const getEndDate = (startDate: string, duration: string): string => {
+  const start = new Date(startDate);
+  const durationNumber = parseInt(duration, 10); // Convert string to number
+
+  if (isNaN(durationNumber)) {
+    throw new Error("Invalid duration: Must be a number in string format");
+  }
+
+  const end = new Date(start);
+  end.setDate(start.getDate() + durationNumber); // Include the last active day
+
+  return end.toISOString().split("T")[0]; // Format: YYYY-MM-DD
+};
+
+
+
 export const getYesterdayDate = () => {
   const date = new Date()
   date.setDate(date.getDate() - 1)

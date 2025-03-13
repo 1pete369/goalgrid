@@ -1,7 +1,10 @@
 "use client"
 
+import Greetings from "@/AppComponents/Greetings"
+import FullPageLoading from "@/AppComponents/loaders/FullPageLoading"
 import { Button } from "@/components/ui/button"
 import { useUserContext } from "@/contexts/UserDataProviderContext"
+import JournalSkeleton from "@/skeletons/JournalSkeleton"
 import { Journal } from "@/types/journalTypes"
 import { deleteJournal, getJournals } from "@/utils/journals"
 import { Edit, ExternalLink, Plus, Trash2 } from "lucide-react"
@@ -11,14 +14,17 @@ import { useEffect, useState } from "react"
 export default function JournalFeature() {
   const { user } = useUserContext()
   const [journals, setJournals] = useState<Journal[]>([])
+  const [loading,setLoading]= useState(false)
 
   useEffect(() => {
     if (user !== null) {
       async function loadJournals() {
+        setLoading(true)
         const journalsReturned: Journal[] = await getJournals(
           user?.uid as string
         )
         setJournals(journalsReturned)
+        setLoading(false)
       }
       loadJournals()
     }
@@ -29,57 +35,51 @@ export default function JournalFeature() {
     await deleteJournal(journalId)
   }
 
-  if (user === null)
-    return (
-      <div className="h-screen w-full flex justify-center items-center">
-        <p className="text-lg text-gray-600 animate-pulse">Loading...</p>
-      </div>
-    )
+  if (user === null) return <FullPageLoading />
 
   return (
-    <div className="container md:px-24 p-4 pt-6 min-w-full ">
-      <header className="text-4xl font-semibold my-3">
-        Hello, {user?.personalInfo.name.split(" ")[0]}!
-        <p className="text-lg text-neutral-500">Create Journals here!</p>
+    <div className="container md:px-16 p-4 pt-20 min-w-full ">
+      <header className="flex md:flex-row gap-2 md:gap-4 items-center justify-between">
+        <Greetings feature="Journals" />
+        <Link href={"/work/personal/journals/create-journal"}>
+          <Button className="font-semibold text-base flex items-center">
+            <Plus />
+            Add
+            <p className="hidden md:flex">new Journal!</p>
+          </Button>
+        </Link>
       </header>
-      <Link href={"/work/personal/journals/create-journal"}>
-        <Button className="font-semibold text-lg">
-          <Plus />
-          Add new Journal!
-        </Button>
-      </Link>
-
-      <div className="mt-6 flex flex-wrap gap-5">
-        {journals.length === 0 ? (
+      <div className="mt-6 flex flex-wrap gap-4">
+        { loading ? <JournalSkeleton />: journals.length === 0 ? (
           <p className="text-gray-500">No Journals available.</p>
         ) : (
           journals.map((journal) => (
             <div
               key={journal.id}
-              className="max-w-sm w-full p-4 border border-gray-200 rounded-lg shadow-sm flex flex-col"
+              className="w-[290px] p-4 border rounded-lg shadow-sm flex flex-col"
             >
               <div className="flex justify-between">
                 <div className="flex flex-col">
-                  <h3 className="text-xl font-semibold text-gray-800">
+                  <h3 className="text-base font-semibold ">
                     {journal.name}
                   </h3>
-                  <p className="text-sm text-gray-500">
+                  <p className="text-xs">
                     {new Date(journal.createdDate).toLocaleDateString()}
                   </p>
                 </div>
-                <div className="space-x-2">
+                <div className="flex gap-1">
                   <Link href={`/work/personal/journals/${journal.id}/edit`}>
-                    <Button>
+                    <Button variant="outline">
                       <Edit />
                     </Button>
                   </Link>
-                  <Button onClick={() => handleDeletejournal(journal.id)}>
+                  <Button variant="outline" onClick={() => handleDeletejournal(journal.id)}>
                     <Trash2 />
                   </Button>
                 </div>
               </div>
               <Link href={`/work/personal/journals/${journal.id}`}>
-                <Button className="mt-4 w-full text-sm text-white rounded px-4 py-2">
+                <Button variant="outline" className="mt-4 w-full text-sm rounded px-4 py-2">
                   View Journal <ExternalLink />
                 </Button>
               </Link>

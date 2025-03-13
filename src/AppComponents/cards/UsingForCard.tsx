@@ -14,15 +14,14 @@ import Image from "next/image"
 import React from "react"
 
 type UsingForCardPropsType = {
-  intendedUseCases : string[]
-  setIntendedUseCases : React.Dispatch<React.SetStateAction<string[]>>
+  intendedUseCases: string[]
+  setIntendedUseCases: React.Dispatch<React.SetStateAction<string[]>>
 }
 
 export default function UsingForCard({
   intendedUseCases,
   setIntendedUseCases
 }: UsingForCardPropsType) {
-
   const handleUseCases = (value: string) => {
     setIntendedUseCases(
       (prev) =>
@@ -33,7 +32,7 @@ export default function UsingForCard({
   }
 
   return (
-    <Card className="w-full border-none shadow-none min-h-[600px] divide-y-3 divide-primary-800">
+    <Card className="w-full border-none shadow-none min-h-[600px] dark:bg-transparent">
       <CardHeader>
         <CardTitle className="text-2xl">
           What do you want to achieve using this app?
@@ -51,7 +50,7 @@ export default function UsingForCard({
               className={`${
                 intendedUseCases.includes("Boost Productivity") &&
                 "border-2 border-primary-800 box-border"
-              } rounded-sm px-4 py-6 w-[350px] flex gap-4 hover:border-primary-300 hover:scale-105 transition-all hover:shadow-lg border-2 h-32`}
+              } rounded-sm px-4 py-6 flex gap-4  border-2 `}
             >
               <Input
                 type="checkbox"
@@ -67,11 +66,14 @@ export default function UsingForCard({
                 className="object-contain"
                 alt="to-do-list"
               />
-              <div>
-                <h1 className="font-bold text-lg leading-8">Boost Productivity</h1>
+              <div className="flex flex-col gap-2 justify-center">
+                <h1 className="font-bold ">
+                  Boost Productivity
+                </h1>
                 <p className="text-neutral-500">
                   {" "}
-                  Stay on top of tasks, set daily goals, and track your progress to get more done.
+                  Stay on top of tasks, set daily goals, and track your progress
+                  to get more done.
                 </p>
               </div>
             </Label>
@@ -84,7 +86,7 @@ export default function UsingForCard({
               className={`${
                 intendedUseCases.includes("Build Healthy Habits") &&
                 "border-2 border-primary-800 box-border"
-              } rounded-sm px-4 py-6 w-[350px] flex  gap-4 hover:border-primary-300 hover:scale-105 transition-all hover:shadow-lg border-2 h-32`}
+              } rounded-sm px-4 py-6  flex  gap-4  border-2 `}
             >
               <Input
                 type="checkbox"
@@ -94,16 +96,19 @@ export default function UsingForCard({
                 onChange={() => handleUseCases("Build Healthy Habits")}
               />
               <Image
-              className="object-contain"
+                className="object-contain"
                 src={"/daily-tasks.png"}
                 height={30}
                 width={30}
                 alt="daily-tasks"
               />
-              <div>
-                <h1 className="font-bold text-lg leading-8">Build Healthy Habits</h1>
+              <div className="flex flex-col gap-2 justify-center">
+                <h1 className="font-bold ">
+                  Build Healthy Habits
+                </h1>
                 <p className="text-neutral-500">
-                  Track habits like exercise, water intake, and sleep to improve your daily routine.
+                  Track habits like exercise, water intake, and sleep to improve
+                  your daily routine.
                 </p>
               </div>
             </Label>
@@ -116,7 +121,7 @@ export default function UsingForCard({
               className={`${
                 intendedUseCases.includes("Achieve Personal Goals") &&
                 "border-2 border-primary-800 box-border"
-              } rounded-sm px-4 py-6 w-[350px] flex  gap-4 hover:border-primary-300 hover:scale-105 transition-all hover:shadow-lg border-2 h-32`}
+              } rounded-sm px-4 py-6  flex  gap-4  border-2 `}
             >
               <Input
                 type="checkbox"
@@ -126,17 +131,20 @@ export default function UsingForCard({
                 onChange={() => handleUseCases("Achieve Personal Goals")}
               />
               <Image
-              className="object-contain"
+                className="object-contain"
                 src={"/target.png"}
                 height={30}
                 width={30}
                 alt="target"
               />
-              <div>
-                <h1 className="font-bold text-lg leading-8">Achieve Personal Goals</h1>
+              <div className="flex flex-col gap-2 justify-center">
+                <h1 className="font-bold ">
+                  Achieve Personal Goals
+                </h1>
                 <p className="text-neutral-500">
                   {" "}
-                  Set personal objectives, break them down into actionable steps, and track your journey.
+                  Set personal objectives, break them down into actionable
+                  steps, and track your journey.
                 </p>
               </div>
             </Label>
@@ -149,7 +157,7 @@ export default function UsingForCard({
               className={`${
                 intendedUseCases.includes("Track Fitness & Health") &&
                 "border-2 border-primary-800 box-border"
-              } rounded-sm px-4 py-6 w-[350px] flex  gap-4 hover:border-primary-300 hover:scale-105 transition-all hover:shadow-lg border-2 h-32`}
+              } rounded-sm px-4 py-6  flex  gap-4  border-2 `}
             >
               <Input
                 type="checkbox"
@@ -159,17 +167,20 @@ export default function UsingForCard({
                 onChange={() => handleUseCases("Track Fitness & Health")}
               />
               <Image
-              className="object-contain"
+                className="object-contain"
                 src={"/dumbbell.png"}
                 height={30}
                 width={30}
                 alt="dumbbell"
               />
-             <div>
-                <h1 className="font-bold text-lg leading-8">Track Fitness & Health</h1>
+              <div className="flex flex-col gap-2 justify-center">
+                <h1 className="font-bold ">
+                  Track Fitness & Health
+                </h1>
                 <p className="text-neutral-500">
                   {" "}
-                  Monitor workouts, set fitness targets, and track your health progress for a healthier lifestyle.
+                  Monitor workouts, set fitness targets, and track your health
+                  progress for a healthier lifestyle.
                 </p>
               </div>
             </Label>
@@ -182,7 +193,7 @@ export default function UsingForCard({
               className={`${
                 intendedUseCases.includes("Enhance Self-Discipline") &&
                 "border-2 border-primary-800 box-border"
-              } rounded-sm px-4 py-6 w-[350px] flex  gap-4 hover:border-primary-300 hover:scale-105 transition-all hover:shadow-lg border-2 h-32`}
+              } rounded-sm px-4 py-6  flex  gap-4  border-2 `}
             >
               <Input
                 type="checkbox"
@@ -192,17 +203,20 @@ export default function UsingForCard({
                 onChange={() => handleUseCases("Enhance Self-Discipline")}
               />
               <Image
-              className="object-contain"
+                className="object-contain"
                 src={"/accountability.png"}
                 height={30}
                 width={30}
                 alt="accountability"
               />
-             <div>
-                <h1 className="font-bold text-lg leading-8">Enhance Self-Discipline</h1>
+              <div className="flex flex-col gap-2 justify-center">
+                <h1 className="font-bold ">
+                  Enhance Self-Discipline
+                </h1>
                 <p className="text-neutral-500">
                   {" "}
-                  Build consistency by tracking habits, setting reminders, and maintaining accountability.
+                  Build consistency by tracking habits, setting reminders, and
+                  maintaining accountability.
                 </p>
               </div>
             </Label>
@@ -213,7 +227,7 @@ export default function UsingForCard({
               className={`${
                 intendedUseCases.includes("Grow Social Connections") &&
                 "border-2 border-primary-800 box-border"
-              } rounded-sm px-4 py-6 w-[350px] flex  gap-4 hover:border-primary-300 hover:scale-105 transition-all hover:shadow-lg border-2 h-32`}
+              } rounded-sm px-4 py-6  flex  gap-4  border-2 `}
             >
               <Input
                 type="checkbox"
@@ -223,17 +237,20 @@ export default function UsingForCard({
                 onChange={() => handleUseCases("Grow Social Connections")}
               />
               <Image
-              className="object-contain"
+                className="object-contain"
                 src={"/networking.png"}
                 height={30}
                 width={30}
                 alt="networking"
               />
-             <div>
-                <h1 className="font-bold text-lg leading-8">Grow Social Connections</h1>
+              <div className="flex flex-col gap-2 justify-center">
+                <h1 className="font-bold ">
+                  Grow Social Connections
+                </h1>
                 <p className="text-neutral-500">
                   {" "}
-                  Join challenges, connect with others, and share your progress with a supportive community.
+                  Join challenges, connect with others, and share your progress
+                  with a supportive community.
                 </p>
               </div>
             </Label>
@@ -244,29 +261,30 @@ export default function UsingForCard({
               className={`${
                 intendedUseCases.includes("Develop a Balanced Lifestyle") &&
                 "border-2 border-primary-800 box-border"
-              } rounded-sm px-4 py-6 w-[350px] flex  gap-4 hover:border-primary-300 hover:scale-105 transition-all hover:shadow-lg border-2 h-32`}
+              } rounded-sm px-4 py-6  flex  gap-4  border-2 `}
             >
               <Input
                 type="checkbox"
                 className="hidden"
                 value="Develop a Balanced Lifestyle"
                 id="r7"
-                onChange={() =>
-                  handleUseCases("Develop a Balanced Lifestyle")
-                }
+                onChange={() => handleUseCases("Develop a Balanced Lifestyle")}
               />
               <Image
-              className="object-contain"
+                className="object-contain"
                 src={"/yoga.png"}
                 height={30}
                 width={30}
                 alt="yoga"
               />
-              <div>
-                <h1 className="font-bold text-lg leading-8">Develop a Balanced Lifestyle</h1>
+              <div className="flex flex-col gap-2 justify-center">
+                <h1 className="font-bold ">
+                  Develop a Balanced Lifestyle
+                </h1>
                 <p className="text-neutral-500">
                   {" "}
-                  Focus on your well-being with tools for mindfulness, stress management, and self-care.
+                  Focus on your well-being with tools for mindfulness, stress
+                  management, and self-care.
                 </p>
               </div>
             </Label>

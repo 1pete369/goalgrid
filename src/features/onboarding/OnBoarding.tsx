@@ -10,24 +10,25 @@ import GetStartedCard from "../../AppComponents/cards/GetStartedCard"
 import ProfessionCard from "../../AppComponents/cards/ProfessionCard"
 import ReferralSourceCard from "../../AppComponents/cards/ReferralSourceCard"
 import UsingForCard from "../../AppComponents/cards/UsingForCard"
-import { useSession } from "next-auth/react"
 import { useUserContext } from "@/contexts/UserDataProviderContext"
+import { useSession } from "next-auth/react"
 
 export function OnBoarding() {
   const searchParams = useSearchParams()
   const router = useRouter()
 
-  const {user} = useUserContext()
+  const { user } = useUserContext()
 
   const { toast } = useToast()
 
   const initialStep = parseInt(searchParams.get("step") || "1", 10)
 
-  const [onBoardingData, setOnBoardingData] = useState<onBoardingDataType | null>(null)
+  const [onBoardingData, setOnBoardingData] =
+    useState<onBoardingDataType | null>(null)
 
   const [step, setStep] = useState(initialStep)
 
-  const [onBoardingStatusToMount,setOnBoardingStatusToMount] = useState(null)
+  const [onBoardingStatusToMount, setOnBoardingStatusToMount] = useState(null)
 
   // Initialize state
   const [name, setName] = useState("")
@@ -45,6 +46,7 @@ export function OnBoarding() {
   const [referralSourceError, setReferralSourceError] = useState("")
   const [intendedUseCases, setIntendedUseCases] = useState<string[]>([])
   const [proceed, setProceed] = useState(false)
+  const {  update } = useSession()
 
   // Load data from localStorage on the client side
   useEffect(() => {
@@ -60,18 +62,17 @@ export function OnBoarding() {
 
         setDob(parsedData.dob || "")
         setDobError(parsedData.dobError || "")
-        
+
         setGender(parsedData.gender || "male")
-        
+
         setProfession(parsedData.profession || "")
         setProfessionError(parsedData.professionError || "")
         setProfessionOption(parsedData.professionOption || "")
 
-
         setReferralSource(parsedData.referralSource || "")
         setReferralSourceError(parsedData.referralSourceError || "")
         setReferralSourceOption(parsedData.referralSourceOption || "")
-        
+
         setIntendedUseCases(parsedData.intendedUseCases || [])
       }
     }
@@ -80,8 +81,7 @@ export function OnBoarding() {
   // Save data to localStorage on state change
   useEffect(() => {
     if (typeof window !== "undefined") {
-
-      const onBoardingData : onBoardingDataType={
+      const onBoardingData: onBoardingDataType = {
         name,
         username,
         dob,
@@ -96,19 +96,34 @@ export function OnBoarding() {
       const onBoardingDataLocalSaved = {
         name,
         nameError,
-        username,usernameError,
-        dob,dobError,
+        username,
+        usernameError,
+        dob,
+        dobError,
         gender,
-        profession,professionError,
+        profession,
+        professionError,
         professionOption,
-        referralSource,referralSourceError,
+        referralSource,
+        referralSourceError,
         referralSourceOption,
-        intendedUseCases,
+        intendedUseCases
       }
-      localStorage.setItem("onBoardingData", JSON.stringify(onBoardingDataLocalSaved))
+      localStorage.setItem(
+        "onBoardingData",
+        JSON.stringify(onBoardingDataLocalSaved)
+      )
       console.log("onBoardingData saved:", onBoardingDataLocalSaved)
     }
-  }, [name, username, dob, gender, profession, referralSource, intendedUseCases])
+  }, [
+    name,
+    username,
+    dob,
+    gender,
+    profession,
+    referralSource,
+    intendedUseCases
+  ])
 
   // Update URL safely
   const updateUrl = (newStep: number) => {
@@ -142,7 +157,9 @@ export function OnBoarding() {
           dobError === ""
       )
     } else if (step === 2) {
-      setProceed(profession !== "" && profession !== "other" && professionError === "")
+      setProceed(
+        profession !== "" && profession !== "other" && professionError === ""
+      )
     } else if (step === 3) {
       setProceed(referralSource !== "" && referralSourceError === "")
     } else if (step === 4) {
@@ -160,20 +177,24 @@ export function OnBoarding() {
     professionError,
     referralSource,
     referralSourceError,
-    intendedUseCases,
+    intendedUseCases
   ])
 
   const handleNextStep = async () => {
     if (step < 4) {
       setStep((prev) => prev + 1)
-    }else{
-      if(onBoardingData && user){
-      await updateOnBoardingDataToUser(onBoardingData,user.uid)
-      const onBoardingStatusFlag =await onBoardingStatus(user.uid)
-      toast({description : "OnBoarding Completed🎉", className : "bg-success text-white"})
-      if(onBoardingStatusFlag){
-        redirect('/')
-      }
+    } else {
+      if (onBoardingData && user) {
+        await updateOnBoardingDataToUser(onBoardingData, user.uid)
+        const onBoardingStatusFlag = await onBoardingStatus(user.uid)
+        await update()
+        toast({
+          description: "OnBoarding Completed🎉",
+          className: "bg-success text-white"
+        })
+        if (onBoardingStatusFlag) {
+          redirect("/")
+        }
       }
     }
   }
@@ -205,7 +226,8 @@ export function OnBoarding() {
   }
 
   return (
-    <div className="container mx-auto flex flex-col min-h-[calc(100vh-75px)] p-8 md:p-24 select-none">
+    // <div className="container mx-auto flex flex-col min-h-[calc(100vh-75px)] p-8 md:p-24 select-none">
+    <div className="container mx-auto flex flex-col min-h-[calc(100vh-75px)] p-8 md:p-24 select-none pt-[80px]">
       <Progress value={(step / 4) * 100} />
       {step === 1 && (
         <GetStartedCard
@@ -251,7 +273,7 @@ export function OnBoarding() {
           setIntendedUseCases={setIntendedUseCases}
         />
       )}
-      <div className="relative bottom-0 w-full flex justify-between md:justify-normal md:gap-20 ml-4 md:ml-6">
+      <div className="w-full flex justify-between md:justify-normal md:gap-20 mt-auto">
         <Button className="min-w-[100px]" onClick={handlePrevStep}>
           Prev
         </Button>
@@ -259,7 +281,6 @@ export function OnBoarding() {
           className="min-w-[100px]"
           disabled={!proceed}
           onClick={handleNextStep}
-
         >
           {step === 4 ? "Finish" : "Next"}
         </Button>

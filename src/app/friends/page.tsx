@@ -20,7 +20,7 @@ export default function Page() {
 
 
   return (
-    <div className="p-4 min-h-[calc(100vh-75px)] w-full text-lg">
+    <div className="p-4 min-h-[calc(100vh-75px)] w-full text-lg pt-[80px]">
       <Tabs defaultValue="all-users" className="max-w-4xl mx-auto">
         <TabsList className="w-full">
           <TabsTrigger value="all-users" className="w-full text-base">

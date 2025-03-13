@@ -2,10 +2,12 @@ export type Goal = {
   id: string
   uid : string
   name: string
+  goalColor : string
   description: string
   category : string
   createdAt : string
-  duration : number
+  deadline : string
+  duration : string
   habits: []
   progress: {
     totalCompleted: number

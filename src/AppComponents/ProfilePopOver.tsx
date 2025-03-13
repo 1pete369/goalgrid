@@ -1,23 +1,24 @@
 "use client"
 
-import React, { use, useEffect, useState } from "react"
+import { Button } from "@/components/ui/button"
 import {
   Popover,
   PopoverContent,
   PopoverTrigger
 } from "@/components/ui/popover"
-import Image from "next/image"
-import { Button } from "@/components/ui/button"
-import ReactCountryFlag from "react-country-flag"
-import Link from "next/link"
-import { signOut } from "next-auth/react"
 import { useUserContext } from "@/contexts/UserDataProviderContext"
 import { format, parseISO } from "date-fns"
+import { signOut } from "next-auth/react"
+import Image from "next/image"
+import Link from "next/link"
+import { useEffect, useState } from "react"
+import ReactCountryFlag from "react-country-flag"
 
 import { Badge } from "@/components/ui/badge"
+import LoadingUser from "./loaders/LoadingUser"
 
 export default function ProfilePopOver() {
-  const { user } = useUserContext()
+  const { user, loading } = useUserContext()
 
   const [badgeColor, setBadgeColor] = useState("gray")
 
@@ -48,23 +49,25 @@ export default function ProfilePopOver() {
     }
   }, [user])
 
-  if (user === null) {
-    return <p>Loading...</p>
+  
+  if (loading === true) {
+    return <LoadingUser />
   }
+  
+  if (user !== null)
 
   return (
     <Popover>
       <PopoverTrigger>
-        {/* Profile Picture */}
         <Image
           src={user?.personalInfo?.photoURL as string}
           height={40}
           width={40}
           alt="profile-photo"
-          className="rounded-full cursor-pointer border-2 border-gray-300 hover:border-primary-500 transition"
+          className="rounded-full h-10 w-10 cursor-pointer border-2 border-neutral-300 hover:border-primary-500 transition"
         />
       </PopoverTrigger>
-      <PopoverContent className="flex flex-col p-4 w-72 mr-4 space-y-4 shadow-lg rounded-lg text-gray-800">
+      <PopoverContent className="flex flex-col p-4 w-72 mr-4 space-y-4 shadow-lg rounded-lg text-gray-800 bg-blue-100">
         {/* User Info */}
         <div className="flex items-center space-x-3">
           <Image
@@ -109,18 +112,26 @@ export default function ProfilePopOver() {
           <p className="flex gap-2">
             <span className="font-semibold underline text-sm">CreatedAt:</span>
             <span className="text-slate-600">
-              {format(parseISO(user.timings.createdAt), "MMM dd, yyyy hh:mm a")}
+              {user?.timings?.createdAt
+                ? format(
+                    parseISO(user.timings.createdAt),
+                    "MMM dd, yyyy hh:mm a"
+                  )
+                : "N/A"}
             </span>
           </p>
+
           <p className="flex gap-2">
             <span className="font-semibold underline text-sm">
               LastLoginAt:
             </span>
             <span className="text-slate-600">
-              {format(
-                parseISO(user.timings.lastLoginAt),
-                "MMM dd, yyyy hh:mm a"
-              )}
+              {user?.timings?.lastLoginAt
+                ? format(
+                    parseISO(user.timings.lastLoginAt),
+                    "MMM dd, yyyy hh:mm a"
+                  )
+                : "N/A"}
             </span>
           </p>
         </div>

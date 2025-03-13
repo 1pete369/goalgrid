@@ -27,98 +27,98 @@ import { Label } from "@/components/ui/label"
 import { ChangeEvent, useState } from "react"
 
 export default function ToolBar({ editor }: any) {
-  
   const [isPopoverOpen, setIsPopoverOpen] = useState(false)
-  
+
   const [imageUrl, setImageUrl] = useState("")
-  
   if (!editor) return null
   const Options = [
     {
       icon: <Heading1 className="size-4" />,
       onClick: () => editor.chain().focus().toggleHeading({ level: 1 }).run(),
-      pressed: editor.isActive("heading", { level: 1 })
+      pressed: editor.isActive("heading", { level: 1 }),
     },
     {
       icon: <Heading2 className="size-4" />,
       onClick: () => editor.chain().focus().toggleHeading({ level: 2 }).run(),
-      pressed: editor.isActive("heading", { level: 2 })
+      pressed: editor.isActive("heading", { level: 2 }),
     },
     {
       icon: <Heading3 className="size-4" />,
       onClick: () => editor.chain().focus().toggleHeading({ level: 3 }).run(),
-      pressed: editor.isActive("heading", { level: 3 })
+      pressed: editor.isActive("heading", { level: 3 }),
     },
     {
       icon: <Bold className="size-4" />,
       onClick: () => editor.chain().focus().toggleBold().run(),
-      pressed: editor.isActive("bold")
+      pressed: editor.isActive("bold"),
     },
     {
       icon: <Italic className="size-4" />,
       onClick: () => editor.chain().focus().toggleItalic().run(),
-      pressed: editor.isActive("italic")
+      pressed: editor.isActive("italic"),
     },
     {
       icon: <Strikethrough className="size-4" />,
       onClick: () => editor.chain().focus().toggleStrike().run(),
-      pressed: editor.isActive("strike")
+      pressed: editor.isActive("strike"),
+    },{
+      icon: <Underline className="size-4" />,
+      onClick: () => editor.chain().focus().toggleUnderline().run(),
+      pressed: editor.isActive("underline"),
     },
     {
       icon: <AlignLeft className="size-4" />,
       onClick: () => editor.chain().focus().setTextAlign("left").run(),
-      pressed: editor.isActive({ textAlign: "left" })
+      pressed: editor.isActive({ textAlign: "left" }),
     },
     {
       icon: <AlignCenter className="size-4" />,
       onClick: () => editor.chain().focus().setTextAlign("center").run(),
-      pressed: editor.isActive({ textAlign: "center" })
+      pressed: editor.isActive({ textAlign: "center" }),
     },
     {
       icon: <AlignRight className="size-4" />,
       onClick: () => editor.chain().focus().setTextAlign("right").run(),
-      pressed: editor.isActive({ textAlign: "right" })
+      pressed: editor.isActive({ textAlign: "right" }),
     },
     {
       icon: <List className="size-4" />,
       onClick: () => editor.chain().focus().toggleBulletList().run(),
-      pressed: editor.isActive("bulletList")
+      pressed: editor.isActive("bulletList"),
     },
     {
       icon: <ListOrdered className="size-4" />,
       onClick: () => editor.chain().focus().toggleOrderedList().run(),
-      pressed: editor.isActive("orderedList")
+      pressed: editor.isActive("orderedList"),
     },
     {
       icon: <Code className="size-4" />,
       onClick: () => editor.chain().focus().toggleCodeBlock().run(),
-      pressed: editor.isActive("code")
-    },
-    {
-      icon: <Underline className="size-4" />,
-      onClick: () => editor.chain().focus().toggleUnderline().run(),
-      pressed: editor.isActive("code")
+      pressed: editor.isActive("code"),
     },
     {
       icon: <Highlighter className="size-4" />,
       onClick: () => editor.chain().focus().toggleHighlight().run(),
-      pressed: editor.isActive("highlight")
+      pressed: editor.isActive("highlight"),
     }
-  ]
-
+  ];
 
   const AddImagePopover = () => {
     const handleAddImage = (url: string) => {
       if (url) {
         // Insert the image followed by a line break
-        editor.chain().focus().insertContent(`<img src="${url}" alt="Image" /><br />`).run();
+        editor
+          .chain()
+          .focus()
+          .insertContent(`<img src="${url}" alt="Image" /><br />`)
+          .run()
       }
-      setImageUrl("");
-      setIsPopoverOpen(false);
-    };
-    
-    
+      setImageUrl("")
+      setIsPopoverOpen(false)
+    }
+
     const handleImageUrl = (e: ChangeEvent<HTMLInputElement>) => {
+      console.log(e.target.value.trim())
       setImageUrl(e.target.value.trim())
     }
 
@@ -129,7 +129,7 @@ export default function ToolBar({ editor }: any) {
             <Upload className=" size-6 " />
           </Button>
         </PopoverTrigger>
-        <PopoverContent className="w-80 mr-20">
+        <PopoverContent className="w-80 mr-10 md:mr-0">
           <div className="space-y-2">
             <Label htmlFor="image-url">Image URL</Label>
             <Input
@@ -159,7 +159,7 @@ export default function ToolBar({ editor }: any) {
   }
 
   return (
-    <div className=" md:max-w-3xl w-full flex overflow-x-scroll scroll-smooth md:flex md:flex-wrap sm:flex sm:flex-wrap md:justify-center px-4 sm:px-8 mx-auto border rounded-md py-2 mb-1 space-x-1 gap-1 ">
+    <div className=" w-full flex overflow-x-scroll scroll-smooth md:flex md:flex-wrap sm:flex sm:flex-wrap md:justify-center px-4 sm:px-8 mx-auto border rounded-md py-2 mb-1 space-x-1 gap-1 ">
       {Options.map((option, i) => (
         <Toggle
           key={i}

@@ -23,7 +23,7 @@ export const UserProfileProvider = ({ children }: { children: React.ReactNode })
   const loadUserProfiles = async () => {
     try {
       const { allUsers : data } = await (await axios.get(`${process.env.NEXT_PUBLIC_API_URL}/users/get-all-users`)).data
-      console.log(data)
+      // console.log(data)
       const profiles = Array.isArray(data) && data.reduce((acc: Record<string, UserProfile>, user: UserProfile) => {
         acc[user.uid] = user
         return acc

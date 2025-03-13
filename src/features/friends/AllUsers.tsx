@@ -20,7 +20,7 @@ export default function AllUsers() {
   }
 
   return (
-    <div className="flex gap-2 flex-wrap text-black">
+    <div className="flex gap-2 flex-wrap ">
       {Array.isArray(users) && users.length>0 && users.filter((user) => user.uid !== myId)
         .map((user) => (
           <div

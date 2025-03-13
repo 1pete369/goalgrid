@@ -1,39 +1,34 @@
 import { CategoryType } from "@/types/todoFeatureTypes"
 import axios from "axios"
+import { handleApiError } from "./handleApiError"
+import { ApiResponse } from "@/types/apiErrorType"
 
-export async function getCategories(uid: string) {
+// Fetch all categories for a user
+export async function getCategories(uid: string): Promise<ApiResponse<any>> {
   try {
-    const categories = (
-      await axios.get(
-        `${process.env.NEXT_PUBLIC_API_URL}/categories/get-categories/${uid}`
-      )
-    ).data
-    console.log(categories)
-    return categories.categories
+    const response = await axios.get(`/api/categories?uid=${uid}`)
+    return { success: true, data: response.data }
   } catch (error) {
-    console.log(error)
+    return handleApiError(error)
   }
 }
 
-export async function createCategory(category: CategoryType) {
+// Create a new category
+export async function createCategory(category: CategoryType): Promise<ApiResponse<any>> {
   try {
-    const response = await axios.post(
-      `${process.env.NEXT_PUBLIC_API_URL}/categories/create-category`,
-      { category }
-    )
-    console.log(response.data)
+    const response = await axios.post(`/api/categories`, { category })
+    return { success: true, data: response.data }
   } catch (error) {
-    console.log(error)
+    return handleApiError(error)
   }
 }
 
-export async function DeleteCategory(id: string) {
+// Delete a category by ID
+export async function deleteCategory(categoryId: string): Promise<ApiResponse<any>> {
   try {
-    const response = await axios.delete(
-      `${process.env.NEXT_PUBLIC_API_URL}/categories/delete-category/${id}`
-    )
-    console.log(response.data)
+    const response = await axios.delete(`/api/categories/${categoryId}`)
+    return { success: true, data: response.data }
   } catch (error) {
-    console.log(error)
+    return handleApiError(error)
   }
 }

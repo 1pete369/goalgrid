@@ -12,13 +12,9 @@ export function useFetchUsersAndFriends(myId: string | undefined) {
       const fetchData = async () => {
         try {
           const [userResponse, friendResponse] = await Promise.all([
-            axios.get(`${process.env.NEXT_PUBLIC_API_URL}/users/get-all-users`),
-            axios.get(
-              `${process.env.NEXT_PUBLIC_API_URL}/users/get-friends-list/${myId}`
-            ),
+            axios.get("/api/users/get-all-users"),
+            axios.get(`/api/users/get-friends-list/${myId}`),
           ])
-          console.log(userResponse.data)
-          console.log(friendResponse.data)
           setUsers(userResponse.data.allUsers)
           setFriendList(friendResponse.data.friends)
         } catch (error) {
@@ -31,9 +27,7 @@ export function useFetchUsersAndFriends(myId: string | undefined) {
 
   const refreshFriendList = async () => {
     try {
-      const response = await axios.get(
-        `${process.env.NEXT_PUBLIC_API_URL}/users/get-friends-list/${myId}`
-      )
+      const response = await axios.get(`/api/users/get-friends-list/${myId}`)
       setFriendList(response.data.friends)
     } catch (error) {
       console.error("Error refreshing friend list:", error)

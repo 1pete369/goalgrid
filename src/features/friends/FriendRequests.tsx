@@ -27,9 +27,11 @@ export default function FriendRequests() {
     if (user !== null) {
       async function getFriendRequests() {
         try {
-          const response = await axios.get(
-            `${process.env.NEXT_PUBLIC_API_URL}/friends/get-requests/${user?.uid}`
-          )
+          // const response = await axios.get(
+          //   `${process.env.NEXT_PUBLIC_API_URL}/friends/get-requests/${user?.uid}`
+          // )
+          const response= await axios.get(`/api/friends/get-requests/${user?.uid}`)
+
           const { receivedRequests, sentRequests } = response.data
           setReceivedRequests(receivedRequests)
           setSentRequests(sentRequests)
@@ -38,10 +40,15 @@ export default function FriendRequests() {
             ...sentRequests.map((request: Friend) => request.recipientId),
             ...receivedRequests.map((request: Friend) => request.requesterId)
           ]
-          const usersResponse = await axios.post(
-            `${process.env.NEXT_PUBLIC_API_URL}/users/get-users-by-ids`,
-            { userIds: requesterIds }
-          )
+          // const usersResponse = await axios.post(
+          //   `${process.env.NEXT_PUBLIC_API_URL}/users/get-users-by-ids`,
+          //   { userIds: requesterIds }
+          // )
+
+          const usersResponse = await axios.post("/api/users/get-users-by-ids", {
+            userIds: requesterIds,
+          })
+
           setUsers(usersResponse.data.users)
 
           setLoading(false)
@@ -59,16 +66,21 @@ export default function FriendRequests() {
     requesterId: string
   ) => {
     const response = await axios.delete(
-      `${process.env.NEXT_PUBLIC_API_URL}/friends/delete-friend-request`,
+      `/api/friends/delete-friend-request`,
       {
         data: { recipientId, requesterId }
       }
-    )
+    );
+
+    // await axios.patch(
+    //   `${process.env.NEXT_PUBLIC_API_URL}/users/pop-friend-id/${requesterId}`,
+    //   { _id: response.data.deletedRequest._id, recipientId: recipientId }
+    // )
 
     await axios.patch(
-      `${process.env.NEXT_PUBLIC_API_URL}/users/pop-friend-id/${requesterId}`,
+      `/api/users/pop-friend-id/${requesterId}`,
       { _id: response.data.deletedRequest._id, recipientId: recipientId }
-    )
+    );
 
     setSentRequests((prevRequests) =>
       prevRequests.filter(
@@ -85,10 +97,12 @@ export default function FriendRequests() {
   ) => {
     if (user !== null) {
       const recipientId = user.uid
+      
       const response = await axios.patch(
-        `${process.env.NEXT_PUBLIC_API_URL}/friends/update-friend-request-status`,
+        `/api/friends/update-friend-request-status`,
         { requesterId, recipientId, status }
-      )
+      );
+
 
       setReceivedRequests((prevRequests) =>
         prevRequests.map((request) =>
@@ -108,7 +122,7 @@ export default function FriendRequests() {
 
   return (
     <div className="p-4">
-      <div className="grid grid-cols-1 md:grid-cols-2 gap-4 justify-center flex-wrap text-black mt-4">
+      <div className="grid grid-cols-1 md:grid-cols-2 gap-4 justify-center flex-wrap mt-4">
         {/* Display Received Requests */}
         <div className="flex flex-col">
           <h2>Received Requests</h2>

@@ -1,0 +1,464 @@
+<svg width="1000" height="1000" xmlns="http://www.w3.org/2000/svg">
+<text x="50" y="30" font-size="14" fill="white">Jan</text>
+<text x="50" y="40" font-size="10" fill="white">S</text>
+<text x="73" y="40" font-size="10" fill="white">M</text>
+<text x="96" y="40" font-size="10" fill="white">T</text>
+<text x="119" y="40" font-size="10" fill="white">W</text>
+<text x="142" y="40" font-size="10" fill="white">T</text>
+<text x="165" y="40" font-size="10" fill="white">F</text>
+<text x="188" y="40" font-size="10" fill="white">S</text>
+<rect id="day-2024-01-01" x="50" y="50" width="20" height="20" fill="#101010" stroke="#AAA" data-date="2024-01-01"></rect>
+<rect id="day-2024-01-02" x="73" y="50" width="20" height="20" fill="#101010" stroke="#AAA" data-date="2024-01-02"></rect>
+<rect id="day-2024-01-03" x="96" y="50" width="20" height="20" fill="#101010" stroke="#AAA" data-date="2024-01-03"></rect>
+<rect id="day-2024-01-04" x="119" y="50" width="20" height="20" fill="#101010" stroke="#AAA" data-date="2024-01-04"></rect>
+<rect id="day-2024-01-05" x="142" y="50" width="20" height="20" fill="#101010" stroke="#AAA" data-date="2024-01-05"></rect>
+<rect id="day-2024-01-06" x="165" y="50" width="20" height="20" fill="#101010" stroke="#AAA" data-date="2024-01-06"></rect>
+<rect id="day-2024-01-07" x="188" y="50" width="20" height="20" fill="#101010" stroke="#AAA" data-date="2024-01-07"></rect>
+<rect id="day-2024-01-08" x="50" y="73" width="20" height="20" fill="#101010" stroke="#AAA" data-date="2024-01-08"></rect>
+<rect id="day-2024-01-09" x="73" y="73" width="20" height="20" fill="#101010" stroke="#AAA" data-date="2024-01-09"></rect>
+<rect id="day-2024-01-10" x="96" y="73" width="20" height="20" fill="#101010" stroke="#AAA" data-date="2024-01-10"></rect>
+<rect id="day-2024-01-11" x="119" y="73" width="20" height="20" fill="#101010" stroke="#AAA" data-date="2024-01-11"></rect>
+<rect id="day-2024-01-12" x="142" y="73" width="20" height="20" fill="#101010" stroke="#AAA" data-date="2024-01-12"></rect>
+<rect id="day-2024-01-13" x="165" y="73" width="20" height="20" fill="#101010" stroke="#AAA" data-date="2024-01-13"></rect>
+<rect id="day-2024-01-14" x="188" y="73" width="20" height="20" fill="#101010" stroke="#AAA" data-date="2024-01-14"></rect>
+<rect id="day-2024-01-15" x="50" y="96" width="20" height="20" fill="#101010" stroke="#AAA" data-date="2024-01-15"></rect>
+<rect id="day-2024-01-16" x="73" y="96" width="20" height="20" fill="#101010" stroke="#AAA" data-date="2024-01-16"></rect>
+<rect id="day-2024-01-17" x="96" y="96" width="20" height="20" fill="#101010" stroke="#AAA" data-date="2024-01-17"></rect>
+<rect id="day-2024-01-18" x="119" y="96" width="20" height="20" fill="#101010" stroke="#AAA" data-date="2024-01-18"></rect>
+<rect id="day-2024-01-19" x="142" y="96" width="20" height="20" fill="#101010" stroke="#AAA" data-date="2024-01-19"></rect>
+<rect id="day-2024-01-20" x="165" y="96" width="20" height="20" fill="#101010" stroke="#AAA" data-date="2024-01-20"></rect>
+<rect id="day-2024-01-21" x="188" y="96" width="20" height="20" fill="#101010" stroke="#AAA" data-date="2024-01-21"></rect>
+<rect id="day-2024-01-22" x="50" y="119" width="20" height="20" fill="#101010" stroke="#AAA" data-date="2024-01-22"></rect>
+<rect id="day-2024-01-23" x="73" y="119" width="20" height="20" fill="#101010" stroke="#AAA" data-date="2024-01-23"></rect>
+<rect id="day-2024-01-24" x="96" y="119" width="20" height="20" fill="#101010" stroke="#AAA" data-date="2024-01-24"></rect>
+<rect id="day-2024-01-25" x="119" y="119" width="20" height="20" fill="#101010" stroke="#AAA" data-date="2024-01-25"></rect>
+<rect id="day-2024-01-26" x="142" y="119" width="20" height="20" fill="#101010" stroke="#AAA" data-date="2024-01-26"></rect>
+<rect id="day-2024-01-27" x="165" y="119" width="20" height="20" fill="#101010" stroke="#AAA" data-date="2024-01-27"></rect>
+<rect id="day-2024-01-28" x="188" y="119" width="20" height="20" fill="#101010" stroke="#AAA" data-date="2024-01-28"></rect>
+<rect id="day-2024-01-29" x="50" y="142" width="20" height="20" fill="#101010" stroke="#AAA" data-date="2024-01-29"></rect>
+<rect id="day-2024-01-30" x="73" y="142" width="20" height="20" fill="#101010" stroke="#AAA" data-date="2024-01-30"></rect>
+<rect id="day-2024-01-31" x="96" y="142" width="20" height="20" fill="#101010" stroke="#AAA" data-date="2024-01-31"></rect>
+<text x="231" y="30" font-size="14" fill="white">Feb</text>
+<text x="231" y="40" font-size="10" fill="white">S</text>
+<text x="254" y="40" font-size="10" fill="white">M</text>
+<text x="277" y="40" font-size="10" fill="white">T</text>
+<text x="300" y="40" font-size="10" fill="white">W</text>
+<text x="323" y="40" font-size="10" fill="white">T</text>
+<text x="346" y="40" font-size="10" fill="white">F</text>
+<text x="369" y="40" font-size="10" fill="white">S</text>
+<rect id="day-2024-02-01" x="300" y="50" width="20" height="20" fill="#101010" stroke="#AAA" data-date="2024-02-01"></rect>
+<rect id="day-2024-02-02" x="323" y="50" width="20" height="20" fill="#101010" stroke="#AAA" data-date="2024-02-02"></rect>
+<rect id="day-2024-02-03" x="346" y="50" width="20" height="20" fill="#101010" stroke="#AAA" data-date="2024-02-03"></rect>
+<rect id="day-2024-02-04" x="369" y="50" width="20" height="20" fill="#101010" stroke="#AAA" data-date="2024-02-04"></rect>
+<rect id="day-2024-02-05" x="231" y="73" width="20" height="20" fill="#101010" stroke="#AAA" data-date="2024-02-05"></rect>
+<rect id="day-2024-02-06" x="254" y="73" width="20" height="20" fill="#101010" stroke="#AAA" data-date="2024-02-06"></rect>
+<rect id="day-2024-02-07" x="277" y="73" width="20" height="20" fill="#101010" stroke="#AAA" data-date="2024-02-07"></rect>
+<rect id="day-2024-02-08" x="300" y="73" width="20" height="20" fill="#101010" stroke="#AAA" data-date="2024-02-08"></rect>
+<rect id="day-2024-02-09" x="323" y="73" width="20" height="20" fill="#101010" stroke="#AAA" data-date="2024-02-09"></rect>
+<rect id="day-2024-02-10" x="346" y="73" width="20" height="20" fill="#101010" stroke="#AAA" data-date="2024-02-10"></rect>
+<rect id="day-2024-02-11" x="369" y="73" width="20" height="20" fill="#101010" stroke="#AAA" data-date="2024-02-11"></rect>
+<rect id="day-2024-02-12" x="231" y="96" width="20" height="20" fill="#101010" stroke="#AAA" data-date="2024-02-12"></rect>
+<rect id="day-2024-02-13" x="254" y="96" width="20" height="20" fill="#101010" stroke="#AAA" data-date="2024-02-13"></rect>
+<rect id="day-2024-02-14" x="277" y="96" width="20" height="20" fill="#101010" stroke="#AAA" data-date="2024-02-14"></rect>
+<rect id="day-2024-02-15" x="300" y="96" width="20" height="20" fill="#101010" stroke="#AAA" data-date="2024-02-15"></rect>
+<rect id="day-2024-02-16" x="323" y="96" width="20" height="20" fill="#101010" stroke="#AAA" data-date="2024-02-16"></rect>
+<rect id="day-2024-02-17" x="346" y="96" width="20" height="20" fill="#101010" stroke="#AAA" data-date="2024-02-17"></rect>
+<rect id="day-2024-02-18" x="369" y="96" width="20" height="20" fill="#101010" stroke="#AAA" data-date="2024-02-18"></rect>
+<rect id="day-2024-02-19" x="231" y="119" width="20" height="20" fill="#101010" stroke="#AAA" data-date="2024-02-19"></rect>
+<rect id="day-2024-02-20" x="254" y="119" width="20" height="20" fill="#101010" stroke="#AAA" data-date="2024-02-20"></rect>
+<rect id="day-2024-02-21" x="277" y="119" width="20" height="20" fill="#101010" stroke="#AAA" data-date="2024-02-21"></rect>
+<rect id="day-2024-02-22" x="300" y="119" width="20" height="20" fill="#101010" stroke="#AAA" data-date="2024-02-22"></rect>
+<rect id="day-2024-02-23" x="323" y="119" width="20" height="20" fill="#101010" stroke="#AAA" data-date="2024-02-23"></rect>
+<rect id="day-2024-02-24" x="346" y="119" width="20" height="20" fill="#101010" stroke="#AAA" data-date="2024-02-24"></rect>
+<rect id="day-2024-02-25" x="369" y="119" width="20" height="20" fill="#101010" stroke="#AAA" data-date="2024-02-25"></rect>
+<rect id="day-2024-02-26" x="231" y="142" width="20" height="20" fill="#101010" stroke="#AAA" data-date="2024-02-26"></rect>
+<rect id="day-2024-02-27" x="254" y="142" width="20" height="20" fill="#101010" stroke="#AAA" data-date="2024-02-27"></rect>
+<rect id="day-2024-02-28" x="277" y="142" width="20" height="20" fill="#101010" stroke="#AAA" data-date="2024-02-28"></rect>
+<rect id="day-2024-02-29" x="300" y="142" width="20" height="20" fill="#101010" stroke="#AAA" data-date="2024-02-29"></rect>
+<text x="412" y="30" font-size="14" fill="white">Mar</text>
+<text x="412" y="40" font-size="10" fill="white">S</text>
+<text x="435" y="40" font-size="10" fill="white">M</text>
+<text x="458" y="40" font-size="10" fill="white">T</text>
+<text x="481" y="40" font-size="10" fill="white">W</text>
+<text x="504" y="40" font-size="10" fill="white">T</text>
+<text x="527" y="40" font-size="10" fill="white">F</text>
+<text x="550" y="40" font-size="10" fill="white">S</text>
+<rect id="day-2024-03-01" x="504" y="50" width="20" height="20" fill="#101010" stroke="#AAA" data-date="2024-03-01"></rect>
+<rect id="day-2024-03-02" x="527" y="50" width="20" height="20" fill="#101010" stroke="#AAA" data-date="2024-03-02"></rect>
+<rect id="day-2024-03-03" x="550" y="50" width="20" height="20" fill="#101010" stroke="#AAA" data-date="2024-03-03"></rect>
+<rect id="day-2024-03-04" x="412" y="73" width="20" height="20" fill="#101010" stroke="#AAA" data-date="2024-03-04"></rect>
+<rect id="day-2024-03-05" x="435" y="73" width="20" height="20" fill="#101010" stroke="#AAA" data-date="2024-03-05"></rect>
+<rect id="day-2024-03-06" x="458" y="73" width="20" height="20" fill="#101010" stroke="#AAA" data-date="2024-03-06"></rect>
+<rect id="day-2024-03-07" x="481" y="73" width="20" height="20" fill="#101010" stroke="#AAA" data-date="2024-03-07"></rect>
+<rect id="day-2024-03-08" x="504" y="73" width="20" height="20" fill="#101010" stroke="#AAA" data-date="2024-03-08"></rect>
+<rect id="day-2024-03-09" x="527" y="73" width="20" height="20" fill="#101010" stroke="#AAA" data-date="2024-03-09"></rect>
+<rect id="day-2024-03-10" x="550" y="73" width="20" height="20" fill="#101010" stroke="#AAA" data-date="2024-03-10"></rect>
+<rect id="day-2024-03-11" x="412" y="96" width="20" height="20" fill="#101010" stroke="#AAA" data-date="2024-03-11"></rect>
+<rect id="day-2024-03-12" x="435" y="96" width="20" height="20" fill="#101010" stroke="#AAA" data-date="2024-03-12"></rect>
+<rect id="day-2024-03-13" x="458" y="96" width="20" height="20" fill="#101010" stroke="#AAA" data-date="2024-03-13"></rect>
+<rect id="day-2024-03-14" x="481" y="96" width="20" height="20" fill="#101010" stroke="#AAA" data-date="2024-03-14"></rect>
+<rect id="day-2024-03-15" x="504" y="96" width="20" height="20" fill="#101010" stroke="#AAA" data-date="2024-03-15"></rect>
+<rect id="day-2024-03-16" x="527" y="96" width="20" height="20" fill="#101010" stroke="#AAA" data-date="2024-03-16"></rect>
+<rect id="day-2024-03-17" x="550" y="96" width="20" height="20" fill="#101010" stroke="#AAA" data-date="2024-03-17"></rect>
+<rect id="day-2024-03-18" x="412" y="119" width="20" height="20" fill="#101010" stroke="#AAA" data-date="2024-03-18"></rect>
+<rect id="day-2024-03-19" x="435" y="119" width="20" height="20" fill="#101010" stroke="#AAA" data-date="2024-03-19"></rect>
+<rect id="day-2024-03-20" x="458" y="119" width="20" height="20" fill="#101010" stroke="#AAA" data-date="2024-03-20"></rect>
+<rect id="day-2024-03-21" x="481" y="119" width="20" height="20" fill="#101010" stroke="#AAA" data-date="2024-03-21"></rect>
+<rect id="day-2024-03-22" x="504" y="119" width="20" height="20" fill="#101010" stroke="#AAA" data-date="2024-03-22"></rect>
+<rect id="day-2024-03-23" x="527" y="119" width="20" height="20" fill="#101010" stroke="#AAA" data-date="2024-03-23"></rect>
+<rect id="day-2024-03-24" x="550" y="119" width="20" height="20" fill="#101010" stroke="#AAA" data-date="2024-03-24"></rect>
+<rect id="day-2024-03-25" x="412" y="142" width="20" height="20" fill="#101010" stroke="#AAA" data-date="2024-03-25"></rect>
+<rect id="day-2024-03-26" x="435" y="142" width="20" height="20" fill="#101010" stroke="#AAA" data-date="2024-03-26"></rect>
+<rect id="day-2024-03-27" x="458" y="142" width="20" height="20" fill="#101010" stroke="#AAA" data-date="2024-03-27"></rect>
+<rect id="day-2024-03-28" x="481" y="142" width="20" height="20" fill="#101010" stroke="#AAA" data-date="2024-03-28"></rect>
+<rect id="day-2024-03-29" x="504" y="142" width="20" height="20" fill="#101010" stroke="#AAA" data-date="2024-03-29"></rect>
+<rect id="day-2024-03-30" x="527" y="142" width="20" height="20" fill="#101010" stroke="#AAA" data-date="2024-03-30"></rect>
+<rect id="day-2024-03-31" x="550" y="142" width="20" height="20" fill="#101010" stroke="#AAA" data-date="2024-03-31"></rect>
+<text x="593" y="30" font-size="14" fill="white">Apr</text>
+<text x="593" y="40" font-size="10" fill="white">S</text>
+<text x="616" y="40" font-size="10" fill="white">M</text>
+<text x="639" y="40" font-size="10" fill="white">T</text>
+<text x="662" y="40" font-size="10" fill="white">W</text>
+<text x="685" y="40" font-size="10" fill="white">T</text>
+<text x="708" y="40" font-size="10" fill="white">F</text>
+<text x="731" y="40" font-size="10" fill="white">S</text>
+<rect id="day-2024-04-01" x="593" y="50" width="20" height="20" fill="#101010" stroke="#AAA" data-date="2024-04-01"></rect>
+<rect id="day-2024-04-02" x="616" y="50" width="20" height="20" fill="#101010" stroke="#AAA" data-date="2024-04-02"></rect>
+<rect id="day-2024-04-03" x="639" y="50" width="20" height="20" fill="#101010" stroke="#AAA" data-date="2024-04-03"></rect>
+<rect id="day-2024-04-04" x="662" y="50" width="20" height="20" fill="#101010" stroke="#AAA" data-date="2024-04-04"></rect>
+<rect id="day-2024-04-05" x="685" y="50" width="20" height="20" fill="#101010" stroke="#AAA" data-date="2024-04-05"></rect>
+<rect id="day-2024-04-06" x="708" y="50" width="20" height="20" fill="#101010" stroke="#AAA" data-date="2024-04-06"></rect>
+<rect id="day-2024-04-07" x="731" y="50" width="20" height="20" fill="#101010" stroke="#AAA" data-date="2024-04-07"></rect>
+<rect id="day-2024-04-08" x="593" y="73" width="20" height="20" fill="#101010" stroke="#AAA" data-date="2024-04-08"></rect>
+<rect id="day-2024-04-09" x="616" y="73" width="20" height="20" fill="#101010" stroke="#AAA" data-date="2024-04-09"></rect>
+<rect id="day-2024-04-10" x="639" y="73" width="20" height="20" fill="#101010" stroke="#AAA" data-date="2024-04-10"></rect>
+<rect id="day-2024-04-11" x="662" y="73" width="20" height="20" fill="#101010" stroke="#AAA" data-date="2024-04-11"></rect>
+<rect id="day-2024-04-12" x="685" y="73" width="20" height="20" fill="#101010" stroke="#AAA" data-date="2024-04-12"></rect>
+<rect id="day-2024-04-13" x="708" y="73" width="20" height="20" fill="#101010" stroke="#AAA" data-date="2024-04-13"></rect>
+<rect id="day-2024-04-14" x="731" y="73" width="20" height="20" fill="#101010" stroke="#AAA" data-date="2024-04-14"></rect>
+<rect id="day-2024-04-15" x="593" y="96" width="20" height="20" fill="#101010" stroke="#AAA" data-date="2024-04-15"></rect>
+<rect id="day-2024-04-16" x="616" y="96" width="20" height="20" fill="#101010" stroke="#AAA" data-date="2024-04-16"></rect>
+<rect id="day-2024-04-17" x="639" y="96" width="20" height="20" fill="#101010" stroke="#AAA" data-date="2024-04-17"></rect>
+<rect id="day-2024-04-18" x="662" y="96" width="20" height="20" fill="#101010" stroke="#AAA" data-date="2024-04-18"></rect>
+<rect id="day-2024-04-19" x="685" y="96" width="20" height="20" fill="#101010" stroke="#AAA" data-date="2024-04-19"></rect>
+<rect id="day-2024-04-20" x="708" y="96" width="20" height="20" fill="#101010" stroke="#AAA" data-date="2024-04-20"></rect>
+<rect id="day-2024-04-21" x="731" y="96" width="20" height="20" fill="#101010" stroke="#AAA" data-date="2024-04-21"></rect>
+<rect id="day-2024-04-22" x="593" y="119" width="20" height="20" fill="#101010" stroke="#AAA" data-date="2024-04-22"></rect>
+<rect id="day-2024-04-23" x="616" y="119" width="20" height="20" fill="#101010" stroke="#AAA" data-date="2024-04-23"></rect>
+<rect id="day-2024-04-24" x="639" y="119" width="20" height="20" fill="#101010" stroke="#AAA" data-date="2024-04-24"></rect>
+<rect id="day-2024-04-25" x="662" y="119" width="20" height="20" fill="#101010" stroke="#AAA" data-date="2024-04-25"></rect>
+<rect id="day-2024-04-26" x="685" y="119" width="20" height="20" fill="#101010" stroke="#AAA" data-date="2024-04-26"></rect>
+<rect id="day-2024-04-27" x="708" y="119" width="20" height="20" fill="#101010" stroke="#AAA" data-date="2024-04-27"></rect>
+<rect id="day-2024-04-28" x="731" y="119" width="20" height="20" fill="#101010" stroke="#AAA" data-date="2024-04-28"></rect>
+<rect id="day-2024-04-29" x="593" y="142" width="20" height="20" fill="#101010" stroke="#AAA" data-date="2024-04-29"></rect>
+<rect id="day-2024-04-30" x="616" y="142" width="20" height="20" fill="#101010" stroke="#AAA" data-date="2024-04-30"></rect>
+<text x="50" y="208" font-size="14" fill="white">May</text>
+<text x="50" y="218" font-size="10" fill="white">S</text>
+<text x="73" y="218" font-size="10" fill="white">M</text>
+<text x="96" y="218" font-size="10" fill="white">T</text>
+<text x="119" y="218" font-size="10" fill="white">W</text>
+<text x="142" y="218" font-size="10" fill="white">T</text>
+<text x="165" y="218" font-size="10" fill="white">F</text>
+<text x="188" y="218" font-size="10" fill="white">S</text>
+<rect id="day-2024-05-01" x="96" y="228" width="20" height="20" fill="#101010" stroke="#AAA" data-date="2024-05-01"></rect>
+<rect id="day-2024-05-02" x="119" y="228" width="20" height="20" fill="#101010" stroke="#AAA" data-date="2024-05-02"></rect>
+<rect id="day-2024-05-03" x="142" y="228" width="20" height="20" fill="#101010" stroke="#AAA" data-date="2024-05-03"></rect>
+<rect id="day-2024-05-04" x="165" y="228" width="20" height="20" fill="#101010" stroke="#AAA" data-date="2024-05-04"></rect>
+<rect id="day-2024-05-05" x="188" y="228" width="20" height="20" fill="#101010" stroke="#AAA" data-date="2024-05-05"></rect>
+<rect id="day-2024-05-06" x="50" y="251" width="20" height="20" fill="#101010" stroke="#AAA" data-date="2024-05-06"></rect>
+<rect id="day-2024-05-07" x="73" y="251" width="20" height="20" fill="#101010" stroke="#AAA" data-date="2024-05-07"></rect>
+<rect id="day-2024-05-08" x="96" y="251" width="20" height="20" fill="#101010" stroke="#AAA" data-date="2024-05-08"></rect>
+<rect id="day-2024-05-09" x="119" y="251" width="20" height="20" fill="#101010" stroke="#AAA" data-date="2024-05-09"></rect>
+<rect id="day-2024-05-10" x="142" y="251" width="20" height="20" fill="#101010" stroke="#AAA" data-date="2024-05-10"></rect>
+<rect id="day-2024-05-11" x="165" y="251" width="20" height="20" fill="#101010" stroke="#AAA" data-date="2024-05-11"></rect>
+<rect id="day-2024-05-12" x="188" y="251" width="20" height="20" fill="#101010" stroke="#AAA" data-date="2024-05-12"></rect>
+<rect id="day-2024-05-13" x="50" y="274" width="20" height="20" fill="#101010" stroke="#AAA" data-date="2024-05-13"></rect>
+<rect id="day-2024-05-14" x="73" y="274" width="20" height="20" fill="#101010" stroke="#AAA" data-date="2024-05-14"></rect>
+<rect id="day-2024-05-15" x="96" y="274" width="20" height="20" fill="#101010" stroke="#AAA" data-date="2024-05-15"></rect>
+<rect id="day-2024-05-16" x="119" y="274" width="20" height="20" fill="#101010" stroke="#AAA" data-date="2024-05-16"></rect>
+<rect id="day-2024-05-17" x="142" y="274" width="20" height="20" fill="#101010" stroke="#AAA" data-date="2024-05-17"></rect>
+<rect id="day-2024-05-18" x="165" y="274" width="20" height="20" fill="#101010" stroke="#AAA" data-date="2024-05-18"></rect>
+<rect id="day-2024-05-19" x="188" y="274" width="20" height="20" fill="#101010" stroke="#AAA" data-date="2024-05-19"></rect>
+<rect id="day-2024-05-20" x="50" y="297" width="20" height="20" fill="#101010" stroke="#AAA" data-date="2024-05-20"></rect>
+<rect id="day-2024-05-21" x="73" y="297" width="20" height="20" fill="#101010" stroke="#AAA" data-date="2024-05-21"></rect>
+<rect id="day-2024-05-22" x="96" y="297" width="20" height="20" fill="#101010" stroke="#AAA" data-date="2024-05-22"></rect>
+<rect id="day-2024-05-23" x="119" y="297" width="20" height="20" fill="#101010" stroke="#AAA" data-date="2024-05-23"></rect>
+<rect id="day-2024-05-24" x="142" y="297" width="20" height="20" fill="#101010" stroke="#AAA" data-date="2024-05-24"></rect>
+<rect id="day-2024-05-25" x="165" y="297" width="20" height="20" fill="#101010" stroke="#AAA" data-date="2024-05-25"></rect>
+<rect id="day-2024-05-26" x="188" y="297" width="20" height="20" fill="#101010" stroke="#AAA" data-date="2024-05-26"></rect>
+<rect id="day-2024-05-27" x="50" y="320" width="20" height="20" fill="#101010" stroke="#AAA" data-date="2024-05-27"></rect>
+<rect id="day-2024-05-28" x="73" y="320" width="20" height="20" fill="#101010" stroke="#AAA" data-date="2024-05-28"></rect>
+<rect id="day-2024-05-29" x="96" y="320" width="20" height="20" fill="#101010" stroke="#AAA" data-date="2024-05-29"></rect>
+<rect id="day-2024-05-30" x="119" y="320" width="20" height="20" fill="#101010" stroke="#AAA" data-date="2024-05-30"></rect>
+<rect id="day-2024-05-31" x="142" y="320" width="20" height="20" fill="#101010" stroke="#AAA" data-date="2024-05-31"></rect>
+<text x="231" y="208" font-size="14" fill="white">Jun</text>
+<text x="231" y="218" font-size="10" fill="white">S</text>
+<text x="254" y="218" font-size="10" fill="white">M</text>
+<text x="277" y="218" font-size="10" fill="white">T</text>
+<text x="300" y="218" font-size="10" fill="white">W</text>
+<text x="323" y="218" font-size="10" fill="white">T</text>
+<text x="346" y="218" font-size="10" fill="white">F</text>
+<text x="369" y="218" font-size="10" fill="white">S</text>
+<rect id="day-2024-06-01" x="346" y="228" width="20" height="20" fill="#101010" stroke="#AAA" data-date="2024-06-01"></rect>
+<rect id="day-2024-06-02" x="369" y="228" width="20" height="20" fill="#101010" stroke="#AAA" data-date="2024-06-02"></rect>
+<rect id="day-2024-06-03" x="231" y="251" width="20" height="20" fill="#101010" stroke="#AAA" data-date="2024-06-03"></rect>
+<rect id="day-2024-06-04" x="254" y="251" width="20" height="20" fill="#101010" stroke="#AAA" data-date="2024-06-04"></rect>
+<rect id="day-2024-06-05" x="277" y="251" width="20" height="20" fill="#101010" stroke="#AAA" data-date="2024-06-05"></rect>
+<rect id="day-2024-06-06" x="300" y="251" width="20" height="20" fill="#101010" stroke="#AAA" data-date="2024-06-06"></rect>
+<rect id="day-2024-06-07" x="323" y="251" width="20" height="20" fill="#101010" stroke="#AAA" data-date="2024-06-07"></rect>
+<rect id="day-2024-06-08" x="346" y="251" width="20" height="20" fill="#101010" stroke="#AAA" data-date="2024-06-08"></rect>
+<rect id="day-2024-06-09" x="369" y="251" width="20" height="20" fill="#101010" stroke="#AAA" data-date="2024-06-09"></rect>
+<rect id="day-2024-06-10" x="231" y="274" width="20" height="20" fill="#101010" stroke="#AAA" data-date="2024-06-10"></rect>
+<rect id="day-2024-06-11" x="254" y="274" width="20" height="20" fill="#101010" stroke="#AAA" data-date="2024-06-11"></rect>
+<rect id="day-2024-06-12" x="277" y="274" width="20" height="20" fill="#101010" stroke="#AAA" data-date="2024-06-12"></rect>
+<rect id="day-2024-06-13" x="300" y="274" width="20" height="20" fill="#101010" stroke="#AAA" data-date="2024-06-13"></rect>
+<rect id="day-2024-06-14" x="323" y="274" width="20" height="20" fill="#101010" stroke="#AAA" data-date="2024-06-14"></rect>
+<rect id="day-2024-06-15" x="346" y="274" width="20" height="20" fill="#101010" stroke="#AAA" data-date="2024-06-15"></rect>
+<rect id="day-2024-06-16" x="369" y="274" width="20" height="20" fill="#101010" stroke="#AAA" data-date="2024-06-16"></rect>
+<rect id="day-2024-06-17" x="231" y="297" width="20" height="20" fill="#101010" stroke="#AAA" data-date="2024-06-17"></rect>
+<rect id="day-2024-06-18" x="254" y="297" width="20" height="20" fill="#101010" stroke="#AAA" data-date="2024-06-18"></rect>
+<rect id="day-2024-06-19" x="277" y="297" width="20" height="20" fill="#101010" stroke="#AAA" data-date="2024-06-19"></rect>
+<rect id="day-2024-06-20" x="300" y="297" width="20" height="20" fill="#101010" stroke="#AAA" data-date="2024-06-20"></rect>
+<rect id="day-2024-06-21" x="323" y="297" width="20" height="20" fill="#101010" stroke="#AAA" data-date="2024-06-21"></rect>
+<rect id="day-2024-06-22" x="346" y="297" width="20" height="20" fill="#101010" stroke="#AAA" data-date="2024-06-22"></rect>
+<rect id="day-2024-06-23" x="369" y="297" width="20" height="20" fill="#101010" stroke="#AAA" data-date="2024-06-23"></rect>
+<rect id="day-2024-06-24" x="231" y="320" width="20" height="20" fill="#101010" stroke="#AAA" data-date="2024-06-24"></rect>
+<rect id="day-2024-06-25" x="254" y="320" width="20" height="20" fill="#101010" stroke="#AAA" data-date="2024-06-25"></rect>
+<rect id="day-2024-06-26" x="277" y="320" width="20" height="20" fill="#101010" stroke="#AAA" data-date="2024-06-26"></rect>
+<rect id="day-2024-06-27" x="300" y="320" width="20" height="20" fill="#101010" stroke="#AAA" data-date="2024-06-27"></rect>
+<rect id="day-2024-06-28" x="323" y="320" width="20" height="20" fill="#101010" stroke="#AAA" data-date="2024-06-28"></rect>
+<rect id="day-2024-06-29" x="346" y="320" width="20" height="20" fill="#101010" stroke="#AAA" data-date="2024-06-29"></rect>
+<rect id="day-2024-06-30" x="369" y="320" width="20" height="20" fill="#101010" stroke="#AAA" data-date="2024-06-30"></rect>
+<text x="412" y="208" font-size="14" fill="white">Jul</text>
+<text x="412" y="218" font-size="10" fill="white">S</text>
+<text x="435" y="218" font-size="10" fill="white">M</text>
+<text x="458" y="218" font-size="10" fill="white">T</text>
+<text x="481" y="218" font-size="10" fill="white">W</text>
+<text x="504" y="218" font-size="10" fill="white">T</text>
+<text x="527" y="218" font-size="10" fill="white">F</text>
+<text x="550" y="218" font-size="10" fill="white">S</text>
+<rect id="day-2024-07-01" x="412" y="228" width="20" height="20" fill="#101010" stroke="#AAA" data-date="2024-07-01"></rect>
+<rect id="day-2024-07-02" x="435" y="228" width="20" height="20" fill="#101010" stroke="#AAA" data-date="2024-07-02"></rect>
+<rect id="day-2024-07-03" x="458" y="228" width="20" height="20" fill="#101010" stroke="#AAA" data-date="2024-07-03"></rect>
+<rect id="day-2024-07-04" x="481" y="228" width="20" height="20" fill="#101010" stroke="#AAA" data-date="2024-07-04"></rect>
+<rect id="day-2024-07-05" x="504" y="228" width="20" height="20" fill="#101010" stroke="#AAA" data-date="2024-07-05"></rect>
+<rect id="day-2024-07-06" x="527" y="228" width="20" height="20" fill="#101010" stroke="#AAA" data-date="2024-07-06"></rect>
+<rect id="day-2024-07-07" x="550" y="228" width="20" height="20" fill="#101010" stroke="#AAA" data-date="2024-07-07"></rect>
+<rect id="day-2024-07-08" x="412" y="251" width="20" height="20" fill="#101010" stroke="#AAA" data-date="2024-07-08"></rect>
+<rect id="day-2024-07-09" x="435" y="251" width="20" height="20" fill="#101010" stroke="#AAA" data-date="2024-07-09"></rect>
+<rect id="day-2024-07-10" x="458" y="251" width="20" height="20" fill="#101010" stroke="#AAA" data-date="2024-07-10"></rect>
+<rect id="day-2024-07-11" x="481" y="251" width="20" height="20" fill="#101010" stroke="#AAA" data-date="2024-07-11"></rect>
+<rect id="day-2024-07-12" x="504" y="251" width="20" height="20" fill="#101010" stroke="#AAA" data-date="2024-07-12"></rect>
+<rect id="day-2024-07-13" x="527" y="251" width="20" height="20" fill="#101010" stroke="#AAA" data-date="2024-07-13"></rect>
+<rect id="day-2024-07-14" x="550" y="251" width="20" height="20" fill="#101010" stroke="#AAA" data-date="2024-07-14"></rect>
+<rect id="day-2024-07-15" x="412" y="274" width="20" height="20" fill="#101010" stroke="#AAA" data-date="2024-07-15"></rect>
+<rect id="day-2024-07-16" x="435" y="274" width="20" height="20" fill="#101010" stroke="#AAA" data-date="2024-07-16"></rect>
+<rect id="day-2024-07-17" x="458" y="274" width="20" height="20" fill="#101010" stroke="#AAA" data-date="2024-07-17"></rect>
+<rect id="day-2024-07-18" x="481" y="274" width="20" height="20" fill="#101010" stroke="#AAA" data-date="2024-07-18"></rect>
+<rect id="day-2024-07-19" x="504" y="274" width="20" height="20" fill="#101010" stroke="#AAA" data-date="2024-07-19"></rect>
+<rect id="day-2024-07-20" x="527" y="274" width="20" height="20" fill="#101010" stroke="#AAA" data-date="2024-07-20"></rect>
+<rect id="day-2024-07-21" x="550" y="274" width="20" height="20" fill="#101010" stroke="#AAA" data-date="2024-07-21"></rect>
+<rect id="day-2024-07-22" x="412" y="297" width="20" height="20" fill="#101010" stroke="#AAA" data-date="2024-07-22"></rect>
+<rect id="day-2024-07-23" x="435" y="297" width="20" height="20" fill="#101010" stroke="#AAA" data-date="2024-07-23"></rect>
+<rect id="day-2024-07-24" x="458" y="297" width="20" height="20" fill="#101010" stroke="#AAA" data-date="2024-07-24"></rect>
+<rect id="day-2024-07-25" x="481" y="297" width="20" height="20" fill="#101010" stroke="#AAA" data-date="2024-07-25"></rect>
+<rect id="day-2024-07-26" x="504" y="297" width="20" height="20" fill="#101010" stroke="#AAA" data-date="2024-07-26"></rect>
+<rect id="day-2024-07-27" x="527" y="297" width="20" height="20" fill="#101010" stroke="#AAA" data-date="2024-07-27"></rect>
+<rect id="day-2024-07-28" x="550" y="297" width="20" height="20" fill="#101010" stroke="#AAA" data-date="2024-07-28"></rect>
+<rect id="day-2024-07-29" x="412" y="320" width="20" height="20" fill="#101010" stroke="#AAA" data-date="2024-07-29"></rect>
+<rect id="day-2024-07-30" x="435" y="320" width="20" height="20" fill="#101010" stroke="#AAA" data-date="2024-07-30"></rect>
+<rect id="day-2024-07-31" x="458" y="320" width="20" height="20" fill="#101010" stroke="#AAA" data-date="2024-07-31"></rect>
+<text x="593" y="208" font-size="14" fill="white">Aug</text>
+<text x="593" y="218" font-size="10" fill="white">S</text>
+<text x="616" y="218" font-size="10" fill="white">M</text>
+<text x="639" y="218" font-size="10" fill="white">T</text>
+<text x="662" y="218" font-size="10" fill="white">W</text>
+<text x="685" y="218" font-size="10" fill="white">T</text>
+<text x="708" y="218" font-size="10" fill="white">F</text>
+<text x="731" y="218" font-size="10" fill="white">S</text>
+<rect id="day-2024-08-01" x="662" y="228" width="20" height="20" fill="#101010" stroke="#AAA" data-date="2024-08-01"></rect>
+<rect id="day-2024-08-02" x="685" y="228" width="20" height="20" fill="#101010" stroke="#AAA" data-date="2024-08-02"></rect>
+<rect id="day-2024-08-03" x="708" y="228" width="20" height="20" fill="#101010" stroke="#AAA" data-date="2024-08-03"></rect>
+<rect id="day-2024-08-04" x="731" y="228" width="20" height="20" fill="#101010" stroke="#AAA" data-date="2024-08-04"></rect>
+<rect id="day-2024-08-05" x="593" y="251" width="20" height="20" fill="#101010" stroke="#AAA" data-date="2024-08-05"></rect>
+<rect id="day-2024-08-06" x="616" y="251" width="20" height="20" fill="#101010" stroke="#AAA" data-date="2024-08-06"></rect>
+<rect id="day-2024-08-07" x="639" y="251" width="20" height="20" fill="#101010" stroke="#AAA" data-date="2024-08-07"></rect>
+<rect id="day-2024-08-08" x="662" y="251" width="20" height="20" fill="#101010" stroke="#AAA" data-date="2024-08-08"></rect>
+<rect id="day-2024-08-09" x="685" y="251" width="20" height="20" fill="#101010" stroke="#AAA" data-date="2024-08-09"></rect>
+<rect id="day-2024-08-10" x="708" y="251" width="20" height="20" fill="#101010" stroke="#AAA" data-date="2024-08-10"></rect>
+<rect id="day-2024-08-11" x="731" y="251" width="20" height="20" fill="#101010" stroke="#AAA" data-date="2024-08-11"></rect>
+<rect id="day-2024-08-12" x="593" y="274" width="20" height="20" fill="#101010" stroke="#AAA" data-date="2024-08-12"></rect>
+<rect id="day-2024-08-13" x="616" y="274" width="20" height="20" fill="#101010" stroke="#AAA" data-date="2024-08-13"></rect>
+<rect id="day-2024-08-14" x="639" y="274" width="20" height="20" fill="#101010" stroke="#AAA" data-date="2024-08-14"></rect>
+<rect id="day-2024-08-15" x="662" y="274" width="20" height="20" fill="#101010" stroke="#AAA" data-date="2024-08-15"></rect>
+<rect id="day-2024-08-16" x="685" y="274" width="20" height="20" fill="#101010" stroke="#AAA" data-date="2024-08-16"></rect>
+<rect id="day-2024-08-17" x="708" y="274" width="20" height="20" fill="#101010" stroke="#AAA" data-date="2024-08-17"></rect>
+<rect id="day-2024-08-18" x="731" y="274" width="20" height="20" fill="#101010" stroke="#AAA" data-date="2024-08-18"></rect>
+<rect id="day-2024-08-19" x="593" y="297" width="20" height="20" fill="#101010" stroke="#AAA" data-date="2024-08-19"></rect>
+<rect id="day-2024-08-20" x="616" y="297" width="20" height="20" fill="#101010" stroke="#AAA" data-date="2024-08-20"></rect>
+<rect id="day-2024-08-21" x="639" y="297" width="20" height="20" fill="#101010" stroke="#AAA" data-date="2024-08-21"></rect>
+<rect id="day-2024-08-22" x="662" y="297" width="20" height="20" fill="#101010" stroke="#AAA" data-date="2024-08-22"></rect>
+<rect id="day-2024-08-23" x="685" y="297" width="20" height="20" fill="#101010" stroke="#AAA" data-date="2024-08-23"></rect>
+<rect id="day-2024-08-24" x="708" y="297" width="20" height="20" fill="#101010" stroke="#AAA" data-date="2024-08-24"></rect>
+<rect id="day-2024-08-25" x="731" y="297" width="20" height="20" fill="#101010" stroke="#AAA" data-date="2024-08-25"></rect>
+<rect id="day-2024-08-26" x="593" y="320" width="20" height="20" fill="#101010" stroke="#AAA" data-date="2024-08-26"></rect>
+<rect id="day-2024-08-27" x="616" y="320" width="20" height="20" fill="#101010" stroke="#AAA" data-date="2024-08-27"></rect>
+<rect id="day-2024-08-28" x="639" y="320" width="20" height="20" fill="#101010" stroke="#AAA" data-date="2024-08-28"></rect>
+<rect id="day-2024-08-29" x="662" y="320" width="20" height="20" fill="#101010" stroke="#AAA" data-date="2024-08-29"></rect>
+<rect id="day-2024-08-30" x="685" y="320" width="20" height="20" fill="#101010" stroke="#AAA" data-date="2024-08-30"></rect>
+<rect id="day-2024-08-31" x="708" y="320" width="20" height="20" fill="#101010" stroke="#AAA" data-date="2024-08-31"></rect>
+<text x="50" y="386" font-size="14" fill="white">Sep</text>
+<text x="50" y="396" font-size="10" fill="white">S</text>
+<text x="73" y="396" font-size="10" fill="white">M</text>
+<text x="96" y="396" font-size="10" fill="white">T</text>
+<text x="119" y="396" font-size="10" fill="white">W</text>
+<text x="142" y="396" font-size="10" fill="white">T</text>
+<text x="165" y="396" font-size="10" fill="white">F</text>
+<text x="188" y="396" font-size="10" fill="white">S</text>
+<rect id="day-2024-09-01" x="188" y="406" width="20" height="20" fill="#101010" stroke="#AAA" data-date="2024-09-01"></rect>
+<rect id="day-2024-09-02" x="50" y="429" width="20" height="20" fill="#101010" stroke="#AAA" data-date="2024-09-02"></rect>
+<rect id="day-2024-09-03" x="73" y="429" width="20" height="20" fill="#101010" stroke="#AAA" data-date="2024-09-03"></rect>
+<rect id="day-2024-09-04" x="96" y="429" width="20" height="20" fill="#101010" stroke="#AAA" data-date="2024-09-04"></rect>
+<rect id="day-2024-09-05" x="119" y="429" width="20" height="20" fill="#101010" stroke="#AAA" data-date="2024-09-05"></rect>
+<rect id="day-2024-09-06" x="142" y="429" width="20" height="20" fill="#101010" stroke="#AAA" data-date="2024-09-06"></rect>
+<rect id="day-2024-09-07" x="165" y="429" width="20" height="20" fill="#101010" stroke="#AAA" data-date="2024-09-07"></rect>
+<rect id="day-2024-09-08" x="188" y="429" width="20" height="20" fill="#101010" stroke="#AAA" data-date="2024-09-08"></rect>
+<rect id="day-2024-09-09" x="50" y="452" width="20" height="20" fill="#101010" stroke="#AAA" data-date="2024-09-09"></rect>
+<rect id="day-2024-09-10" x="73" y="452" width="20" height="20" fill="#101010" stroke="#AAA" data-date="2024-09-10"></rect>
+<rect id="day-2024-09-11" x="96" y="452" width="20" height="20" fill="#101010" stroke="#AAA" data-date="2024-09-11"></rect>
+<rect id="day-2024-09-12" x="119" y="452" width="20" height="20" fill="#101010" stroke="#AAA" data-date="2024-09-12"></rect>
+<rect id="day-2024-09-13" x="142" y="452" width="20" height="20" fill="#101010" stroke="#AAA" data-date="2024-09-13"></rect>
+<rect id="day-2024-09-14" x="165" y="452" width="20" height="20" fill="#101010" stroke="#AAA" data-date="2024-09-14"></rect>
+<rect id="day-2024-09-15" x="188" y="452" width="20" height="20" fill="#101010" stroke="#AAA" data-date="2024-09-15"></rect>
+<rect id="day-2024-09-16" x="50" y="475" width="20" height="20" fill="#101010" stroke="#AAA" data-date="2024-09-16"></rect>
+<rect id="day-2024-09-17" x="73" y="475" width="20" height="20" fill="#101010" stroke="#AAA" data-date="2024-09-17"></rect>
+<rect id="day-2024-09-18" x="96" y="475" width="20" height="20" fill="#101010" stroke="#AAA" data-date="2024-09-18"></rect>
+<rect id="day-2024-09-19" x="119" y="475" width="20" height="20" fill="#101010" stroke="#AAA" data-date="2024-09-19"></rect>
+<rect id="day-2024-09-20" x="142" y="475" width="20" height="20" fill="#101010" stroke="#AAA" data-date="2024-09-20"></rect>
+<rect id="day-2024-09-21" x="165" y="475" width="20" height="20" fill="#101010" stroke="#AAA" data-date="2024-09-21"></rect>
+<rect id="day-2024-09-22" x="188" y="475" width="20" height="20" fill="#101010" stroke="#AAA" data-date="2024-09-22"></rect>
+<rect id="day-2024-09-23" x="50" y="498" width="20" height="20" fill="#101010" stroke="#AAA" data-date="2024-09-23"></rect>
+<rect id="day-2024-09-24" x="73" y="498" width="20" height="20" fill="#101010" stroke="#AAA" data-date="2024-09-24"></rect>
+<rect id="day-2024-09-25" x="96" y="498" width="20" height="20" fill="#101010" stroke="#AAA" data-date="2024-09-25"></rect>
+<rect id="day-2024-09-26" x="119" y="498" width="20" height="20" fill="#101010" stroke="#AAA" data-date="2024-09-26"></rect>
+<rect id="day-2024-09-27" x="142" y="498" width="20" height="20" fill="#101010" stroke="#AAA" data-date="2024-09-27"></rect>
+<rect id="day-2024-09-28" x="165" y="498" width="20" height="20" fill="#101010" stroke="#AAA" data-date="2024-09-28"></rect>
+<rect id="day-2024-09-29" x="188" y="498" width="20" height="20" fill="#101010" stroke="#AAA" data-date="2024-09-29"></rect>
+<rect id="day-2024-09-30" x="50" y="521" width="20" height="20" fill="#101010" stroke="#AAA" data-date="2024-09-30"></rect>
+<text x="231" y="386" font-size="14" fill="white">Oct</text>
+<text x="231" y="396" font-size="10" fill="white">S</text>
+<text x="254" y="396" font-size="10" fill="white">M</text>
+<text x="277" y="396" font-size="10" fill="white">T</text>
+<text x="300" y="396" font-size="10" fill="white">W</text>
+<text x="323" y="396" font-size="10" fill="white">T</text>
+<text x="346" y="396" font-size="10" fill="white">F</text>
+<text x="369" y="396" font-size="10" fill="white">S</text>
+<rect id="day-2024-10-01" x="254" y="406" width="20" height="20" fill="#101010" stroke="#AAA" data-date="2024-10-01"></rect>
+<rect id="day-2024-10-02" x="277" y="406" width="20" height="20" fill="#101010" stroke="#AAA" data-date="2024-10-02"></rect>
+<rect id="day-2024-10-03" x="300" y="406" width="20" height="20" fill="#101010" stroke="#AAA" data-date="2024-10-03"></rect>
+<rect id="day-2024-10-04" x="323" y="406" width="20" height="20" fill="#101010" stroke="#AAA" data-date="2024-10-04"></rect>
+<rect id="day-2024-10-05" x="346" y="406" width="20" height="20" fill="#101010" stroke="#AAA" data-date="2024-10-05"></rect>
+<rect id="day-2024-10-06" x="369" y="406" width="20" height="20" fill="#101010" stroke="#AAA" data-date="2024-10-06"></rect>
+<rect id="day-2024-10-07" x="231" y="429" width="20" height="20" fill="#101010" stroke="#AAA" data-date="2024-10-07"></rect>
+<rect id="day-2024-10-08" x="254" y="429" width="20" height="20" fill="#101010" stroke="#AAA" data-date="2024-10-08"></rect>
+<rect id="day-2024-10-09" x="277" y="429" width="20" height="20" fill="#101010" stroke="#AAA" data-date="2024-10-09"></rect>
+<rect id="day-2024-10-10" x="300" y="429" width="20" height="20" fill="#101010" stroke="#AAA" data-date="2024-10-10"></rect>
+<rect id="day-2024-10-11" x="323" y="429" width="20" height="20" fill="#101010" stroke="#AAA" data-date="2024-10-11"></rect>
+<rect id="day-2024-10-12" x="346" y="429" width="20" height="20" fill="#101010" stroke="#AAA" data-date="2024-10-12"></rect>
+<rect id="day-2024-10-13" x="369" y="429" width="20" height="20" fill="#101010" stroke="#AAA" data-date="2024-10-13"></rect>
+<rect id="day-2024-10-14" x="231" y="452" width="20" height="20" fill="#101010" stroke="#AAA" data-date="2024-10-14"></rect>
+<rect id="day-2024-10-15" x="254" y="452" width="20" height="20" fill="#101010" stroke="#AAA" data-date="2024-10-15"></rect>
+<rect id="day-2024-10-16" x="277" y="452" width="20" height="20" fill="#101010" stroke="#AAA" data-date="2024-10-16"></rect>
+<rect id="day-2024-10-17" x="300" y="452" width="20" height="20" fill="#101010" stroke="#AAA" data-date="2024-10-17"></rect>
+<rect id="day-2024-10-18" x="323" y="452" width="20" height="20" fill="#101010" stroke="#AAA" data-date="2024-10-18"></rect>
+<rect id="day-2024-10-19" x="346" y="452" width="20" height="20" fill="#101010" stroke="#AAA" data-date="2024-10-19"></rect>
+<rect id="day-2024-10-20" x="369" y="452" width="20" height="20" fill="#101010" stroke="#AAA" data-date="2024-10-20"></rect>
+<rect id="day-2024-10-21" x="231" y="475" width="20" height="20" fill="#101010" stroke="#AAA" data-date="2024-10-21"></rect>
+<rect id="day-2024-10-22" x="254" y="475" width="20" height="20" fill="#101010" stroke="#AAA" data-date="2024-10-22"></rect>
+<rect id="day-2024-10-23" x="277" y="475" width="20" height="20" fill="#101010" stroke="#AAA" data-date="2024-10-23"></rect>
+<rect id="day-2024-10-24" x="300" y="475" width="20" height="20" fill="#101010" stroke="#AAA" data-date="2024-10-24"></rect>
+<rect id="day-2024-10-25" x="323" y="475" width="20" height="20" fill="#101010" stroke="#AAA" data-date="2024-10-25"></rect>
+<rect id="day-2024-10-26" x="346" y="475" width="20" height="20" fill="#101010" stroke="#AAA" data-date="2024-10-26"></rect>
+<rect id="day-2024-10-27" x="369" y="475" width="20" height="20" fill="#101010" stroke="#AAA" data-date="2024-10-27"></rect>
+<rect id="day-2024-10-28" x="231" y="498" width="20" height="20" fill="#101010" stroke="#AAA" data-date="2024-10-28"></rect>
+<rect id="day-2024-10-29" x="254" y="498" width="20" height="20" fill="#101010" stroke="#AAA" data-date="2024-10-29"></rect>
+<rect id="day-2024-10-30" x="277" y="498" width="20" height="20" fill="#101010" stroke="#AAA" data-date="2024-10-30"></rect>
+<rect id="day-2024-10-31" x="300" y="498" width="20" height="20" fill="#101010" stroke="#AAA" data-date="2024-10-31"></rect>
+<text x="412" y="386" font-size="14" fill="white">Nov</text>
+<text x="412" y="396" font-size="10" fill="white">S</text>
+<text x="435" y="396" font-size="10" fill="white">M</text>
+<text x="458" y="396" font-size="10" fill="white">T</text>
+<text x="481" y="396" font-size="10" fill="white">W</text>
+<text x="504" y="396" font-size="10" fill="white">T</text>
+<text x="527" y="396" font-size="10" fill="white">F</text>
+<text x="550" y="396" font-size="10" fill="white">S</text>
+<rect id="day-2024-11-01" x="504" y="406" width="20" height="20" fill="#101010" stroke="#AAA" data-date="2024-11-01"></rect>
+<rect id="day-2024-11-02" x="527" y="406" width="20" height="20" fill="#101010" stroke="#AAA" data-date="2024-11-02"></rect>
+<rect id="day-2024-11-03" x="550" y="406" width="20" height="20" fill="#101010" stroke="#AAA" data-date="2024-11-03"></rect>
+<rect id="day-2024-11-04" x="412" y="429" width="20" height="20" fill="#101010" stroke="#AAA" data-date="2024-11-04"></rect>
+<rect id="day-2024-11-05" x="435" y="429" width="20" height="20" fill="#101010" stroke="#AAA" data-date="2024-11-05"></rect>
+<rect id="day-2024-11-06" x="458" y="429" width="20" height="20" fill="#101010" stroke="#AAA" data-date="2024-11-06"></rect>
+<rect id="day-2024-11-07" x="481" y="429" width="20" height="20" fill="#101010" stroke="#AAA" data-date="2024-11-07"></rect>
+<rect id="day-2024-11-08" x="504" y="429" width="20" height="20" fill="#101010" stroke="#AAA" data-date="2024-11-08"></rect>
+<rect id="day-2024-11-09" x="527" y="429" width="20" height="20" fill="#101010" stroke="#AAA" data-date="2024-11-09"></rect>
+<rect id="day-2024-11-10" x="550" y="429" width="20" height="20" fill="#101010" stroke="#AAA" data-date="2024-11-10"></rect>
+<rect id="day-2024-11-11" x="412" y="452" width="20" height="20" fill="#101010" stroke="#AAA" data-date="2024-11-11"></rect>
+<rect id="day-2024-11-12" x="435" y="452" width="20" height="20" fill="#101010" stroke="#AAA" data-date="2024-11-12"></rect>
+<rect id="day-2024-11-13" x="458" y="452" width="20" height="20" fill="#101010" stroke="#AAA" data-date="2024-11-13"></rect>
+<rect id="day-2024-11-14" x="481" y="452" width="20" height="20" fill="#101010" stroke="#AAA" data-date="2024-11-14"></rect>
+<rect id="day-2024-11-15" x="504" y="452" width="20" height="20" fill="#101010" stroke="#AAA" data-date="2024-11-15"></rect>
+<rect id="day-2024-11-16" x="527" y="452" width="20" height="20" fill="#101010" stroke="#AAA" data-date="2024-11-16"></rect>
+<rect id="day-2024-11-17" x="550" y="452" width="20" height="20" fill="#101010" stroke="#AAA" data-date="2024-11-17"></rect>
+<rect id="day-2024-11-18" x="412" y="475" width="20" height="20" fill="#101010" stroke="#AAA" data-date="2024-11-18"></rect>
+<rect id="day-2024-11-19" x="435" y="475" width="20" height="20" fill="#101010" stroke="#AAA" data-date="2024-11-19"></rect>
+<rect id="day-2024-11-20" x="458" y="475" width="20" height="20" fill="#101010" stroke="#AAA" data-date="2024-11-20"></rect>
+<rect id="day-2024-11-21" x="481" y="475" width="20" height="20" fill="#101010" stroke="#AAA" data-date="2024-11-21"></rect>
+<rect id="day-2024-11-22" x="504" y="475" width="20" height="20" fill="#101010" stroke="#AAA" data-date="2024-11-22"></rect>
+<rect id="day-2024-11-23" x="527" y="475" width="20" height="20" fill="#101010" stroke="#AAA" data-date="2024-11-23"></rect>
+<rect id="day-2024-11-24" x="550" y="475" width="20" height="20" fill="#101010" stroke="#AAA" data-date="2024-11-24"></rect>
+<rect id="day-2024-11-25" x="412" y="498" width="20" height="20" fill="#101010" stroke="#AAA" data-date="2024-11-25"></rect>
+<rect id="day-2024-11-26" x="435" y="498" width="20" height="20" fill="#101010" stroke="#AAA" data-date="2024-11-26"></rect>
+<rect id="day-2024-11-27" x="458" y="498" width="20" height="20" fill="#101010" stroke="#AAA" data-date="2024-11-27"></rect>
+<rect id="day-2024-11-28" x="481" y="498" width="20" height="20" fill="#101010" stroke="#AAA" data-date="2024-11-28"></rect>
+<rect id="day-2024-11-29" x="504" y="498" width="20" height="20" fill="#101010" stroke="#AAA" data-date="2024-11-29"></rect>
+<rect id="day-2024-11-30" x="527" y="498" width="20" height="20" fill="#101010" stroke="#AAA" data-date="2024-11-30"></rect>
+<text x="593" y="386" font-size="14" fill="white">Dec</text>
+<text x="593" y="396" font-size="10" fill="white">S</text>
+<text x="616" y="396" font-size="10" fill="white">M</text>
+<text x="639" y="396" font-size="10" fill="white">T</text>
+<text x="662" y="396" font-size="10" fill="white">W</text>
+<text x="685" y="396" font-size="10" fill="white">T</text>
+<text x="708" y="396" font-size="10" fill="white">F</text>
+<text x="731" y="396" font-size="10" fill="white">S</text>
+<rect id="day-2024-12-01" x="731" y="406" width="20" height="20" fill="#101010" stroke="#AAA" data-date="2024-12-01"></rect>
+<rect id="day-2024-12-02" x="593" y="429" width="20" height="20" fill="#101010" stroke="#AAA" data-date="2024-12-02"></rect>
+<rect id="day-2024-12-03" x="616" y="429" width="20" height="20" fill="#101010" stroke="#AAA" data-date="2024-12-03"></rect>
+<rect id="day-2024-12-04" x="639" y="429" width="20" height="20" fill="#101010" stroke="#AAA" data-date="2024-12-04"></rect>
+<rect id="day-2024-12-05" x="662" y="429" width="20" height="20" fill="#101010" stroke="#AAA" data-date="2024-12-05"></rect>
+<rect id="day-2024-12-06" x="685" y="429" width="20" height="20" fill="#101010" stroke="#AAA" data-date="2024-12-06"></rect>
+<rect id="day-2024-12-07" x="708" y="429" width="20" height="20" fill="#101010" stroke="#AAA" data-date="2024-12-07"></rect>
+<rect id="day-2024-12-08" x="731" y="429" width="20" height="20" fill="#101010" stroke="#AAA" data-date="2024-12-08"></rect>
+<rect id="day-2024-12-09" x="593" y="452" width="20" height="20" fill="#101010" stroke="#AAA" data-date="2024-12-09"></rect>
+<rect id="day-2024-12-10" x="616" y="452" width="20" height="20" fill="#101010" stroke="#AAA" data-date="2024-12-10"></rect>
+<rect id="day-2024-12-11" x="639" y="452" width="20" height="20" fill="#101010" stroke="#AAA" data-date="2024-12-11"></rect>
+<rect id="day-2024-12-12" x="662" y="452" width="20" height="20" fill="#101010" stroke="#AAA" data-date="2024-12-12"></rect>
+<rect id="day-2024-12-13" x="685" y="452" width="20" height="20" fill="#101010" stroke="#AAA" data-date="2024-12-13"></rect>
+<rect id="day-2024-12-14" x="708" y="452" width="20" height="20" fill="#101010" stroke="#AAA" data-date="2024-12-14"></rect>
+<rect id="day-2024-12-15" x="731" y="452" width="20" height="20" fill="#101010" stroke="#AAA" data-date="2024-12-15"></rect>
+<rect id="day-2024-12-16" x="593" y="475" width="20" height="20" fill="#101010" stroke="#AAA" data-date="2024-12-16"></rect>
+<rect id="day-2024-12-17" x="616" y="475" width="20" height="20" fill="#101010" stroke="#AAA" data-date="2024-12-17"></rect>
+<rect id="day-2024-12-18" x="639" y="475" width="20" height="20" fill="#101010" stroke="#AAA" data-date="2024-12-18"></rect>
+<rect id="day-2024-12-19" x="662" y="475" width="20" height="20" fill="#101010" stroke="#AAA" data-date="2024-12-19"></rect>
+<rect id="day-2024-12-20" x="685" y="475" width="20" height="20" fill="#101010" stroke="#AAA" data-date="2024-12-20"></rect>
+<rect id="day-2024-12-21" x="708" y="475" width="20" height="20" fill="#101010" stroke="#AAA" data-date="2024-12-21"></rect>
+<rect id="day-2024-12-22" x="731" y="475" width="20" height="20" fill="#101010" stroke="#AAA" data-date="2024-12-22"></rect>
+<rect id="day-2024-12-23" x="593" y="498" width="20" height="20" fill="#101010" stroke="#AAA" data-date="2024-12-23"></rect>
+<rect id="day-2024-12-24" x="616" y="498" width="20" height="20" fill="#101010" stroke="#AAA" data-date="2024-12-24"></rect>
+<rect id="day-2024-12-25" x="639" y="498" width="20" height="20" fill="#101010" stroke="#AAA" data-date="2024-12-25"></rect>
+<rect id="day-2024-12-26" x="662" y="498" width="20" height="20" fill="#101010" stroke="#AAA" data-date="2024-12-26"></rect>
+<rect id="day-2024-12-27" x="685" y="498" width="20" height="20" fill="#101010" stroke="#AAA" data-date="2024-12-27"></rect>
+<rect id="day-2024-12-28" x="708" y="498" width="20" height="20" fill="#101010" stroke="#AAA" data-date="2024-12-28"></rect>
+<rect id="day-2024-12-29" x="731" y="498" width="20" height="20" fill="#101010" stroke="#AAA" data-date="2024-12-29"></rect>
+<rect id="day-2024-12-30" x="593" y="521" width="20" height="20" fill="#101010" stroke="#AAA" data-date="2024-12-30"></rect>
+<rect id="day-2024-12-31" x="616" y="521" width="20" height="20" fill="#101010" stroke="#AAA" data-date="2024-12-31"></rect>
+</svg>

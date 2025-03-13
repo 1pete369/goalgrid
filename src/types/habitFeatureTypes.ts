@@ -5,7 +5,10 @@ export type Habit = {
   description?: string
   category: string
   startDate: string
+  endDate: string
   duration: string
+  habitColor:string
+  createdAt : Date
   streak: {
     current: number
     best: number

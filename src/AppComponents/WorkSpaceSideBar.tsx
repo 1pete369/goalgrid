@@ -21,7 +21,7 @@ import {
   SidebarHeader,
   SidebarRail
 } from "@/components/ui/sidebar"
-
+import { useUserContext } from "@/contexts/UserDataProviderContext"
 
 // This is sample data.
 const data = {
@@ -34,7 +34,7 @@ const data = {
         {
           title: "Personal Dashboard",
           url: "/work",
-          icon : Home,
+          icon: Home,
           items: [
             {
               title: "To-Do List",
@@ -73,7 +73,7 @@ const data = {
         {
           title: "Settings",
           url: "#",
-          icon : Settings2,
+          icon: Settings2,
           items: [
             {
               title: "Profile",
@@ -92,7 +92,7 @@ const data = {
         {
           title: "Learning Flow", // Learning section
           url: "#",
-          icon : BookOpen,
+          icon: BookOpen,
           items: [
             {
               title: "Resources",
@@ -122,7 +122,7 @@ const data = {
         {
           title: "Community Dashboard",
           url: "#",
-          icon : Users,
+          icon: Users,
           items: [
             {
               title: "Group To-Do List",
@@ -153,18 +153,21 @@ const data = {
         {
           title: "Community chats",
           url: "#",
-          icon : Folder,
+          icon: Folder,
           items: [
             {
               title: "Beginner's Chat",
               url: "/work/community/beginners-chat"
-            },{
+            },
+            {
               title: "Daily wins",
               url: "/work/community/daily-wins"
-            },{
+            },
+            {
               title: "Public journals",
               url: "/work/community/public-journals"
-            },{
+            },
+            {
               title: "Community Feedback",
               url: "/work/community/community-feedback"
             },
@@ -193,26 +196,51 @@ const data = {
       ]
     }
   ]
-};
-
+}
 
 export function WorkAppSidebar({
   ...props
 }: React.ComponentProps<typeof Sidebar>) {
+  const [activeWorkspace, setActiveWorkspace] = useState("My Space")
+  const { user } = useUserContext()
 
-  const [activeWorkspace,setActiveWorkspace] =useState("My Space")
+  // Define the NavUserObjectType to store specific user info
+  type NavUserObjectType = {
+    name: string
+    email: string
+    avatar: string
+  }
+
+  // Initialize NavUserObject based on the user context
+  let NavUserObject: NavUserObjectType | null = null
+  if (user !== null) {
+    NavUserObject = {
+      name: user.personalInfo.name,
+      email: user.personalInfo.email,
+      avatar: user.personalInfo.photoURL
+    }
+  }
 
   return (
     <Sidebar collapsible="icon" {...props} className="z-50">
       <SidebarHeader>
-        <TeamSwitcher teams={data.workspaces} setActiveWorkspace={setActiveWorkspace} />
+        <TeamSwitcher
+          teams={data.workspaces}
+          setActiveWorkspace={setActiveWorkspace}
+        />
       </SidebarHeader>
       <SidebarContent>
-        <NavMain items={activeWorkspace==="My Space" ? data.workspaces[0].navMain : data.workspaces[1].navMain} />
+        <NavMain
+          items={
+            activeWorkspace === "My Space"
+              ? data.workspaces[0].navMain
+              : data.workspaces[1].navMain
+          }
+        />
         {/* <NavProjects projects={data.projects} /> */}
       </SidebarContent>
       <SidebarFooter>
-        <NavUser />
+        {NavUserObject && <NavUser user={NavUserObject} />}
       </SidebarFooter>
       <SidebarRail />
     </Sidebar>

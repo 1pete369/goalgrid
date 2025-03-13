@@ -26,19 +26,25 @@ export default function ChatBox({ roomName }: ChatBoxProps) {
   const socketRef = useRef<Socket | null>(null) // Using a ref to store the socket instance
 
   useEffect(() => {
+    if (!user || !roomName) return;
+  
     // Initialize socket only once when the component mounts
-    socketRef.current = io(process.env.NEXT_PUBLIC_API_URL) // Single connection
-
+    socketRef.current = io(process.env.NEXT_PUBLIC_API_URL); // Single connection
+  
+    // Emit event to join the specific room
+    socketRef.current.emit('joinRoom', roomName);
+  
     // Listen for incoming chat messages
     socketRef.current.on("chatMessage", (message: any) => {
-      setMessages((prevMessages) => [...(prevMessages || []), message]) // Ensuring prevMessages is an array
-    })
-    
+      setMessages((prevMessages) => [...(prevMessages || []), message]);
+    });
+  
     return () => {
       // Disconnect from the socket when component unmounts
-      socketRef.current?.disconnect()
-    }
-  }, []) // Empty dependency array means this runs only once
+      socketRef.current?.disconnect();
+    };
+  }, [user, roomName]);
+  // Empty dependency array means this runs only once
 
   useEffect(() => {
     if (!user) return

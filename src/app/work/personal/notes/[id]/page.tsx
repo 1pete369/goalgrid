@@ -11,13 +11,17 @@ import { BiLeftArrow } from "react-icons/bi"
 import { ArrowLeft } from "lucide-react"
 import { getNote } from "@/utils/notes"
 
-export default function FullNote({params} : {params :Promise<{ id: string }>}) {
+export default function FullNote({
+  params
+}: {
+  params: Promise<{ id: string }>
+}) {
   const { id } = use(params)
   const [note, setNote] = useState<Note | null>(null)
-  const [loading,setLoading] = useState(false)
+  const [loading, setLoading] = useState(false)
 
   useEffect(() => {
-    async function loadNote(){
+    async function loadNote() {
       if (id) {
         setLoading(true)
         const noteFetched = await getNote(id)
@@ -31,21 +35,24 @@ export default function FullNote({params} : {params :Promise<{ id: string }>}) {
   if (!note) return <p>Note not found.</p>
 
   return (
-    <div className="container md:px-24 p-4 pt-6 mt-10">
-      <div className="mx-auto max-w-5xl">
-        <Link href={"."}>
-          <Button className="text-sm mb-6"><ArrowLeft /> All Notes</Button>
-        </Link>
-
-        <div className="flex items-center justify-between mx-auto p-6 max-w-3xl border-solid border-b-2">
-          <p className="text-xl font-semibold">{note.name}</p>
-          <p className="text-right text-slate-700 dark:text-slate-400">
-            Date: {note.createdDate}
-          </p>
+    <div className="container md:px-24 p-4 pt-20">
+      <div className="mx-auto max-w-6xl">
+        <div className="flex items-center justify-between mx-auto p-3 max-w-6xl border-solid border-b-2">
+          <p className="text-lg font-semibold">{note.name}</p>
+          <div className="flex gap-1 items-center">
+            <p className="text-sm  text-slate-700 dark:text-slate-400">
+              Date: {note.createdDate}
+            </p>
+            <Link href={"."}>
+              <Button className="text-sm border ml-1" variant="link">
+                <ArrowLeft />
+              </Button>
+            </Link>
+          </div>
         </div>
 
         <div
-          className="mx-auto px-6 py-4 max-w-3xl dark:prose-invert markdown prose"
+          className="mx-auto px-6 py-4 max-w-6xl dark:prose-invert markdown prose"
           dangerouslySetInnerHTML={{ __html: note.content }}
         />
       </div>

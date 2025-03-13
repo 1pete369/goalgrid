@@ -1,5 +1,6 @@
 /** @type {import('next').NextConfig} */
 const nextConfig = {
+  // reactStrictMode: false,
   images: {
     remotePatterns: [
       {
@@ -19,7 +20,7 @@ const nextConfig = {
     ],
    domains: ['picsum.photos','images.pexels.com'],
   },
-  poweredByHeader : false
+  poweredByHeader : false,
 };
 
 export default nextConfig;

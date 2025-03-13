@@ -25,8 +25,8 @@ export default withAuth(
       // ❌ Check if the current route matches the plan requirements
       if (
         (path.startsWith("/work/personal") && !PLAN_ACCESS["/work/personal"].includes(userPlan)) ||
-        (path.startsWith("/work/community") && !PLAN_ACCESS["/work/community"].includes(userPlan)) ||
-        (path.startsWith("/friends")) // Block access to /friends route for everyone
+        (path.startsWith("/work/community") && !PLAN_ACCESS["/work/community"].includes(userPlan)) 
+        // ||(path.startsWith("/friends")) // Block access to /friends route for everyone
       ) {
         return NextResponse.redirect(new URL("/pricing", req.url)); // Redirect to pricing page if not allowed
       }

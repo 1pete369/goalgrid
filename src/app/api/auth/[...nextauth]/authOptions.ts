@@ -165,6 +165,8 @@ export const authOptions: AuthOptions = {
   },  
   session: {
     strategy: "jwt",
+    maxAge:  24 * 60 * 60, // 24 hours in seconds
+    updateAge: 24 * 60 * 60, // The session token will be refreshed after 24 hours
   },
   pages: {
     signIn: "/auth/login"

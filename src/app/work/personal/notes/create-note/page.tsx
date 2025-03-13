@@ -31,10 +31,7 @@ export default function Page() {
   }
 
   return (
-    <div className="container md:px-24 p-4 pt-6  space-y-4">
-      <header className="text-4xl font-semibold my-3">
-        Create Notes here!
-      </header>
+    <div className="container md:px-24 p-4 pt-20 space-y-4">
       <TextEditor
         editorContent={editorContent}
         setEditorContent={setEditorContent}
