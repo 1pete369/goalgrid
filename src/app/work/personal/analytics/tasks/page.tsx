@@ -71,7 +71,7 @@ import TotalCompletionChart from "@/AppComponents/analytics/DropOffDataChart"
 import DropOffDataChart from "@/AppComponents/analytics/DropOffDataChart"
 import TotalCompletionDataChart from "@/AppComponents/analytics/TotalCompletionDataChart"
 
-export default function () {
+export default function Page() {
   // 1️⃣ State Management
   const [data, setData] = useState<TaskData | null>(null)
   const [overAllStats, setOverAllStats] = useState<BasicStats[] | null>(null)

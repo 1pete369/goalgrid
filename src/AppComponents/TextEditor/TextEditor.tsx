@@ -104,6 +104,7 @@ export default function TextEditor({
       }
     }
   })
+
   const validateAndSubmit = () => {
     const nameErr = name.trim().length === 0 ? "Name is required" : ""
     const contentErr = editor && editor.isEmpty ? "Content is empty" : ""
@@ -127,7 +128,7 @@ export default function TextEditor({
     if (editor && editor.getHTML() !== editorContent) {
       editor.commands.setContent(editorContent, false)
     }
-  }, [editorContent])
+  }, [editorContent,editor])
 
   return (
     <div className="relative w-full flex flex-col items-center px-4">
