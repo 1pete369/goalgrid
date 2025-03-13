@@ -9,7 +9,7 @@ export async function GET(req: Request) {
   }
   try {
     const response = await axios.get(
-      `${process.env.NEXT_PUBLIC_API_URL}/journals/get-journals/${uid}`
+      `${process.env.API_URL}/journals/get-journals/${uid}`
     )
     const journals = response.data.journals
     return NextResponse.json(journals)
@@ -29,7 +29,7 @@ export async function POST(req: Request) {
   }
   try {
     const response = await axios.post(
-      `${process.env.NEXT_PUBLIC_API_URL}/journals/create-journal`,
+      `${process.env.API_URL}/journals/create-journal`,
       { journalObj }
     )
 
