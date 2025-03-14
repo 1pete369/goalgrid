@@ -84,7 +84,7 @@ export default function KegelCounter() {
   }
 
   const resetAllReps = () => {
-    // setReps({ "5sHold": 0, "10sHold": 0, Flutter: 0 })
+    setReps({ "5sHold": 0, "10sHold": 0, Flutter: 0 })
   }
 
   const handleRepsChange = (e: React.ChangeEvent<HTMLInputElement>) => {
@@ -150,7 +150,7 @@ export default function KegelCounter() {
             </Button>
           </div> */}
 
-          <Button disabled className="w-full mt-4 bg-gray-700 hover:bg-gray-600 text-white" onClick={resetAllReps}>
+          <Button  className="w-full mt-4 bg-gray-700 hover:bg-gray-600 text-white" onClick={resetAllReps}>
             Reset All Reps
           </Button>
         </CardContent>
