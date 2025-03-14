@@ -516,7 +516,8 @@ export default function Page() {
           <CardContent className="relative min-h-60">
             {Array.isArray(durationData) && durationData.length > 0 ? (
               <ChartContainer config={areaChartConfig}>
-                <AreaChart accessibilityLayer data={getCurrentDurationWeek()}>
+                <AreaChart accessibilityLayer data={getCurrentDurationWeek()} 
+                >
                   <defs>
                     <linearGradient
                       id="totalGradient"
@@ -633,15 +634,16 @@ export default function Page() {
         </Card>
         <Card className="relative shadow-none rounded-sm w-full dark:bg-transparent ">
           <CardHeader className="flex flex-row items-center justify-between">
-            <CardTitle className="font-semibold">
-              Peak Productivity hours
+            <CardTitle className="font-semibold mt-4">
+              Peak Productivity hours 
             </CardTitle>
           </CardHeader>
-          <CardContent className="relative min-h-60">
+          <CardContent className="relative min-h-60 ">
             {Array.isArray(hourData) && hourData.length > 0 ? (
               <ChartContainer config={barChartConfig}>
                 {/* <ResponsiveContainer width="100%" height={300}> */}
-                <BarChart data={hourData}>
+                <BarChart data={hourData}
+                  margin={{ left: -25, right: 0, top: 0, bottom: 0 }}>
                   {/* <CartesianGrid strokeDasharray="3 3" /> */}
                   <XAxis dataKey="hour" />
                   <YAxis />
@@ -659,9 +661,9 @@ export default function Page() {
                 {/* </ResponsiveContainer> */}
               </ChartContainer>
             ) : (
-              <div className="relative h-full w-full flex flex-col justify-center items-center">
+              <div className="relative h-full w-full flex flex-col justify-center items-center ">
                 {/* Sample Graph with No Data */}
-                <div className="w-full h-[300px]">
+                <div className="w-full h-[300px] ">
                   <ResponsiveContainer width="100%" height="100%">
                     <BarChart
                       data={[]}

@@ -24,17 +24,17 @@ export function BasicStatsCard({
 }: BasicStats) {
   return (
     <Card className="relative rounded-sm p-0 m-0 shadow-none dark:bg-transparent">
-      <CardHeader className="p-2 px-4 flex flex-row items-center justify-between">
+      <CardHeader className="p-2 px-4 flex flex-row items-center justify-between text-base">
         {label}
         <Icon size={16} />
       </CardHeader>
       {progress ? (
-        <CardContent className="p-2 px-4 font-semibold text-xl flex gap-2 items-center">
+        <CardContent className="p-2 px-4 font-semibold lg:text-xl text-sm flex gap-2 items-center">
           <p>{data}%</p>
           <Progress value={data} />
         </CardContent>
       ) : (
-        <CardContent className="p-2 px-4 font-semibold text-xl">
+        <CardContent className="p-2 px-4 font-semibold lg:text-xl text-sm">
           {data}
         </CardContent>
       )}
@@ -55,7 +55,7 @@ export function AdvancedStatsCard({
         {title}
         <Icon size={16} />
       </CardHeader>
-      <CardContent className="pb-3 flex flex-col">
+      <CardContent className="pb-3 flex flex-col ">
         <p className=" font-semibold">{label}</p>
         <p className="text-slate-800 dark:text-slate-400 text-sm">
           {sublabel && sublabel.split(", ").length > 2
