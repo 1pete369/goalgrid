@@ -52,10 +52,10 @@ export default function NotesFeature() {
       <div className="mt-6 flex flex-wrap gap-4">
         {
         loading ? <NoteSkeleton /> :
-        notes.length === 0 ? (
+       Array.isArray(notes) && notes.length === 0 ? (
           <p className="text-gray-500">No notes available.</p>
         ) : (
-          notes.map((note) => (
+          Array.isArray(notes) && notes.length> 0 && notes.map((note) => (
             <Card
               key={note.id}
               className="w-[290px] p-4 border rounded-lg shadow-sm flex flex-col bg-transparent dark:bg-transparent"

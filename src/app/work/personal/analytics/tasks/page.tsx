@@ -122,6 +122,9 @@ export default function Page() {
   // 5️⃣ useEffect to Populate `completionArray`
   useEffect(() => {
     if (data !== null) {
+
+      console.log("data",data)
+
       const dailyCompletionStats = fillMissingDates(data.dailyTaskStats)
       setCompletionArray(
         dailyCompletionStats.map((stat) => ({

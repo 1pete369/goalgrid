@@ -50,10 +50,10 @@ export default function JournalFeature() {
         </Link>
       </header>
       <div className="mt-6 flex flex-wrap gap-4">
-        { loading ? <JournalSkeleton />: journals.length === 0 ? (
+        { loading ? <JournalSkeleton />: (Array.isArray(journals) && journals.length === 0) ? (
           <p className="text-gray-500">No Journals available.</p>
         ) : (
-          journals.map((journal) => (
+          Array.isArray(journals) && journals.length > 0 && journals.map((journal) => (
             <div
               key={journal.id}
               className="w-[290px] p-4 border rounded-lg shadow-sm flex flex-col"

@@ -99,7 +99,7 @@ export default function SignUpWithEmail() {
             required
             type="email"
             id="email"
-            className="rounded-sm border-2 border-solid border-black/30 focus-within:border-primary-800 outline-none px-2 py-1.5 placeholder:text-neutral-500 text-black min-w-60"
+            className="rounded-sm border-2 border-solid border-black/30 focus-within:border-primary-800 outline-none px-2 py-1.5 placeholder:text-neutral-500  min-w-60"
             placeholder="Enter email"
             value={email}
             onChange={(e) => handleEmail(e)}
@@ -116,7 +116,7 @@ export default function SignUpWithEmail() {
             required
             type="password"
             id="password"
-            className="rounded-sm border-2 border-solid border-black/30 focus-within:border-primary-800 outline-none px-2 py-1.5 placeholder:text-neutral-500 text-black min-w-60"
+            className="rounded-sm border-2 border-solid border-black/30 focus-within:border-primary-800 outline-none px-2 py-1.5 placeholder:text-neutral-500  min-w-60"
             placeholder="Enter password"
             value={password}
             onChange={(e) => handlePassword(e)}
@@ -133,7 +133,7 @@ export default function SignUpWithEmail() {
             required
             type="password"
             id="confirm password"
-            className="rounded-sm border-2 border-solid border-black/30 focus-within:border-primary-800 outline-none px-2 py-1.5 placeholder:text-neutral-500 text-black min-w-60"
+            className="rounded-sm border-2 border-solid border-black/30 focus-within:border-primary-800 outline-none px-2 py-1.5 placeholder:text-neutral-500  min-w-60"
             placeholder="Enter password Again"
             value={confirmPassword}
             onChange={(e) => handleConfrimPassword(e)}

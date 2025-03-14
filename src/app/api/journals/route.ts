@@ -11,6 +11,8 @@ export async function GET(req: Request) {
     const response = await axios.get(
       `${process.env.API_URL}/journals/get-journals/${uid}`
     )
+    console.log("response",response.data)
+
     const journals = response.data.journals
     return NextResponse.json(journals)
   } catch (error) {
