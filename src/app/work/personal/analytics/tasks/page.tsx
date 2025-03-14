@@ -70,6 +70,7 @@ import {
 import TotalCompletionChart from "@/AppComponents/analytics/DropOffDataChart"
 import DropOffDataChart from "@/AppComponents/analytics/DropOffDataChart"
 import TotalCompletionDataChart from "@/AppComponents/analytics/TotalCompletionDataChart"
+import axios from "axios"
 
 export default function Page() {
   // 1️⃣ State Management
@@ -161,11 +162,9 @@ export default function Page() {
       const getAnalytics = async () => {
         setIsLoading(true) // Show loading state
         try {
-          const res = await fetch(
-            `http://localhost:3001/today-tasks/analytics/${user.uid}`
-          )
-          const data = await res.json()
+          const res= await axios.get(`/api/analytics/tasks/${user.uid}`)
           // Introduce a slight delay before setting the data
+          const data=res.data
           setData(data)
           setIsDataFetched(true)
           setIsLoading(false)

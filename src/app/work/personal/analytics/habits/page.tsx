@@ -26,6 +26,7 @@ import { Progress } from "@/components/ui/progress"
 import { Tooltip } from "@/components/ui/tooltip"
 import { useUserContext } from "@/contexts/UserDataProviderContext"
 import { formatDateOnDuration } from "@/utils/basics"
+import axios from "axios"
 import {
   ArrowLeft,
   ArrowRight,
@@ -81,10 +82,9 @@ export default function HabitDashboard() {
     if (user !== null) {
       const getAnalytics = async () => {
         try {
-          const res = await fetch(
-            `http://localhost:3001/habits/analytics/${user.uid}`
-          )
-          const data = await res.json()
+          const res= await axios.get(`/api/analytics/habits/${user.uid}`)
+          // Introduce a slight delay before setting the data
+          const data=res.data
           setData(data)
         } catch (error) {
           console.error("Error fetching analytics:", error)
