@@ -1,5 +1,7 @@
+import { ApiResponse } from "@/types/apiErrorType"
 import { Note } from "@/types/noteFeatureTypes"
 import axios from "axios"
+import { handleApiError } from "./handleApiError"
 
 export const getNotes = async (uid: string) => {
   try {
@@ -21,29 +23,35 @@ export const getNote = async (noteId: string) => {
   }
 }
 
-export const createNote = async (noteObj: Note) => {
+export const createNote = async (noteObj: Note) : Promise<ApiResponse<any>> => {
   try {
     const response = await axios.post("/api/notes", { noteObj })
-    console.log(response.data)
+    return {success: true, data: response.data}
+    // console.log(response.data)
   } catch (error) {
-    console.log(error)
+    // console.log(error)
+    return handleApiError(error)
   }
 }
 
-export const updateNote = async (noteObj: Note) => {
+export const updateNote = async (noteObj: Note) : Promise<ApiResponse<any>> => {
   try {
     const response = await axios.patch(`/api/notes/${noteObj.id}`, { noteObj })
-    console.log(response.data)
+    return {success: true, data: response.data}
+    // console.log(response.data)
   } catch (error) {
-    console.log(error)
+    // console.log(error)
+    return handleApiError(error)
   }
 }
 
-export const deleteNote = async (noteId: string) => {
+export const deleteNote = async (noteId: string) : Promise<ApiResponse<any>> => {
   try {
     const response = await axios.delete(`/api/notes/${noteId}`)
-    console.log(response.data)
+    return {success: true, data: response.data}
+    // console.log(response.data)
   } catch (error) {
-    console.log(error)
+    // console.log(error)
+    return handleApiError(error)
   }
 }

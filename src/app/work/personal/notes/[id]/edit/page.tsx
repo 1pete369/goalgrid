@@ -1,6 +1,7 @@
 "use client"
 import TextEditor from "@/AppComponents/TextEditor/TextEditor"
 import { useUserContext } from "@/contexts/UserDataProviderContext"
+import { useCustomToast } from "@/hooks/useCustomToast"
 import { Note } from "@/types/noteFeatureTypes"
 import { getTodayDate } from "@/utils/basics"
 import { getNote, updateNote } from "@/utils/notes"
@@ -14,6 +15,7 @@ export default function Page({ params }: { params: Promise<{ id: string }> }) {
   const [noteId, setNoteId] = useState("")
   const { user } = useUserContext()
   const { id } = use(params)
+  const { showToast } = useCustomToast()
 
   useEffect(() => {
     async function loadNote() {
@@ -37,10 +39,14 @@ export default function Page({ params }: { params: Promise<{ id: string }> }) {
         id: noteId,
         uid: user?.uid,
         createdDate: todayDate,
-        createdAt: new Date().toISOString()
+        createdAt: new Date()
       }
-
-      await updateNote(noteObject)
+      const result = await updateNote(noteObject)
+      if (result.success) {
+        showToast("Note updated!", 200)
+      } else {
+        showToast(result.message, result.status)
+      }
       redirect(".")
     }
   }

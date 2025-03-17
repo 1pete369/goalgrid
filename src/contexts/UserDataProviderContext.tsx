@@ -13,6 +13,8 @@ import {
 } from "@/utils/users"
 import { redirect } from "next/navigation"
 import { mapFirebaseUserToMainUserObject } from "@/utils/userMappeing"
+import { handleCreateSubscription } from "@/features/pricing/PricingPlanAction";
+import { PricingPlan } from "@/types/subscriptionTypes";
 
 interface UserContextType {
   user: MainUserObject | null
@@ -31,6 +33,22 @@ export const UserProvider: React.FC<{ children: React.ReactNode }> = ({
   const [user, setUser] = useState<MainUserObject | null>(null)
   const [loading, setLoading] = useState(true)
 
+  const baseSubscriptionPlan = {
+    title: "Free",
+    plan: "free",
+    price: 0,
+    billingCycle: null,
+    description: "Kickstart your productivity journey—no cost",
+    features: [
+      "Task & habit tracking",
+      "10 journal entries per month",
+      "Weekly progress insights",
+      "Simple, distraction-free dashboard"
+    ],
+    durationInMonths: 1,
+    isPopular: false
+  }
+
 
   const shouldUpdateLastLogin = (lastLoginAt?: string) => {
     if (!lastLoginAt) return true; // If lastLoginAt is missing, update it
@@ -48,7 +66,7 @@ export const UserProvider: React.FC<{ children: React.ReactNode }> = ({
   
     const userExist = await checkUser(session.user.id);
     if (userExist) {
-      let MainUserObject = await fetchUser(session.user.id);
+      let MainUserObject : MainUserObject = await fetchUser(session.user.id);
       
       // Only update last login if 1 hour has passed
       if (shouldUpdateLastLogin(MainUserObject.timings?.lastLoginAt)) {
@@ -65,7 +83,8 @@ export const UserProvider: React.FC<{ children: React.ReactNode }> = ({
         setUser(MainUserObject);
       }
   
-      const onBoardingStatusFlag = await onBoardingStatus(session.user.id);
+      const onBoardingStatusFlag = MainUserObject.isOnboardingComplete
+
       if (!onBoardingStatusFlag) {
         redirect("/onboarding");
       }
@@ -78,6 +97,8 @@ export const UserProvider: React.FC<{ children: React.ReactNode }> = ({
         console.log("User Object Created", MainUserObject);
         setUser(MainUserObject);
         await createUser(MainUserObject);
+        await handleCreateSubscription(baseSubscriptionPlan as PricingPlan,MainUserObject)
+
         redirect("/onboarding");
       }
     }

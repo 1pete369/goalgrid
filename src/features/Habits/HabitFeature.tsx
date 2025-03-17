@@ -31,6 +31,7 @@ import {
 import { useToast } from "@/hooks/use-toast"
 import HabitsSkeleton from "@/skeletons/HabitSkeleton"
 import { ArrowDownIcon, ArrowUpIcon, EllipsisVertical } from "lucide-react"
+import { delay } from "@/utils/delay"
 
 export default function HabitFeature() {
   const [habits, setHabits] = useState<Habit[] | []>([])
@@ -277,6 +278,8 @@ export default function HabitFeature() {
 
       async function fetchData() {
         setLoading(true)
+        await delay(3000)
+
         await fetchAndProcessHabits(user?.uid as string, setHabits, fetchedRef)
         const result = await getGoals(user?.uid as string)
         if (result.success) {

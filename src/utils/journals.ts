@@ -1,5 +1,7 @@
+import { ApiResponse } from "@/types/apiErrorType"
 import { Journal } from "@/types/journalTypes"
 import axios from "axios"
+import { handleApiError } from "./handleApiError"
 
 export const getJournals = async (uid: string) => {
   try {
@@ -20,31 +22,38 @@ export const getJournal = async (journalId: string) => {
   }
 }
 
-export const createJournal = async (journalObj: Journal) => {
+export const createJournal = async (journalObj: Journal) : Promise<ApiResponse<any>> => {
   try {
     const response = await axios.post(`/api/journals`, { journalObj })
-    console.log(response.data)
+    return {success: true, data : response.data}
+    // console.log(response.data)
   } catch (error) {
-    console.log(error)
+    // console.log(error)
+    return handleApiError(error)
   }
 }
 
-export const updateJournal = async (journalObj: Journal) => {
+export const updateJournal = async (journalObj: Journal) : Promise<ApiResponse<any>> => {
   try {
     const response = await axios.patch(`/api/journals/${journalObj.id}`, {
       journalObj
     })
-    console.log(response.data)
+    return {success: true, data : response.data}
+    // console.log(response.data)
   } catch (error) {
-    console.log(error)
+    // console.log(error)
+    return handleApiError(error)
+
   }
 }
 
-export const deleteJournal = async (journalId: string) => {
+export const deleteJournal = async (journalId: string) : Promise<ApiResponse<any>> => {
   try {
     const response = await axios.delete(`/api/journals/${journalId}`)
-    console.log(response.data)
+    return {success: true, data : response.data}
+    // console.log(response.data)
   } catch (error) {
-    console.log(error)
+    // console.log(error)
+    return handleApiError(error)
   }
 }

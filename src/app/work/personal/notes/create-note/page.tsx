@@ -1,9 +1,11 @@
 "use client"
 import TextEditor from "@/AppComponents/TextEditor/TextEditor"
 import { useUserContext } from "@/contexts/UserDataProviderContext"
+import { useCustomToast } from "@/hooks/useCustomToast"
 import { Note } from "@/types/noteFeatureTypes"
 import { getTodayDate } from "@/utils/basics"
 import { createNote } from "@/utils/notes"
+import { getResourceCount } from "@/utils/resource-limits"
 import { redirect } from "next/navigation"
 import React, { use, useState } from "react"
 
@@ -11,9 +13,13 @@ export default function Page() {
   const [editorContent, setEditorContent] = useState("")
   const [name, setName] = useState("")
   const { user } = useUserContext()
+  const {showToast}= useCustomToast()
 
   const onSubmit = async (name: string, content: string) => {
     if (user !== null) {
+      
+    const resourceResult = await getResourceCount(user?.uid as string, "notes")
+    if (resourceResult.success) {
       const todayDate = getTodayDate()
       const noteObject: Note = {
         name,
@@ -21,11 +27,19 @@ export default function Page() {
         id: crypto.randomUUID(),
         uid: user?.uid,
         createdDate: todayDate,
-        createdAt: new Date().toISOString()
+        createdAt: new Date()
       }
       console.log("noteObject", noteObject)
     
-      await createNote(noteObject)
+      const result=await createNote(noteObject)
+      if(result.success){
+        showToast("Note created!", 200)
+      }else{
+        showToast(result.message, result.status)
+      }
+    }else{
+      showToast("Limit Reached. upgrate plan!", resourceResult.status)
+    }
       redirect(".")
     }
   }

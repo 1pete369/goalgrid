@@ -5,7 +5,7 @@ export type Goal = {
   goalColor : string
   description: string
   category : string
-  createdAt : string
+  createdAt : Date
   deadline : string
   duration : string
   habits: []

@@ -11,20 +11,17 @@ import { Button } from "@/components/ui/button"
 import {
   Card,
   CardContent,
-  CardDescription,
   CardFooter,
   CardHeader,
   CardTitle
 } from "@/components/ui/card"
 import {
-  ChartConfig,
   ChartContainer,
   ChartTooltip,
   ChartTooltipContent
 } from "@/components/ui/chart"
-import { Progress } from "@/components/ui/progress"
-import { Tooltip } from "@/components/ui/tooltip"
 import { useUserContext } from "@/contexts/UserDataProviderContext"
+import HabitInsightsSkeleton from "@/skeletons/HabitInsightsSkeleton"
 import { formatDateOnDuration } from "@/utils/basics"
 import axios from "axios"
 import {
@@ -32,9 +29,7 @@ import {
   ArrowRight,
   ChartColumnIncreasingIcon,
   FlameIcon,
-  LucideIcon,
   Target,
-  TargetIcon,
   TrendingDown,
   TrendingUp,
   Trophy,
@@ -45,10 +40,8 @@ import {
   Bar,
   BarChart,
   CartesianGrid,
-  Cell,
   Pie,
   PieChart,
-  ResponsiveContainer,
   XAxis,
   YAxis
 } from "recharts"
@@ -75,6 +68,7 @@ export default function HabitDashboard() {
     { date: string; completed: number; total: number }[]
   >([])
   const [startIndex, setStartIndex] = useState(0)
+  const [isLoading,setIsLoading]= useState(false)
 
   const { user } = useUserContext()
 
@@ -82,12 +76,15 @@ export default function HabitDashboard() {
     if (user !== null) {
       const getAnalytics = async () => {
         try {
+          setIsLoading(true)
           const res= await axios.get(`/api/analytics/habits/${user.uid}`)
           // Introduce a slight delay before setting the data
           const data=res.data
           setData(data)
         } catch (error) {
           console.error("Error fetching analytics:", error)
+        }finally{
+          setIsLoading(false)
         }
       }
       getAnalytics()
@@ -123,7 +120,11 @@ export default function HabitDashboard() {
     return completionArray.slice(startIndex, startIndex + 7)
   }
 
-  if (!data) return <p>Loading...</p>
+  if (user === null) return <FullPageLoading />
+
+  if (isLoading) return <HabitInsightsSkeleton />
+
+  if(!data) return null
 
   const pieData = [
     { name: "Completed", value: data.completedHabits, fill: "#22C55E" }, // Green
@@ -207,7 +208,6 @@ export default function HabitDashboard() {
     }
   }
 
-  if (user === null) return <FullPageLoading />
 
   return (
     <div className="container min-h-screen p-4 md:px-16 pt-20 space-y-4 mx-auto">

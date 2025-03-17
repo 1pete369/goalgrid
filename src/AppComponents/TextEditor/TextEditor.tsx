@@ -40,8 +40,6 @@ export default function TextEditor({
   const pathname = usePathname()
   const isEdit = pathname.split("/")[5] === "edit"
 
-  const { toast } = useToast()
-
   const editor = useEditor({
     extensions: [
       StarterKit.configure(),
@@ -112,15 +110,6 @@ export default function TextEditor({
     setContentError(contentErr)
     if (!nameErr && !contentErr) {
       onSubmit(name, editorContent)
-      toast({
-        description: isEdit
-          ? type === "note"
-            ? "Note updated!"
-            : "Journal updated!"
-          : type === "note"
-          ? "Note saved!"
-          : "Journal saved!"
-      })
     }
   }
 

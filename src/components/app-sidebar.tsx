@@ -59,10 +59,10 @@ workspaces: [
               title: "Rewards",
               url: "/work/personal/rewards"
             },
-            {
-              title: "Timer",
-              url: "/work/personal/timer"
-            },
+            // {
+            //   title: "Timer",
+            //   url: "/work/personal/timer"
+            // },
             {
               title: "Personal Journal",
               url: "/work/personal/journals"

@@ -16,18 +16,39 @@ import {
 } from "@/components/ui/chart"
 import { useUserContext } from "@/contexts/UserDataProviderContext"
 import { formatDateOnDuration } from "@/utils/basics"
-import { eachDayOfInterval, format } from "date-fns"
 import {
   ArrowLeft,
-  ArrowRight,
-  ChartColumnIncreasingIcon,
-  TargetIcon,
-  Trophy,
-  Zap
+  ArrowRight
 } from "lucide-react"
 
+import DropOffDataChart from "@/AppComponents/analytics/DropOffDataChart"
+import {
+  fillMissingDates,
+  fillMissingDaysTaskDuration,
+  fillMissingDropOffDays,
+  getHourData,
+  getOverAllStats,
+  getPieData,
+  getPriorityData,
+  getTodayStats
+} from "@/AppComponents/analytics/helperFunctions"
+import {
+  PriorityAnalyticsData,
+  TaskData,
+  TaskDurationAnalyticsData,
+  TimedAnalyticsData
+} from "@/AppComponents/analytics/insightsDataTypes"
+import {
+  areaChartConfig,
+  barChartConfig,
+  barChartConfigOfPriorityData,
+  dayLabels,
+  pieChartConfig
+} from "@/AppComponents/analytics/taskInsightsConstants"
+import TotalCompletionDataChart from "@/AppComponents/analytics/TotalCompletionDataChart"
 import FullPageLoading from "@/AppComponents/loaders/FullPageLoading"
 import TaskInsightsSkeleton from "@/skeletons/TaskInsightsSkeleton"
+import axios from "axios"
 import { useEffect, useState } from "react"
 import {
   Area,
@@ -44,33 +65,6 @@ import {
   XAxis,
   YAxis
 } from "recharts"
-import {
-  PriorityAnalyticsData,
-  TaskData,
-  TaskDurationAnalyticsData,
-  TimedAnalyticsData
-} from "@/AppComponents/analytics/insightsDataTypes"
-import {
-  fillMissingDates,
-  fillMissingDaysTaskDuration,
-  fillMissingDropOffDays,
-  getHourData,
-  getOverAllStats,
-  getPieData,
-  getPriorityData,
-  getTodayStats
-} from "@/AppComponents/analytics/helperFunctions"
-import {
-  areaChartConfig,
-  barChartConfig,
-  barChartConfigOfPriorityData,
-  dayLabels,
-  pieChartConfig
-} from "@/AppComponents/analytics/taskInsightsConstants"
-import TotalCompletionChart from "@/AppComponents/analytics/DropOffDataChart"
-import DropOffDataChart from "@/AppComponents/analytics/DropOffDataChart"
-import TotalCompletionDataChart from "@/AppComponents/analytics/TotalCompletionDataChart"
-import axios from "axios"
 
 export default function Page() {
   // 1️⃣ State Management
@@ -167,10 +161,11 @@ export default function Page() {
           const data=res.data
           setData(data)
           setIsDataFetched(true)
-          setIsLoading(false)
           console.log("got data")
         } catch (error) {
           console.error("Error fetching analytics:", error)
+        }finally{
+          setIsLoading(false)
         }
       }
       getAnalytics()
@@ -233,7 +228,7 @@ export default function Page() {
         <Card className="relative shadow-none rounded-sm w-full dark:bg-transparent ">
           <CardHeader className="flex flex-row items-center justify-between">
             <CardTitle className="font-semibold">
-              Total vs. Completed Tasks
+             Daily Total vs. Completed Tasks
             </CardTitle>
             {Array.isArray(completionArray) && completionArray.length > 0 && (
               <div className="flex gap-2">
@@ -286,7 +281,7 @@ export default function Page() {
         </Card>
         <Card className="relative shadow-none rounded-sm w-full dark:bg-transparent">
           <CardHeader>
-            <CardTitle className="mt-4">Total vs. Completed Tasks</CardTitle>
+            <CardTitle className="mt-4">Overall Total vs. Completed Tasks</CardTitle>
           </CardHeader>
           <CardContent className="flex-1 pb-0">
             {Array.isArray(pieData) && pieData.length > 0 ? (

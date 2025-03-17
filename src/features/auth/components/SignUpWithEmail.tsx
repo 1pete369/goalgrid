@@ -6,7 +6,7 @@ import {
   validatePassword
 } from "@/utils/validators/authFormValidators"
 import { signIn } from "next-auth/react"
-import { useRouter } from "next/navigation"
+import { redirect, useRouter } from "next/navigation"
 import { ChangeEvent, FormEvent, useEffect, useState } from "react"
 
 export default function SignUpWithEmail() {
@@ -74,9 +74,10 @@ export default function SignUpWithEmail() {
       if (result?.error) {
         setMainError(result.error)
       } else {
-        // On successful login, redirect to homepage
-         const callbackUrl = new URL(window.location.href).searchParams.get("callbackUrl") || "/"
-         router.push(callbackUrl)
+        const callbackUrl =
+          new URL(window.location.href).searchParams.get("callbackUrl") || "/"
+        router.push(callbackUrl)
+        // redirect('/onboarding')
       }
     } catch (error) {
       setLoading(false)

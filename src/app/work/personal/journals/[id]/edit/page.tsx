@@ -1,6 +1,7 @@
 "use client"
 import TextEditor from "@/AppComponents/TextEditor/TextEditor"
 import { useUserContext } from "@/contexts/UserDataProviderContext"
+import { useCustomToast } from "@/hooks/useCustomToast"
 import { Journal } from "@/types/journalTypes"
 import { getTodayDate } from "@/utils/basics"
 import { getJournal, updateJournal } from "@/utils/journals"
@@ -13,6 +14,7 @@ export default function Page({ params }: { params: Promise<{ id: string }> }) {
   const [journalId, setJournalId] = useState("")
   const { user } = useUserContext()
   const { id } = use(params)
+  const { showToast } = useCustomToast()
 
   useEffect(() => {
     async function loadJournal() {
@@ -35,10 +37,14 @@ export default function Page({ params }: { params: Promise<{ id: string }> }) {
         id: journalId,
         uid: user?.uid,
         createdDate: todayDate,
-        createdAt: new Date().toISOString()
+        createdAt: new Date()
       }
-
-      await updateJournal(journalObject)
+     const result= await updateJournal(journalObject)
+     if (result.success) {
+      showToast("Journal Updated!", 200)
+    } else {
+      showToast(result.message, result.status)
+    }
       redirect(".")
     }
   }

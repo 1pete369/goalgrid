@@ -34,10 +34,13 @@ export const handleCreateSubscription = async (
   pricingPlan: PricingPlan,
   user: MainUserObject
 ) => {
+
+  console.log("Create subscription called")
+
   const { startDate, expiryDate } = calculateSubscriptionDates(pricingPlan)
 
   const subscription_response = await axios.get(
-    `/api/subscriptions/check-subscription-status/${user.uid}`
+    `/api/subscriptions/check-subscription-status/${user?.uid}`
   )
 
   const isSubscriptionCreated = subscription_response.data.isSubscriptionCreated
@@ -45,7 +48,7 @@ export const handleCreateSubscription = async (
   if (isSubscriptionCreated) {
   
    const subscriptionStatusUpdatedResponse= await axios.patch(
-      `/api/subscriptions/update-subscription-status/${user.uid}`,
+      `/api/subscriptions/update-subscription-status/${user?.uid}`,
       {
         plan: pricingPlan.plan,
         startDate,
@@ -59,14 +62,14 @@ export const handleCreateSubscription = async (
     console.log("subscriptionStatusUpdatedResponse",subscriptionStatusUpdatedResponse.data)
 
 
-    const userSubscriptionStatusUpdatedResponse = await axios.patch(`/api/users/update-subscription-status/${user.uid}`,{ plan: pricingPlan.plan })
+    const userSubscriptionStatusUpdatedResponse = await axios.patch(`/api/users/update-subscription-status/${user?.uid}`,{ plan: pricingPlan.plan })
 
     console.log("userSubscriptionStatusUpdatedResponse.data",userSubscriptionStatusUpdatedResponse.data)
 
   } else {
     const subscriptionObject: Subscription = {
       id: crypto.randomUUID(),
-      uid: user?.uid,
+      uid: user?.uid!,
       plan: pricingPlan.plan,
       startDate,
       expiryDate,
@@ -87,11 +90,11 @@ export const handleCreateSubscription = async (
     console.log("subscriptionCreateResponse.data",subscriptionCreateResponse.data)
 
     // await axios.patch(
-    //   `${process.env.NEXT_PUBLIC_API_URL}/users/update-subscription-status/${user.uid}`,
+    //   `${process.env.NEXT_PUBLIC_API_URL}/users/update-subscription-status/${user?.uid}`,
     //   { plan: pricingPlan.plan }
     // )
 
-    const userSubscriptionStatusUpdatedResponse = await axios.patch(`/api/users/update-subscription-status/${user.uid}`,{ plan: pricingPlan.plan })
+    const userSubscriptionStatusUpdatedResponse = await axios.patch(`/api/users/update-subscription-status/${user?.uid}`,{ plan: pricingPlan.plan })
 
     console.log("userSubscriptionStatusUpdatedResponse.data",userSubscriptionStatusUpdatedResponse.data)
 

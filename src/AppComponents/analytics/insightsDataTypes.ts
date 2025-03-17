@@ -63,3 +63,24 @@ export type TaskData = {
   priorityAnalytics: PriorityAnalytics[]
   overallTaskDurationAnalytics: TaskDurationAnalytics[]
 }
+
+
+// Define Types
+export type GoalOverallStats ={
+    totalGoals: number;
+    completedGoals: number;
+    activeGoals: number;
+    completionRate: string;
+}
+
+export type GoalCategoryPieData ={
+    category: string;
+    count: number;
+    averageProgress :string
+}
+
+
+export type GoalAnalyticsData ={
+    overallStats: GoalOverallStats;
+    categoryPieChart: GoalCategoryPieData[];
+}

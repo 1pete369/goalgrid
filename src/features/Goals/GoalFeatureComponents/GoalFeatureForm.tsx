@@ -139,13 +139,12 @@ export default function GoalFeatureForm({
     goalDescription: string,
     goalCategory: string
   ) => {
-    const todayDate = getTodayDate()
     const goal: Goal = {
       id: crypto.randomUUID(),
       uid: user?.uid as string,
       name: goalName,
       description: goalDescription,
-      createdAt: todayDate,
+      createdAt: new Date(),
       goalColor: goalColor,
       category: goalCategory,
       deadline: goalDeadline,

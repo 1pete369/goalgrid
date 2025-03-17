@@ -96,6 +96,7 @@ export const authOptions: AuthOptions = {
               newUser
             )
 
+            
             // Fetch subscription info after registration
 
             return {

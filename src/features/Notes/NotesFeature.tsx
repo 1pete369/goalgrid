@@ -5,6 +5,7 @@ import FullPageLoading from "@/AppComponents/loaders/FullPageLoading"
 import { Button } from "@/components/ui/button"
 import { Card } from "@/components/ui/card"
 import { useUserContext } from "@/contexts/UserDataProviderContext"
+import { useCustomToast } from "@/hooks/useCustomToast"
 import NoteSkeleton from "@/skeletons/NoteSkeleton"
 import { Note } from "@/types/noteFeatureTypes"
 import { deleteNote, getNotes } from "@/utils/notes"
@@ -16,7 +17,7 @@ export default function NotesFeature() {
   const { user } = useUserContext()
   const [notes, setNotes] = useState<Note[]>([])
   const [loading,setLoading]= useState(false)
-
+  const {showToast} = useCustomToast()
   // Fetch notes from localStorage (or from a backend, if needed)
   useEffect(() => {
     if (user !== null) {
@@ -31,8 +32,15 @@ export default function NotesFeature() {
   }, [user])
 
   const handleDeleteNote = async (noteId: string) => {
-    setNotes(notes.filter((note) => note.id !== noteId))
-    await deleteNote(noteId)
+    if(user!==null){
+      setNotes(notes.filter((note) => note.id !== noteId))
+      const result=await deleteNote(noteId)
+      if(result.success){
+        showToast("Note deleted!",200)
+      }else{
+        showToast(result.message,result.status)
+      }
+    }
   }
 
   if (user === null) return <FullPageLoading />
@@ -58,11 +66,11 @@ export default function NotesFeature() {
           Array.isArray(notes) && notes.length> 0 && notes.map((note) => (
             <Card
               key={note.id}
-              className="w-[290px] p-4 border rounded-lg shadow-sm flex flex-col bg-transparent dark:bg-transparent"
+              className="w-[290px] p-4 border rounded-sm shadow-none flex flex-col bg-transparent dark:bg-transparent"
             >
               <div className="flex justify-between">
                 <div className="flex flex-col">
-                  <h3 className="text-base font-semibold">
+                  <h3 className="text-sm font-semibold">
                     {note.name}
                   </h3>
                   <p className="text-xs">
@@ -71,17 +79,17 @@ export default function NotesFeature() {
                 </div>
                 <div className="flex gap-1">
                   <Link href={`/work/personal/notes/${note.id}/edit`}>
-                    <Button variant="outline">
+                    <Button variant="outline" className="shadow-none rounded-sm">
                       <Edit />
                     </Button>
                   </Link>
-                  <Button variant="outline" onClick={() => handleDeleteNote(note.id)}>
+                  <Button variant="outline" className="shadow-none rounded-sm" onClick={() => handleDeleteNote(note.id)}>
                     <Trash2 />
                   </Button>
                 </div>
               </div>
               <Link href={`/work/personal/notes/${note.id}`}>
-                <Button variant="outline" className="mt-4 w-full text-sm  rounded px-4 py-2 ">
+                <Button variant="outline" className="shadow-none rounded-sm mt-4 w-full text-sm px-4 py-2 ">
                   View Note <ExternalLink />
                 </Button>
               </Link>

@@ -136,6 +136,15 @@ export default function ProfilePopOver() {
           </p>
         </div>
 
+        <p className="flex gap-2">
+            <span className="font-semibold underline text-sm">
+              Uid:
+            </span>
+            <span className="text-slate-600">
+              {user.uid}
+            </span>
+          </p>
+
         {/* Country & Timezone */}
         <div className="flex items-center justify-between">
           <div className="flex items-center space-x-2">

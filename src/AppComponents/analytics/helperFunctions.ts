@@ -8,6 +8,7 @@ import { BasicStats } from "./cards"
 import {
   DailyTaskStat,
   DropOffData,
+  GoalOverallStats,
   PriorityAnalyticsData,
   TaskData,
   TaskDurationAnalytics,
@@ -25,6 +26,27 @@ export function getOverAllStats(data: TaskData) {
     {
       label: "Completion Rate",
       data: parseInt(data.totalCompletionRate),
+      progress: true,
+      icon: ChartColumnIncreasingIcon
+    }
+  ]
+  return overAllStats
+}
+
+export function getOverAllStatsForGoals(data :GoalOverallStats){
+
+  if (!data) {
+    // console.error("Error: data is undefined or null in getOverAllStatsForGoals");
+    return [];
+  }
+
+  const overAllStats: BasicStats[] = [
+    { label: "Total", data: data.totalGoals, icon: TargetIcon },
+    { label: "Completed", data: data.completedGoals, icon: Trophy },
+    { label: "Pending", data: data.activeGoals, icon: Zap },
+    {
+      label: "Completion Rate",
+      data: parseInt(data.completionRate),
       progress: true,
       icon: ChartColumnIncreasingIcon
     }

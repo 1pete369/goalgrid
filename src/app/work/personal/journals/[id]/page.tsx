@@ -33,7 +33,7 @@ export default function FullJournal({params} : {params :Promise<{ id: string }>}
               Date: {journal.createdDate}
             </p>
             <Link href={"."}>
-              <Button className="text-sm border ml-1" variant="link">
+              <Button className="text-sm border ml-1 rounded-sm shadow-none" variant="link">
                 <ArrowLeft />
               </Button>
             </Link>

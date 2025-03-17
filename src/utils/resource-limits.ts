@@ -6,7 +6,6 @@ export async function getResourceCount(
   uid: string,
   resourceName:
     | "habits"
-    | "taskCategories"
     | "goals"
     | "tasks"
     | "categories"

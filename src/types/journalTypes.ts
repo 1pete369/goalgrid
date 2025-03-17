@@ -4,5 +4,5 @@ export type Journal = {
     name: string
     content : string
     createdDate : string    
-    createdAt : string
+    createdAt : Date
 }

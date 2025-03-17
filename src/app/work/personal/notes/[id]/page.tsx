@@ -44,7 +44,7 @@ export default function FullNote({
               Date: {note.createdDate}
             </p>
             <Link href={"."}>
-              <Button className="text-sm border ml-1" variant="link">
+              <Button className="text-sm border ml-1 shadow-none rounded-sm" variant="link">
                 <ArrowLeft />
               </Button>
             </Link>
