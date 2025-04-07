@@ -1,8 +1,11 @@
 "use client"
 
-import { signIn } from "next-auth/react"
-import { validateEmail, validatePassword } from "@/utils/validators/authFormValidators"
-import { ChangeEvent, FormEvent, useState } from "react"
+import { signIn, useSession } from "next-auth/react"
+import {
+  validateEmail,
+  validatePassword
+} from "@/utils/validators/authFormValidators"
+import { ChangeEvent, FormEvent, useEffect, useState } from "react"
 import { useRouter } from "next/navigation"
 
 export default function LoginWithEmail() {
@@ -12,7 +15,15 @@ export default function LoginWithEmail() {
   const [passwordError, setPasswordError] = useState("")
   const [mainError, setMainError] = useState("")
   const [loading, setLoading] = useState(false)
-  const router = useRouter() // Next.js router to handle programmatic navigation
+  const { data: session, status } = useSession()
+  const router = useRouter()
+
+  useEffect(() => {
+    if (status === "authenticated") {
+      // Redirect to homepage or dashboard
+      router.push("/")
+    }
+  }, [status, router])
 
   const handleEmail = (e: ChangeEvent<HTMLInputElement>) => {
     e.preventDefault()
@@ -40,22 +51,21 @@ export default function LoginWithEmail() {
       const result = await signIn("credentials", {
         email,
         password,
-        type: "login",
-        redirect: false,
+        type: "login", // or "register"
+        redirect: false
       })
       setLoading(false)
-
-      console.log("SignIn result:", result)
-
       if (result?.error) {
+        setMainError(result.error)
         setMainError("Invalid email or password. Please try again.")
+        // Handle error here
       } else {
-        // Get the callback URL from query parameters (if it exists)
-        const callbackUrl = new URL(window.location.href).searchParams.get("callbackUrl") || "/"
-        
-        // Redirect the user to the callback URL or fallback to homepage if not provided
+        // Use the callback URL provided by NextAuth
+        const callbackUrl = result?.url || "/"
         router.push(callbackUrl)
       }
+
+      console.log("SignIn result:", result)
     } catch (error) {
       setLoading(false)
       setMainError("An error occurred while logging in. Please try again.")
@@ -82,7 +92,9 @@ export default function LoginWithEmail() {
             value={email}
             onChange={(e) => handleEmail(e)}
           />
-          {emailError !== "" && <p className="text-error text-sm">{emailError}</p>}
+          {emailError !== "" && (
+            <p className="text-error text-sm">{emailError}</p>
+          )}
         </div>
         <div>
           <label htmlFor="password" className="hidden">
@@ -97,7 +109,9 @@ export default function LoginWithEmail() {
             value={password}
             onChange={(e) => handlePassword(e)}
           />
-          {passwordError !== "" && <p className="text-error text-sm">{passwordError}</p>}
+          {passwordError !== "" && (
+            <p className="text-error text-sm">{passwordError}</p>
+          )}
         </div>
         <button
           type="submit"
@@ -105,7 +119,9 @@ export default function LoginWithEmail() {
         >
           {loading ? "Loading..." : "Login"}
         </button>
-        {mainError !== "" && <p className="text-error text-sm mt-1">{mainError}</p>}
+        {mainError !== "" && (
+          <p className="text-error text-sm mt-1">{mainError}</p>
+        )}
       </form>
     </div>
   )

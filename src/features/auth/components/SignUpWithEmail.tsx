@@ -5,7 +5,7 @@ import {
   validateEmail,
   validatePassword
 } from "@/utils/validators/authFormValidators"
-import { signIn } from "next-auth/react"
+import { signIn, useSession } from "next-auth/react"
 import { redirect, useRouter } from "next/navigation"
 import { ChangeEvent, FormEvent, useEffect, useState } from "react"
 
@@ -18,7 +18,15 @@ export default function SignUpWithEmail() {
   const [emailError, setEmailError] = useState("")
   const [passwordError, setPasswordError] = useState("")
   const [confirmPassworError, setConfirmPasswordError] = useState("")
+  const { data: session, status } = useSession()
   const router = useRouter()
+
+  useEffect(() => {
+    if (status === "authenticated") {
+      // Redirect to homepage or dashboard
+      router.push("/")
+    }
+  }, [status, router])
 
   const handleEmail = (e: ChangeEvent<HTMLInputElement>) => {
     e.preventDefault()
@@ -64,20 +72,17 @@ export default function SignUpWithEmail() {
       const result = await signIn("credentials", {
         email,
         password,
-        type: "register",
+        type: "register", // or "register"
         redirect: false
       })
       setLoading(false)
-
-      console.log("signup result:", result)
-
       if (result?.error) {
         setMainError(result.error)
+        // Handle error here
       } else {
-        const callbackUrl =
-          new URL(window.location.href).searchParams.get("callbackUrl") || "/"
+        // Use the callback URL provided by NextAuth
+        const callbackUrl = result?.url || "/"
         router.push(callbackUrl)
-        // redirect('/onboarding')
       }
     } catch (error) {
       setLoading(false)
