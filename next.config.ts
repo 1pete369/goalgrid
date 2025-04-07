@@ -1,3 +1,5 @@
+import { headers } from "next/headers";
+
 /** @type {import('next').NextConfig} */
 const nextConfig = {
   reactStrictMode: false,
@@ -24,6 +26,7 @@ const nextConfig = {
   eslint: {
     ignoreDuringBuilds: true,
   },
+  
 };
 
 export default nextConfig;

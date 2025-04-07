@@ -9,6 +9,13 @@ export function formatDate(dateInput: string | Date): string {
   return dateCreated
 }
 
+export const subtractOneDay = (dateString: string) => {
+  const date = new Date(dateString)
+  date.setDate(date.getDate() - 1) // Subtract 1 day
+  return date.toISOString().split("T")[0] // Format as YYYY-MM-DD
+}
+
+
 export function getTodayDate() {
   const todayDate = format(new Date(), 'yyyy-MM-dd');
   return todayDate;

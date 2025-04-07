@@ -7,7 +7,7 @@ export type CategoryType = {
   categoryColor: string
   createdAt: string
   completed : boolean
-}
+} 
 
 export type Todo = {
   id: string

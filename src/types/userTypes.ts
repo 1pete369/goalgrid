@@ -13,6 +13,16 @@ export type MainUserObject = {
     referralSource ?: string,
     gender ?: string
   },
+  progress: {
+    xp: number,
+    tokens: number,
+    level: number,
+    streak: number,
+    dailyRewardsClaimed: [{
+      date: Date, // Date of reward claim
+      rewards: string[] // Array of rewards claimed that day
+    }]
+  },
   isOnboardingComplete : boolean,
   customData : {
     timezone : {

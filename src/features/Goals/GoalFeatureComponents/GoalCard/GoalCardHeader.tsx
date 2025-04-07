@@ -13,7 +13,7 @@ import { CardHeader } from "@/components/ui/card"
 import { useCustomToast } from "@/hooks/useCustomToast"
 import { Goal } from "@/types/goalFeatureTypes"
 import { Habit } from "@/types/habitFeatureTypes"
-import { formatDate } from "@/utils/basics"
+import { formatDate, subtractOneDay } from "@/utils/basics"
 import { deleteGoal } from "@/utils/goals"
 import { ArrowRight, Calendar, Loader2, Trash2 } from "lucide-react"
 import { Dispatch, SetStateAction, useState } from "react"
@@ -86,7 +86,7 @@ export default function GoalCardHeader({
           )}`}
         >
           <Calendar size={14} />
-          <p>{formatDate(goal.deadline)}</p>
+          <p>{formatDate(subtractOneDay(goal.deadline))}</p>
         </span>
       </div>
 

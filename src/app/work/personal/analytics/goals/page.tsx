@@ -209,7 +209,7 @@ const AnalyticsCharts: React.FC = () => {
     if (isLoading) return <GoalInsightsSkeleton />
 
   return (
-    <div className="container min-h-screen p-4 md:px-16 pt-20 space-y-2 mx-auto">
+    <div className="container min-h-screen p-4 md:px-16 pt-20 space-y-2 mx-auto bg-squares">
       <h2 className="text-xl font-bold mb-4">📊 Goals Analytics</h2>
       <h2 className="font-semibold">Overall Stats</h2>
       {Array.isArray(overAllStats) && overAllStats.length > 0 ? (

@@ -172,12 +172,18 @@ export default function Page() {
     }
   }, [user, isDataFetched])
 
+  const filteredData = Array.isArray(pieData)
+  ? pieData.filter((entry: any) => entry.value > 0)
+  : [];
+
+  // const filteredFormattedDropOffData= Array.isArray(dropOffData) ? dropOffData.filter((entry: any)=> entry.missedTasks>0) : []
+
   if (user === null) return <FullPageLoading />
 
   if (isLoading) return <TaskInsightsSkeleton />
 
   return (
-    <div className="container min-h-screen p-4 md:px-16 pt-20 space-y-2 mx-auto">
+    <div className="container min-h-screen p-4 md:px-16 pt-20 space-y-2 mx-auto bg-squares">
       <h2 className="text-xl font-bold mb-4">📊 Tasks Analytics</h2>
       <h2 className="font-semibold">Overall Stats</h2>
       {Array.isArray(overAllStats) && overAllStats.length > 0 ? (
@@ -284,7 +290,7 @@ export default function Page() {
             <CardTitle className="mt-4">Overall Total vs. Completed Tasks</CardTitle>
           </CardHeader>
           <CardContent className="flex-1 pb-0">
-            {Array.isArray(pieData) && pieData.length > 0 ? (
+            {filteredData.length>0 ? (
               <ChartContainer
                 config={pieChartConfig}
                 className="mx-auto aspect-square max-h-[250px] pb-0 [&_.recharts-pie-label-text]:fill-foreground"
@@ -351,7 +357,6 @@ export default function Page() {
                     </BarChart>
                   </ResponsiveContainer>
                 </div>
-
                 {/* Centered Message */}
                 <p className="absolute  text-lg font-medium  px-4 py-2 ">
                   No enough data to show!
@@ -359,7 +364,7 @@ export default function Page() {
               </div>
             )}
           </CardContent>
-          {Array.isArray(pieData) && pieData.length > 0 && (
+          {filteredData.length>0 && (
             <CardFooter className="flex flex-col gap-2">
               <div className="flex justify-center gap-4 mt-4">
                 {pieData?.map((entry: any, index: number) => (

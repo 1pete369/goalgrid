@@ -16,7 +16,9 @@ export async function postGoal(goal: Goal): Promise<ApiResponse<any>> {
 // Update an existing goal
 export async function updateGoal(goal: Goal): Promise<ApiResponse<any>> {
   try {
+    console.log("updated goals called")
     const response = await axios.patch(`/api/goals/${goal.id}`, { goal })
+    console.log("updated goals completed")
     return { success: true, data: response.data }
   } catch (error) {
     return handleApiError(error)

@@ -15,7 +15,7 @@ export default function GoalCardContent({ goal }: GoalCardContentPropsType) {
   return (
     <CardContent className="flex flex-col gap-3 px-4">
       <div className="">
-        <Label htmlFor={goal.id} className="text-lg font-semibold">
+        <Label htmlFor={goal.id} className={`text-lg font-semibold ${goal.status==="completed" && "line-through"}`}>
           {goal.name.toWellFormed()}
         </Label>
         <p className="text-neutral-500 text-sm break-all">

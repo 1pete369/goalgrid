@@ -1,6 +1,9 @@
 import { Button } from "@/components/ui/button"
 import axios from "axios"
 import { SetStateAction } from "react"
+import { io } from "socket.io-client"
+
+const socket = io(process.env.NEXT_PUBLIC_API_URL as string)
 
 export default function CommunityFeedbackLandingpage({
   uid,
@@ -17,7 +20,11 @@ export default function CommunityFeedbackLandingpage({
         `${process.env.NEXT_PUBLIC_API_URL}/rooms/join-the-user`,
         { id: uid, roomName }
       )
-      setIsJoined(response.data.flag) // Updates state based on API response
+
+      if (response.data.flag) {
+        setIsJoined(true)
+        socket.emit("userJoined", { roomName, userId: uid }) // Notify others
+      }// Updates state based on API response
     } catch (error) {
       console.error("Error joining the room:", error)
     }

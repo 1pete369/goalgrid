@@ -10,10 +10,13 @@ import { navLinks } from "./NavLinks"
 import ToggleTheme from "./ToggleTheme"
 
 export default function Navbar() {
-  const pathname = usePathname()
-
-  // Hide navbar if the route starts with "/work/"
-  if (pathname.startsWith("/work")) return
+  const pathname = usePathname();
+  const firstSegment = pathname.split("/")[1]?.toLowerCase(); // Ensure lowercase comparison
+  const canNavbarSet = ["work", "profile"].includes(firstSegment);
+  
+  if(canNavbarSet){
+    return null
+  }
 
   return (
     <nav className="w-full fixed top-0 z-50 bg-transparent backdrop-blur-lg border-b border-b-black/30">

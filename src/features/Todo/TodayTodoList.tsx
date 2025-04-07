@@ -24,9 +24,10 @@ import {
   SelectTrigger,
   SelectValue
 } from "@/components/ui/select"
-import TodayTaskSkeleton from "@/skeletons/TodayTaskSkeleton"
+import { Switch } from "@/components/ui/switch"
 import { useCustomToast } from "@/hooks/useCustomToast"
-import { delay } from "@/utils/delay"
+import TodayTaskSkeleton from "@/skeletons/TodayTaskSkeleton"
+import TasksTimeLine from "./TasksTimeLine"
 
 export default function TodayTodoList() {
   const [tasks, setTasks] = useState<Task[]>([])
@@ -42,6 +43,8 @@ export default function TodayTodoList() {
   const { user } = useUserContext()
   const { showToast } = useCustomToast()
 
+  const [activateTimeLine, setActivateTimeLine] = useState(false)
+
   const handleDeleteTask = async (taskId: string) => {
     setDeleteTastLoading(true)
     const result = await deleteTask(taskId)
@@ -53,7 +56,7 @@ export default function TodayTodoList() {
     }
     setDeleteTastLoading(false)
   }
-  
+
   const handleTaskToggle = async (taskId: string, completedStatus: boolean) => {
     setTasks(
       tasks.map((task) =>
@@ -137,46 +140,31 @@ export default function TodayTodoList() {
   return (
     <div className="container min-h-[calc(100vh-64px)] md:px-16 pt-20 p-4">
       <header className="flex md:flex-row gap-2 md:gap-4 items-center justify-between">
-        <div className="flex gap-2 items-center">
+        <div className="w-full flex gap-2 items-center justify-between">
           <Greetings feature="todo" />
-          <div className="hidden lg:flex items-center gap-4">
-            {/* Sorting Criteria */}
-            <Select
-              value={sortBy}
-              onValueChange={(value) => setSortBy(value as any)}
-            >
-              <SelectTrigger className="p-2 py-4 border rounded w-[200px]">
-                <SelectValue placeholder="Sort By" />
-              </SelectTrigger>
-              <SelectContent>
-                <SelectGroup>
-                  <SelectLabel>Sort By</SelectLabel>
-                  <SelectItem value="createdAt">Date</SelectItem>
-                  <SelectItem value="priority">Priority</SelectItem>
-                  <SelectItem value="duration">Duration</SelectItem>
-                  <SelectItem value="completed">Completed</SelectItem>
-                </SelectGroup>
-              </SelectContent>
-            </Select>
-            {/* Toggle Sort Order */}
-            <Button onClick={toggleSortOrder} variant="outline">
-              {sortOrder === "asc" ? (
-                <ArrowUpIcon className="w-5 h-5" />
-              ) : (
-                <ArrowDownIcon className="w-5 h-5" />
-              )}
-            </Button>
-          </div>
-        </div>
-        <div className="flex items-center">
-          <TodayTodoListFeatureForm setTasks={setTasks} tasks={tasks} />
-          <DropdownMenu>
-            <DropdownMenuTrigger className="lg:hidden">
-              <EllipsisVertical size={20} />
-            </DropdownMenuTrigger>
-            <DropdownMenuContent className="mr-4">
-              <DropdownMenuLabel>Sorting</DropdownMenuLabel>
-              <div className="flex items-center gap-4">
+          {/* <div className="flex items-center gap-2">
+            <Switch
+              id="flag"
+              checked={groupByCategory}
+              onCheckedChange={setGroupByCategory}
+            />
+            <label className="text-sm font-medium" htmlFor="flag">
+              Time line
+            </label>
+          </div> */}
+          <div className="flex items-center gap-4">
+            <div className="flex items-center gap-2">
+              <Switch
+                id="flag"
+                checked={activateTimeLine}
+                onCheckedChange={() => setActivateTimeLine((prev) => !prev)}
+              />
+              <label className="text-sm font-medium" htmlFor="flag">
+                Time line
+              </label>
+            </div>
+            {process.env.NEXT_PUBLIC_TASKS_FILTER === "true" && (
+              <div className="hidden lg:flex items-center gap-4">
                 {/* Sorting Criteria */}
                 <Select
                   value={sortBy}
@@ -204,31 +192,56 @@ export default function TodayTodoList() {
                   )}
                 </Button>
               </div>
-            </DropdownMenuContent>
-          </DropdownMenu>
+            )}
+          </div>
+        </div>
+        <div className="flex items-center">
+          <TodayTodoListFeatureForm setTasks={setTasks} tasks={tasks} />
+          {process.env.NEXT_PUBLIC_TASKS_FILTER === "true" && (
+            <DropdownMenu>
+              <DropdownMenuTrigger className="lg:hidden">
+                <EllipsisVertical size={20} />
+              </DropdownMenuTrigger>
+              <DropdownMenuContent className="mr-4">
+                <DropdownMenuLabel>Sorting</DropdownMenuLabel>
+                <div className="flex items-center gap-4">
+                  {/* Sorting Criteria */}
+                  <Select
+                    value={sortBy}
+                    onValueChange={(value) => setSortBy(value as any)}
+                  >
+                    <SelectTrigger className="p-2 py-4 border rounded w-[200px]">
+                      <SelectValue placeholder="Sort By" />
+                    </SelectTrigger>
+                    <SelectContent>
+                      <SelectGroup>
+                        <SelectLabel>Sort By</SelectLabel>
+                        <SelectItem value="createdAt">Date</SelectItem>
+                        <SelectItem value="priority">Priority</SelectItem>
+                        <SelectItem value="duration">Duration</SelectItem>
+                        <SelectItem value="completed">Completed</SelectItem>
+                      </SelectGroup>
+                    </SelectContent>
+                  </Select>
+                  {/* Toggle Sort Order */}
+                  <Button onClick={toggleSortOrder} variant="outline">
+                    {sortOrder === "asc" ? (
+                      <ArrowUpIcon className="w-5 h-5" />
+                    ) : (
+                      <ArrowDownIcon className="w-5 h-5" />
+                    )}
+                  </Button>
+                </div>
+              </DropdownMenuContent>
+            </DropdownMenu>
+          )}
         </div>
       </header>
 
-      {/* ✅ Sorting & Feature Toggle */}
-      {/* {Array.isArray(sortedTasks) && sortedTasks.length > 0 && ( */}
-
-      {/* ✅ Feature Flag Toggle (Grouped or List View) */}
-      {/* <div className="flex items-center gap-2">
-            <Switch
-              id="flag"
-              checked={groupByCategory}
-              onCheckedChange={setGroupByCategory}
-            />
-            <label className="text-sm font-medium" htmlFor="flag">
-              Group by Category
-            </label>
-          </div> */}
-      {/* )} */}
-
-      {/* ✅ Task List Based on Feature Flag */}
-      {}
       {loading ? (
         <TodayTaskSkeleton />
+      ) : activateTimeLine ? (
+        <TasksTimeLine Tasks={tasks} />
       ) : (
         <section className="mt-4 space-y-6">
           {groupByCategory ? (

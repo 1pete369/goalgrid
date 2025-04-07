@@ -63,7 +63,10 @@ export default function HabitFeature() {
 
     console.log("🔄 Checking for missed streaks...")
     const habitsToUpdate = habitsData.filter(
-      (habit) => !habit.dailyTracking[yesterday] && habit.startDate !== todayISO && habit.status!=="completed"
+      (habit) =>
+        !habit.dailyTracking[yesterday] &&
+        habit.startDate !== todayISO &&
+        habit.status !== "completed"
     )
 
     if (habitsToUpdate.length === 0) {
@@ -116,34 +119,34 @@ export default function HabitFeature() {
     )
   }
 
-  async function updateHabitsStatus(habitsData : Habit[]) {
-    const todayDate = getTodayDate() // Get today's date in YYYY-MM-DD format
+  async function updateHabitsStatus(habitsData: Habit[]) {
+    // Get today's date in YYYY-MM-DD format
+    const todayDate = new Date(getTodayDate()) // Convert today's string date to Date object
 
     console.log("todayDate", todayDate)
 
-    // Filter habits that need updating
-    const updatedHabits: Habit[] = habitsData.map((habit) => {
-      return habit.endDate === todayDate
+    // ✅ Update habits' status based on endDate
+    const updatedHabits: Habit[] = habitsData.map((habit) =>
+      new Date(habit.endDate) <= todayDate
         ? { ...habit, status: "completed" }
         : habit
-    })
+    )
 
     console.log("updatedHabits ", updatedHabits)
-    // Update state first
 
-    // Filter only habits that were actually updated
+    // ✅ Use the updated status to filter
     const habitsToUpdate = updatedHabits.filter(
-      (habit) => habit.endDate === todayDate && habit.status==="active"
+      (habit) => habit.status === "completed"
     )
 
     console.log("habits to update", habitsToUpdate)
 
+    // ✅ Update UI first
+    setHabits(updatedHabits)
+
     if (habitsToUpdate.length > 0) {
       try {
-        // Send API request for all updated habits
-        await Promise.all(
-          habitsToUpdate.map((habit) => updateHabit(habit)) // ✅ Call the correct function
-        )
+        await Promise.all(habitsToUpdate.map((habit) => updateHabit(habit)))
         console.log("✅ All habits updated successfully in the database!")
       } catch (error) {
         console.error("❌ Failed to update habits in the database:", error)
@@ -151,7 +154,6 @@ export default function HabitFeature() {
     } else {
       console.log("⚡ No habits needed updating today.")
     }
-    setHabits(updatedHabits)
   }
 
   async function fetchAndProcessHabits(
@@ -162,12 +164,12 @@ export default function HabitFeature() {
     console.log("🚀 Fetching habits...")
 
     let result = await getHabits(userId)
-    if(result.success){
-      let habitsData : Habit[]= result.data
+    if (result.success) {
+      let habitsData: Habit[] = result.data
       console.log(habitsData)
-      
+
       habitsData = await updateMissedStreaks(habitsData)
-      
+
       setHabits(habitsData)
       await updateHabitsStatus(habitsData)
       setGroupedHabits(groupHabitsByCategory(habitsData))
@@ -298,34 +300,40 @@ export default function HabitFeature() {
       <div className="flex md:flex-row gap-2 md:gap-4 items-center justify-between ">
         <div className="flex gap-5 items-center">
           <Greetings feature="habits" />
-          <div className=" gap-4 items-center hidden lg:flex flex-row">
-            <Select value={sortBy} onValueChange={handleSortChange}>
-              <SelectTrigger className="p-2 py-4 border rounded w-[200px]">
-                <SelectValue placeholder="Sort By" />
-              </SelectTrigger>
-              <SelectContent>
-                <SelectGroup>
-                  <SelectLabel>Sort By</SelectLabel>
-                  {/* <SelectItem value="streak">Streak</SelectItem>{" "} */}
-                  {/* ✅ New Streak Option */}
-                  <SelectItem value="duration">Duration (Days)</SelectItem>{" "}
-                  {/* ✅ Sort by Habit Duration */}
-                  <SelectItem value="category">Category</SelectItem>
-                  {/* <SelectItem value="createdAt">Created At</SelectItem> */}
-                </SelectGroup>
-              </SelectContent>
-            </Select>
-            <button
-              onClick={() => setSortOrder(sortOrder === "asc" ? "desc" : "asc")}
-              className="p-2 border rounded"
-            >
-              {sortOrder === "asc" ? (
-                <ArrowUpIcon size={16} className="" />
-              ) : (
-                <ArrowDownIcon size={16} className="" />
-              )}
-            </button>
-          </div>
+          {process.env.NEXT_PUBLIC_HABIT_FILTER === "true" && (
+            <div className=" gap-4 items-center hidden lg:flex flex-row">
+              <Select value={sortBy} onValueChange={handleSortChange}>
+                <SelectTrigger className="p-2 py-4 border rounded w-[200px]">
+                  <SelectValue placeholder="Sort By" />
+                </SelectTrigger>
+                <SelectContent>
+                  <SelectGroup>
+                    <SelectLabel>Sort By</SelectLabel>
+                    {/* <SelectItem value="streak">Streak</SelectItem>{" "} */}
+                    {/* ✅ New Streak Option */}
+                    <SelectItem value="duration">
+                      Duration (Days)
+                    </SelectItem>{" "}
+                    {/* ✅ Sort by Habit Duration */}
+                    <SelectItem value="category">Category</SelectItem>
+                    {/* <SelectItem value="createdAt">Created At</SelectItem> */}
+                  </SelectGroup>
+                </SelectContent>
+              </Select>
+              <button
+                onClick={() =>
+                  setSortOrder(sortOrder === "asc" ? "desc" : "asc")
+                }
+                className="p-2 border rounded"
+              >
+                {sortOrder === "asc" ? (
+                  <ArrowUpIcon size={16} className="" />
+                ) : (
+                  <ArrowDownIcon size={16} className="" />
+                )}
+              </button>
+            </div>
+          )}
         </div>
         <div className="flex gap-1">
           <HabitFeatureForm
@@ -334,46 +342,48 @@ export default function HabitFeature() {
             setHabits={setHabits}
             updateTheGoalData={updateTheGoalData}
           />
-          <DropdownMenu>
-            <DropdownMenuTrigger className="lg:hidden">
-              <EllipsisVertical size={20} />
-            </DropdownMenuTrigger>
-            <DropdownMenuContent className="mr-4">
-              <DropdownMenuLabel>Sorting</DropdownMenuLabel>
-              <div className=" gap-4 items-center flex flex-row">
-                <Select value={sortBy} onValueChange={handleSortChange}>
-                  <SelectTrigger className="p-2 py-4 border rounded w-[200px]">
-                    <SelectValue placeholder="Sort By" />
-                  </SelectTrigger>
-                  <SelectContent>
-                    <SelectGroup>
-                      <SelectLabel>Sort By</SelectLabel>
-                      {/* <SelectItem value="streak">Streak</SelectItem>{" "} */}
-                      {/* ✅ New Streak Option */}
-                      <SelectItem value="duration">
-                        Duration (Days)
-                      </SelectItem>{" "}
-                      {/* ✅ Sort by Habit Duration */}
-                      <SelectItem value="category">Category</SelectItem>
-                      {/* <SelectItem value="createdAt">Created At</SelectItem> */}
-                    </SelectGroup>
-                  </SelectContent>
-                </Select>
-                <button
-                  onClick={() =>
-                    setSortOrder(sortOrder === "asc" ? "desc" : "asc")
-                  }
-                  className="p-2 border rounded"
-                >
-                  {sortOrder === "asc" ? (
-                    <ArrowUpIcon size={16} className="" />
-                  ) : (
-                    <ArrowDownIcon size={16} className="" />
-                  )}
-                </button>
-              </div>
-            </DropdownMenuContent>
-          </DropdownMenu>
+          {process.env.NEXT_PUBLIC_HABIT_FILTER === "true" && (
+            <DropdownMenu>
+              <DropdownMenuTrigger className="lg:hidden">
+                <EllipsisVertical size={20} />
+              </DropdownMenuTrigger>
+              <DropdownMenuContent className="mr-4">
+                <DropdownMenuLabel>Sorting</DropdownMenuLabel>
+                <div className=" gap-4 items-center flex flex-row">
+                  <Select value={sortBy} onValueChange={handleSortChange}>
+                    <SelectTrigger className="p-2 py-4 border rounded w-[200px]">
+                      <SelectValue placeholder="Sort By" />
+                    </SelectTrigger>
+                    <SelectContent>
+                      <SelectGroup>
+                        <SelectLabel>Sort By</SelectLabel>
+                        {/* <SelectItem value="streak">Streak</SelectItem>{" "} */}
+                        {/* ✅ New Streak Option */}
+                        <SelectItem value="duration">
+                          Duration (Days)
+                        </SelectItem>{" "}
+                        {/* ✅ Sort by Habit Duration */}
+                        <SelectItem value="category">Category</SelectItem>
+                        {/* <SelectItem value="createdAt">Created At</SelectItem> */}
+                      </SelectGroup>
+                    </SelectContent>
+                  </Select>
+                  <button
+                    onClick={() =>
+                      setSortOrder(sortOrder === "asc" ? "desc" : "asc")
+                    }
+                    className="p-2 border rounded"
+                  >
+                    {sortOrder === "asc" ? (
+                      <ArrowUpIcon size={16} className="" />
+                    ) : (
+                      <ArrowDownIcon size={16} className="" />
+                    )}
+                  </button>
+                </div>
+              </DropdownMenuContent>
+            </DropdownMenu>
+          )}
         </div>
       </div>
 

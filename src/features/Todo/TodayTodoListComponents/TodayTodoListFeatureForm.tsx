@@ -9,6 +9,11 @@ import {
 } from "@/components/ui/dialog"
 import { Input } from "@/components/ui/input"
 import { Label } from "@/components/ui/label"
+import {
+  Popover,
+  PopoverTrigger,
+  PopoverContent
+} from "@/components/ui/popover"
 import { RadioGroup, RadioGroupItem } from "@/components/ui/radio-group"
 import {
   Select,
@@ -31,6 +36,7 @@ import {
   preDefinedTaskPriorities
 } from "./TodayTodoListConstants"
 import { getResourceCount } from "@/utils/resource-limits"
+import { ScrollArea } from "@/components/ui/scroll-area"
 
 type TodayTaskListFeatureFormPropsType = {
   tasks: Task[]
@@ -44,6 +50,8 @@ export default function TodayTaskListFeatureForm({
   const { user } = useUserContext()
   const [isDialogOpen, setIsDialogOpen] = useState(false)
   const [canAddTask, setCanAddTask] = useState(false)
+
+  const [selectedTime, setSelectedTime] = useState("")
 
   const [taskName, setTaskName] = useState("")
   const [taskNameError, setTaskNameError] = useState("")
@@ -61,6 +69,15 @@ export default function TodayTaskListFeatureForm({
   const [loading, setLoading] = useState(false)
   //   const [taskDueDate,setTaskDueDate] = useState("")
 
+  const times = Array.from({ length: 24 * 4 }, (_, i) => {
+    const hours = Math.floor(i / 4)
+    const minutes = (i % 4) * 15
+    return `${String(hours).padStart(2, "0")}:${String(minutes).padStart(
+      2,
+      "0"
+    )}`
+  })
+
   const createTaskObject = () => {
     if (user !== null) {
       const task: Task = {
@@ -73,7 +90,8 @@ export default function TodayTaskListFeatureForm({
         category: taskCategory,
         isCompleted: false,
         taskColor: taskColor,
-        createdAt: new Date() // ✅ Use Date object instead of string
+        createdAt: new Date(), // ✅ Use Date object instead of string
+        startTime: selectedTime
       }
       return task
     }
@@ -152,13 +170,14 @@ export default function TodayTaskListFeatureForm({
       taskNameError === "" &&
       taskPriority !== "" &&
       // taskColor !== "" &&
-      taskCategory !== ""
+      taskCategory !== "" &&
+      selectedTime!==""
     ) {
       setCanAddTask(true)
     } else {
       setCanAddTask(false)
     }
-  }, [taskCategory, taskName, taskDuration, taskPriority, taskColor])
+  }, [taskCategory, taskName, taskDuration, taskPriority, taskColor,selectedTime])
 
   return (
     <section>
@@ -188,7 +207,7 @@ export default function TodayTaskListFeatureForm({
                 <p className="text-error text-sm">{taskNameError}</p>
               )}
             </div>
-         
+
             <div className="flex items-center justify-between">
               <div className="mt-4">
                 <Select
@@ -277,8 +296,8 @@ export default function TodayTaskListFeatureForm({
               </RadioGroup>
             </div> */}
           </div>
-          <div className="flex items-center gap-4">
-              {/* <div className="w-full">
+          <div className="flex items-center gap-4 justify-between">
+            {/* <div className="w-full">
                 <Label htmlFor="description" className="text-right">
                   Description
                 </Label>
@@ -288,30 +307,48 @@ export default function TodayTaskListFeatureForm({
                   onChange={(e) => handleTaskDescription(e)}
                 />
               </div> */}
-              <div className="">
-                <Select
-                  value={taskPriority}
-                  onValueChange={(value) => handleTaskPriority(value)}
-                  //   disabled={categoryLocked}
-                >
-                  <SelectTrigger className="w-[150px] md:w-[180px]">
-                    <SelectValue placeholder="Task Priority" />
-                  </SelectTrigger>
-                  <SelectContent>
-                    <SelectGroup className="">
-                      <SelectLabel>Task Priority</SelectLabel>
-                      {preDefinedTaskPriorities.map((priority, i) => {
-                        return (
-                          <SelectItem key={i} value={priority.value.toString()}>
-                            {priority.label}
-                          </SelectItem>
-                        )
-                      })}
-                    </SelectGroup>
-                  </SelectContent>
-                </Select>
-              </div>
+            <div className="">
+              <Select
+                value={taskPriority}
+                onValueChange={(value) => handleTaskPriority(value)}
+                //   disabled={categoryLocked}
+              >
+                <SelectTrigger className="w-[150px] md:w-[180px]">
+                  <SelectValue placeholder="Task Priority" />
+                </SelectTrigger>
+                <SelectContent>
+                  <SelectGroup className="">
+                    <SelectLabel>Task Priority</SelectLabel>
+                    {preDefinedTaskPriorities.map((priority, i) => {
+                      return (
+                        <SelectItem key={i} value={priority.value.toString()}>
+                          {priority.label}
+                        </SelectItem>
+                      )
+                    })}
+                  </SelectGroup>
+                </SelectContent>
+              </Select>
             </div>
+            <div>
+              <Select value={selectedTime} onValueChange={setSelectedTime}>
+                <SelectTrigger className="w-[150px] md:w-[180px]">
+                  <SelectValue placeholder="Select Time" />
+                </SelectTrigger>
+                <SelectContent>
+                  <ScrollArea className="h-48">
+                    <SelectGroup>
+                      {times.map((time) => (
+                        <SelectItem key={time} value={time}>
+                          {time}
+                        </SelectItem>
+                      ))}
+                    </SelectGroup>
+                  </ScrollArea>
+                </SelectContent>
+              </Select>
+            </div>
+          </div>
           <DialogFooter>
             <Button
               disabled={!canAddTask || loading}

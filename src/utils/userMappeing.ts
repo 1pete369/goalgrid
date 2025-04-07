@@ -38,6 +38,16 @@ export const mapFirebaseUserToMainUserObject = async (
       referralSource: "",
       gender: ""
     },
+    progress: {
+      xp: 0,
+      tokens: 0,
+      level: 1,
+      streak: 0,
+      dailyRewardsClaimed: [{
+        date: new Date(), // Date of reward claim
+        rewards: [] // Array of rewards claimed that day
+      }]
+    },
     isOnboardingComplete: false,
     customData: {
       timezone: {

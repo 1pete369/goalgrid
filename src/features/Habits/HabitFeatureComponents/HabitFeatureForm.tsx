@@ -340,6 +340,7 @@ export default function HabitFeatureForm({
                     {Array.isArray(goals) &&
                       goals.length > 0 &&
                       goals.map((goal, i) => {
+                        if(goal.status==="active")
                         return (
                           <SelectItem key={i} value={goal.id}>
                             {goal.name}

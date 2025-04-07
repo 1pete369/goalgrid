@@ -9,6 +9,7 @@ export type Task = {
   isCompleted: boolean
   createdAt: Date
   taskColor : string
+  startTime : string
 }
 
 export type TaskPriority = { priority: "1" | "2" | "3" | "4" }

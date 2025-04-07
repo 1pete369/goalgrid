@@ -25,7 +25,7 @@ export default function SidebarBreadcrumbNavigation() {
     .filter((segment) => segment && !isUUID(segment)) // Exclude UUIDs
 
   return (
-    <Breadcrumb>
+    <Breadcrumb className="hidden md:block">
       <BreadcrumbList>
         {pathSegments.map((segment, index) => (
           <React.Fragment key={index}>

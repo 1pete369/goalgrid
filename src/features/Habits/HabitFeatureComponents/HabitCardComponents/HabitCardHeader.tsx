@@ -89,6 +89,7 @@ export default function HabitCardHeader({
       <div className="flex items-center justify-between w-full">
         <div className="flex items-center gap-1">
           <span className="text-sm">{habit.streak.current}</span>
+          {/* <span className="text-sm">{habit.endDate ? "End" : "No"}</span> */}
           <Image
             src={"/flame.png"}
             height={15}

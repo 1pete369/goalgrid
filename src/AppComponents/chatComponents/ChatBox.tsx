@@ -10,14 +10,17 @@ import MessageList from "./MessageList"
 import { ChatBoxProps, MessageType } from "./types"
 import ChatInput from "./ChatInput"
 import io, { Socket } from "socket.io-client"
+import FullPageLoading from "../loaders/FullPageLoading"
+import { delay } from "@/utils/delay"
 
 export default function ChatBox({ roomName }: ChatBoxProps) {
   const { user } = useUserContext()
-  const [messages, setMessages] = useState<any[]>([])
+  const [messages, setMessages] = useState<MessageType[]>([])
   const [newMessage, setNewMessage] = useState("")
   const [joinedUsersData, setJoinedUsersData] = useState<any[]>([])
   const [mediaType, setMediaType] = useState("none")
   const [mediaUrl, setMediaUrl] = useState("")
+  const [messagesLoading,setMessagesLoading] = useState(false)
   const [popoverClose, setPopOverClose] = useState(false)
   const myId = user?.uid
 
@@ -38,6 +41,31 @@ export default function ChatBox({ roomName }: ChatBoxProps) {
     socketRef.current.on("chatMessage", (message: any) => {
       setMessages((prevMessages) => [...(prevMessages || []), message]);
     });
+
+    // **NEW: Listen for new users joining the room**
+    socketRef.current.on("newUserJoined", async (newUserId: string) => {
+      try {
+        const responseForRoomData = await axios.get(
+          `${process.env.NEXT_PUBLIC_API_URL}/rooms/get-room-by-name/${roomName}`
+        )
+
+        console.log("responseforRoomData", responseForRoomData.data)
+
+        const roomData: Room = responseForRoomData.data.room
+        const joinedUsersIds = roomData.usersJoined
+
+        const joinedUsersData = await axios.post(
+          `${process.env.NEXT_PUBLIC_API_URL}/users/get-users-by-ids`,
+          { userIds: joinedUsersIds }
+        )
+
+        console.log("JoinedUsersData", joinedUsersData)
+
+        setJoinedUsersData(joinedUsersData.data.users)
+      } catch (error) {
+        console.error("Error fetching new user data:", error);
+      }
+    });
   
     return () => {
       // Disconnect from the socket when component unmounts
@@ -51,10 +79,15 @@ export default function ChatBox({ roomName }: ChatBoxProps) {
 
     // Load existing messages and room data
     async function loadMessages() {
+      setMessagesLoading(true)
+      await delay(3000)
       try {
         const responseForRoomData = await axios.get(
           `${process.env.NEXT_PUBLIC_API_URL}/rooms/get-room-by-name/${roomName}`
         )
+
+        console.log("responseforRoomData", responseForRoomData.data)
+
         const roomData: Room = responseForRoomData.data.room
         const joinedUsersIds = roomData.usersJoined
 
@@ -63,15 +96,22 @@ export default function ChatBox({ roomName }: ChatBoxProps) {
           { userIds: joinedUsersIds }
         )
 
+        console.log("JoinedUsersData", joinedUsersData)
+
         setJoinedUsersData(joinedUsersData.data.users)
 
         const response = await axios.get(
           `${process.env.NEXT_PUBLIC_API_URL}/chats/get-messages/${roomName}`
         )
-        const messagesFetched: any[] = response.data.data
+
+        console.log("Messages response data", response.data)
+        const messagesFetched: MessageType[] = response.data.data
         setMessages(messagesFetched)
+        
       } catch (error) {
         console.error("Error loading messages:", error)
+      }finally{
+        setMessagesLoading(false)
       }
     }
 
@@ -138,10 +178,13 @@ export default function ChatBox({ roomName }: ChatBoxProps) {
     }
   }, [mediaUrl, mediaType])
 
+  if(user===null) return <FullPageLoading />
+
   return (
     <div className="min-h-screen max-w-7xl w-full h-full p-4 mx-auto">
       <ChatHeader roomName={roomName} />
       <MessageList
+        messagesLoading={messagesLoading}
         messages={messages}
         me={me as string}
         joinedUsersData={joinedUsersData}

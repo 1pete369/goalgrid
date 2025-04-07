@@ -117,18 +117,19 @@ export default function GoalFeatureForm({
   const handleDurationChange = (duration: string) => {
     const durationInDays = parseInt(duration, 10) // Convert string to number
     setGoalDuration(duration)
-
+  
     // Start date is today
     const startDate = new Date()
-
-    // Calculate the deadline correctly
+  
+    // Calculate the deadline correctly (21 days + 1)
     const deadlineDate = new Date(startDate)
-    deadlineDate.setDate(startDate.getDate() + durationInDays - 1) // Subtract 1 to make it exact
-
+    deadlineDate.setDate(startDate.getDate() + durationInDays) // No need to subtract 1 now
+  
     console.log(deadlineDate)
-
+  
     setGoalDeadline(deadlineDate.toISOString().split("T")[0]) // Format YYYY-MM-DD
   }
+  
 
   const handleColorChange = (value: string) => {
     setGoalColor(value)

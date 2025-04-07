@@ -14,7 +14,9 @@ export async function getCategories(uid: string): Promise<ApiResponse<any>> {
 }
 
 // Create a new category
-export async function createCategory(category: CategoryType): Promise<ApiResponse<any>> {
+export async function createCategory(
+  category: CategoryType
+): Promise<ApiResponse<any>> {
   try {
     const response = await axios.post(`/api/categories`, { category })
     return { success: true, data: response.data }
@@ -24,11 +26,22 @@ export async function createCategory(category: CategoryType): Promise<ApiRespons
 }
 
 // Delete a category by ID
-export async function deleteCategory(categoryId: string): Promise<ApiResponse<any>> {
+export async function deleteCategory(
+  categoryId: string
+): Promise<ApiResponse<any>> {
   try {
     const response = await axios.delete(`/api/categories/${categoryId}`)
     return { success: true, data: response.data }
   } catch (error) {
     return handleApiError(error)
+  }
+}
+
+export async function updateCategory(categoryId: string) {
+  try {
+    const response = await axios.patch(`/api/categories/${categoryId}`)
+    console.log(response.data)
+  } catch (error) {
+    console.log(error)
   }
 }

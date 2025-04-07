@@ -36,7 +36,7 @@ export default function ChatInput({
         <Input
           id="messageBox"
           type="text"
-          className="flex-1 md:max-w-md lg:max-lg rounded-sm px-3 py-1 placeholder:text-gray-800 text-gray-800 focus:border-primary-800"
+          className="flex-1 md:max-w-md lg:max-lg rounded-sm px-3 py-1 placeholder:text-gray-800 dark:placeholder:text-gray-500 text-gray-800 dark:text-gray-100 focus:border-primary-800"
           placeholder="Enter message here..."
           onChange={(e) => setNewMessage(e.target.value)}
           value={newMessage}

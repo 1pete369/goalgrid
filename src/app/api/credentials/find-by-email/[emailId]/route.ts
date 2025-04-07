@@ -12,7 +12,6 @@ export async function GET(req: Request,{params}:{params: Promise<{emailId : stri
     
     const response = await axios.get(`${process.env.API_URL}/credentials/find-by-email/${email}`);
     
-    console.log("Find by email data",response.data)
     return NextResponse.json(response.data);
   } catch (error) {
     console.error("Error finding user by email:", error);

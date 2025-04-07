@@ -165,7 +165,17 @@ body {
 
 
 .bg-dot-pattern {
-  background-image: radial-gradient(circle, rgba(255, 255, 255, 0.3) 1px, transparent 1px);
+  @apply bg-primary-800;
+  background-image: radial-gradient(circle, rgba(255, 255, 255, 0.1) 1px, transparent 1px);
   background-size: 16px 16px; /* Smaller dots for a better effect */
-  opacity: 0.3;
+}
+
+
+@layer utilities {
+  .bg-squares {
+    background-color: hsl(var(--background));
+    background-image: linear-gradient(to right, hsl(var(--border) / 0.2) 1px, transparent 1px),
+      linear-gradient(to bottom, hsl(var(--border) / 0.2) 1px, transparent 1px);
+    background-size: 60px 60px;
+  }
 }

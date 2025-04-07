@@ -24,7 +24,6 @@ export default function HabitCard({
     <Card
       className="w-full md:w-[250px] rounded-t-sm rounded-b-none flex flex-col justify-between overflow-hidden shadow-none"
       key={habit.id}
-      // style={{backgroundColor:habit.habitColor}}
     >
       <HabitCardHeader 
         habit={habit}
