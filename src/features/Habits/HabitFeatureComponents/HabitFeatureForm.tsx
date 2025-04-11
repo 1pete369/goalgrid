@@ -147,7 +147,7 @@ export default function HabitFeatureForm({
 
   const handleCreateHabit = async () => {
     setLoading(true)
-    const resourceResult = await getResourceCount(user?.uid as string, "habits")
+    const resourceResult = await getResourceCount( "habits")
     if (resourceResult.success) {
       const habitCreated: Habit = createHabitObject(
         habitName,
@@ -217,7 +217,7 @@ export default function HabitFeatureForm({
           <Button className="font-semibold text-base flex items-center">
             <Plus />
             Add
-            <p className="hidden md:flex">new Habit!</p>
+            <p className="hidden md:flex">Habit!</p>
           </Button>
         </DialogTrigger>
         <DialogContent className="p-4">

@@ -1,19 +1,23 @@
 // app/api/habits/route.ts
 import { NextResponse } from "next/server"
 import axios from "axios"
+import { getSecureAxios } from "@/lib/secureAxios"
+import { getServerSession } from "next-auth"
+import { authOptions } from "../auth/[...nextauth]/authOptions"
 
 // Handle GET request (fetch habits by user ID)
 export async function GET(req: Request) {
-  const { searchParams } = new URL(req.url)
-  const uid = searchParams.get("uid") // Retrieve the query parameter 'uid'
+  const session = await getServerSession(authOptions) // ✅ Fetch once
 
-  if (!uid) {
-    return NextResponse.json({ message: "Missing user ID" }, { status: 400 })
+  if (!session?.user?.id) {
+    return NextResponse.json({ message: "Unauthorized" }, { status: 401 })
   }
 
+  const { axiosInstance } = await getSecureAxios(session)
+
   try {
-    const response = await axios.get(
-      `${process.env.API_URL}/habits/get-habits/${uid}`
+    const response = await axiosInstance.get(
+      `/habits/get-habits/${session.user.id}`
     )
     const habits = response.data.data
     console.log("Habits Data:", response.data)
@@ -28,13 +32,20 @@ export async function GET(req: Request) {
 }
 
 export async function POST(req: Request) {
+  const session = await getServerSession(authOptions) // ✅ Fetch once
+
+  if (!session?.user?.id) {
+    return NextResponse.json({ message: "Unauthorized" }, { status: 401 })
+  }
+
+  const { axiosInstance } = await getSecureAxios(session)
   const { habit } = await req.json() // Parse the request body as JSON
   console.log(habit)
 
   try {
     // Step 1: Create the habit in the database
-    const response = await axios.post(
-      `${process.env.API_URL}/habits/create-habit`,
+    const response = await axiosInstance.post(
+      `/habits/create-habit`,
       { habit: habit }
     )
     console.log("Created Habit:", response.data)
@@ -48,8 +59,8 @@ export async function POST(req: Request) {
       console.log("Linking habit to goal:", linkedGoalId)
 
       // Send PATCH request to update the goal with the new habit ID
-      const response2 = await axios.patch(
-        `${process.env.API_URL}/goals/link-habit/${habit.uid}`,
+      const response2 = await axiosInstance.patch(
+        `/goals/link-habit/${session.user.id}`,
         { habitIdInDb, linkedGoalId }
       )
       console.log(response2.data)

@@ -189,7 +189,7 @@ const AnalyticsCharts: React.FC = () => {
       const getAnalytics = async () => {
         try {
           setIsLoading(true)
-          const res = await axios.get(`/api/analytics/goals/${user.uid}`)
+          const res = await axios.get(`/api/analytics/goals/`)
           // Introduce a slight delay before setting the data
           const data = res.data
           setAnalytics(data)
@@ -201,6 +201,7 @@ const AnalyticsCharts: React.FC = () => {
       }
       getAnalytics()
     }
+    
   }, [user])
 
   // if (!analytics) return <p>Loading...</p>

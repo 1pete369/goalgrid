@@ -156,7 +156,7 @@ export default function Page() {
       const getAnalytics = async () => {
         setIsLoading(true) // Show loading state
         try {
-          const res= await axios.get(`/api/analytics/tasks/${user.uid}`)
+          const res= await axios.get(`/api/analytics/tasks`)
           // Introduce a slight delay before setting the data
           const data=res.data
           setData(data)

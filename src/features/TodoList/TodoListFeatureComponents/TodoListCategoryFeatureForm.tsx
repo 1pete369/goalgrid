@@ -79,7 +79,6 @@ export default function TodoListCategoryFeatureForm({
     if (user !== null) {
       setLoading(true)
       const resourceResult = await getResourceCount(
-        user?.uid as string,
         "categories"
       )
       if (resourceResult.success) {
@@ -128,7 +127,7 @@ export default function TodoListCategoryFeatureForm({
           <Button className="font-semibold text-base flex items-center">
             <Plus />
             Add
-            <p className="hidden md:flex">new Category!</p>
+            <p className="hidden md:flex">Category!</p>
           </Button>
         </DialogTrigger>
         <DialogContent className="sm:max-w-[425px] p-4">

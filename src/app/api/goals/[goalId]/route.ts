@@ -1,10 +1,22 @@
 import { NextResponse } from "next/server"
 import axios from "axios"
+import { getSecureAxios } from "@/lib/secureAxios"
+import { getServerSession } from "next-auth"
+import { authOptions } from "../../auth/[...nextauth]/authOptions"
 
 export async function GET(
   req: Request,
   { params }: { params: Promise<{ goalId: string }> }
 ) {
+
+  const session = await getServerSession(authOptions) // ✅ Fetch once
+
+  if (!session?.user?.id) {
+    return NextResponse.json({ message: "Unauthorized" }, { status: 401 })
+  }
+
+  const { axiosInstance } = await getSecureAxios(session)
+
   try {
     const goalId = (await params).goalId
 
@@ -12,8 +24,8 @@ export async function GET(
       return NextResponse.json({ message: "Missing goal ID" }, { status: 400 })
     }
 
-    const response = await axios.get(
-      `${process.env.API_URL}/goals/get-goal/${goalId}`
+    const response = await axiosInstance.get(
+      `/goals/get-goal/${goalId}`
     )
     console.log("Fetched single goal:", response.data)
 
@@ -31,6 +43,15 @@ export async function PATCH(
   req: Request,
   { params }: { params: Promise<{ goalId: string }> }
 ) {
+
+  const session = await getServerSession(authOptions) // ✅ Fetch once
+
+  if (!session?.user?.id) {
+    return NextResponse.json({ message: "Unauthorized" }, { status: 401 })
+  }
+
+  const { axiosInstance } = await getSecureAxios(session)
+
   try {
     const goalId = (await params).goalId
     const { goal } = await req.json()
@@ -41,8 +62,8 @@ export async function PATCH(
       return NextResponse.json({ message: "Missing Goal Id" }, { status: 400 })
     }
 
-    const response = await axios.patch(
-      `${process.env.API_URL}/goals/update-goal-status/${goal.id}`,
+    const response = await axiosInstance.patch(
+      `/goals/update-goal-status/${goal.id}`,
       { goal }
     )
     console.log(response.data)
@@ -61,6 +82,15 @@ export async function DELETE(
   req: Request,
   { params }: { params: Promise<{ goalId: string }> }
 ) {
+
+  const session = await getServerSession(authOptions) // ✅ Fetch once
+
+  if (!session?.user?.id) {
+    return NextResponse.json({ message: "Unauthorized" }, { status: 401 })
+  }
+
+  const { axiosInstance } = await getSecureAxios(session)
+
   try {
     const goalId = (await params).goalId
     const { linkedHabits } = await req.json()
@@ -71,15 +101,15 @@ export async function DELETE(
     if (linkedHabits && linkedHabits.length > 0) {
       console.log("Deleting linked habits:", linkedHabits)
       // You can add logic to delete linked habits first
-      const response= await axios.delete(`${process.env.API_URL}/habits/delete-linked-habits`, {
+      const response= await axiosInstance.delete(`/habits/delete-linked-habits`, {
         data: { habitIds: linkedHabits }
       })
 
       console.log(response.data)
     }
 
-    const response = await axios.delete(
-      `${process.env.API_URL}/goals/delete-goal/${goalId}`
+    const response = await axiosInstance.delete(
+      `/goals/delete-goal/${goalId}`
     )
     console.log(response)
     return NextResponse.json(response.data)

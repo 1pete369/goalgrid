@@ -28,7 +28,7 @@ export async function updateGoal(goal: Goal): Promise<ApiResponse<any>> {
 // Fetch all goals for a user
 export async function getGoals(uid: string): Promise<ApiResponse<any>> {
   try {
-    const response = await axios.get(`/api/goals?uid=${uid}`)
+    const response = await axios.get(`/api/goals`)
     return { success: true, data: response.data }
   } catch (error) {
     return handleApiError(error)

@@ -156,7 +156,7 @@ export default function TodoFeature() {
 
   if (user === null) return <FullPageLoading />
   return (
-    <div className="container min-h-[calc(100vh-64px)] md:px-16 pt-20 p-4 pb-4">
+    <div className="container min-h-screen md:px-16 pt-20 p-4 pb-4">
       <header className="flex md:flex-row gap-2 md:gap-4 md:items-center justify-between">
         <Greetings feature="todos" />
         <TodoListCategoryFeatureForm
@@ -170,7 +170,7 @@ export default function TodoFeature() {
           dispatch={dispatch}
         />
       </header>
-      <div className="min-h-[600px] rounded-sm shadow-sm mt-4 flex flex-wrap justify-center md:justify-normal gap-4">
+      <div className="min-h-[600px] rounded-sm mt-4 flex flex-wrap justify-center md:justify-normal gap-4">
         {loading ? (
           <TodoCategoryCardSkeleton />
         ) : Array.isArray(state) && state.length > 0 ? (

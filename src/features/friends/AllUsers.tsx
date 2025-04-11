@@ -24,7 +24,7 @@ export default function AllUsers() {
       {Array.isArray(users) && users.length>0 && users.filter((user) => user.uid !== myId)
         .map((user) => (
           <div
-            className="flex flex-col p-4 shadow-md w-[240px] gap-4 border-2 rounded-sm"
+            className="flex flex-col p-4 shadow-md w-[220px] gap-4 border-2 rounded-sm"
             key={user.uid}
           >
             <div className="flex items-center gap-4">

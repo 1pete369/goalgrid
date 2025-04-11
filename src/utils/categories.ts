@@ -6,7 +6,7 @@ import { ApiResponse } from "@/types/apiErrorType"
 // Fetch all categories for a user
 export async function getCategories(uid: string): Promise<ApiResponse<any>> {
   try {
-    const response = await axios.get(`/api/categories?uid=${uid}`)
+    const response = await axios.get(`/api/categories`)
     return { success: true, data: response.data }
   } catch (error) {
     return handleApiError(error)

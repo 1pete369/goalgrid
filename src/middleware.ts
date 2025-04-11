@@ -17,7 +17,7 @@ function isAccessAllowed(path: string, userPlan: string): boolean {
     return PLAN_ACCESS["/work/community"].includes(userPlan);
   }
   if (path.startsWith("/friends")) {
-    return false; // Always restricted.
+    return true; // Always restricted.
   }
   // Default to allow access for routes not explicitly protected.
   return true;

@@ -1,5 +1,14 @@
 "use client"
 
+import {
+  AlertDialog,
+  AlertDialogCancel,
+  AlertDialogContent,
+  AlertDialogDescription,
+  AlertDialogFooter,
+  AlertDialogHeader,
+  AlertDialogTitle
+} from "@/components/ui/alert-dialog"
 import Greetings from "@/AppComponents/Greetings"
 import FullPageLoading from "@/AppComponents/loaders/FullPageLoading"
 import { Button } from "@/components/ui/button"
@@ -8,14 +17,22 @@ import { useCustomToast } from "@/hooks/useCustomToast"
 import JournalSkeleton from "@/skeletons/JournalSkeleton"
 import { Journal } from "@/types/journalTypes"
 import { deleteJournal, getJournals } from "@/utils/journals"
-import { Edit, ExternalLink, Plus, Trash2 } from "lucide-react"
+import { Edit, EllipsisVertical, ExternalLink, Loader2, Plus, Trash2 } from "lucide-react"
 import Link from "next/link"
 import { useEffect, useState } from "react"
+import {
+  DropdownMenu,
+  DropdownMenuContent,
+  DropdownMenuItem,
+  DropdownMenuTrigger
+} from "@/components/ui/dropdown-menu"
 
 export default function JournalFeature() {
   const { user } = useUserContext()
   const [journals, setJournals] = useState<Journal[]>([])
   const [loading, setLoading] = useState(false)
+  const [deleteLoading, setDeleteLoading] = useState(false)
+  const [journalToDelete, setJournalToDelete] = useState<Journal | null>(null)
 
   const { showToast } = useCustomToast()
 
@@ -33,15 +50,19 @@ export default function JournalFeature() {
     }
   }, [user])
 
-  const handleDeletejournal = async (journalId: string) => {
+  const handleDeleteJournal = async (journalId: string) => {
     if (user !== null) {
+      setDeleteLoading(true)
+      // Optimistically update the UI
       setJournals(journals.filter((journal) => journal.id !== journalId))
       const result = await deleteJournal(journalId)
       if (result.success) {
         showToast("Journal Deleted", 200)
+        setJournalToDelete(null)
       } else {
         showToast(result.message, result.status)
       }
+      setDeleteLoading(false)
     }
   }
 
@@ -54,8 +75,7 @@ export default function JournalFeature() {
         <Link href={"/work/personal/journals/create-journal"}>
           <Button className="font-semibold text-base flex items-center">
             <Plus />
-            Add
-            <p className="hidden md:flex">new Journal!</p>
+            Add <span className="hidden md:inline">Journal!</span>
           </Button>
         </Link>
       </header>
@@ -65,8 +85,6 @@ export default function JournalFeature() {
         ) : Array.isArray(journals) && journals.length === 0 ? (
           <p className="text-gray-500">No Journals available.</p>
         ) : (
-          Array.isArray(journals) &&
-          journals.length > 0 &&
           journals.map((journal) => (
             <div
               key={journal.id}
@@ -74,28 +92,44 @@ export default function JournalFeature() {
             >
               <div className="flex justify-between">
                 <div className="flex flex-col">
-                  <h3 className="text-sm font-semibold ">{journal.name}</h3>
+                  <h3 className="text-sm font-semibold">{journal.name}</h3>
                   <p className="text-xs">
                     {new Date(journal.createdDate).toLocaleDateString()}
                   </p>
                 </div>
-                <div className="flex gap-1">
-                  <Link href={`/work/personal/journals/${journal.id}/edit`}>
+                <DropdownMenu>
+                  <DropdownMenuTrigger asChild>
                     <Button
                       variant="outline"
                       className="rounded-sm shadow-none"
+                      aria-label="More Actions"
                     >
-                      <Edit />
+                      <EllipsisVertical />
                     </Button>
-                  </Link>
-                  <Button
-                    variant="outline"
-                    className="rounded-sm shadow-none"
-                    onClick={() => handleDeletejournal(journal.id)}
-                  >
-                    <Trash2 />
-                  </Button>
-                </div>
+                  </DropdownMenuTrigger>
+                  <DropdownMenuContent align="end" className="w-40">
+                    <DropdownMenuItem asChild>
+                      <Link
+                        href={`/work/personal/journals/${journal.id}/edit`}
+                        aria-label="Edit Journal"
+                      >
+                        <div className="flex items-center gap-2">
+                          <Edit size={14} />
+                          <span>Edit Journal</span>
+                        </div>
+                      </Link>
+                    </DropdownMenuItem>
+                    <DropdownMenuItem
+                      onClick={() => setJournalToDelete(journal)}
+                      className="text-red-600"
+                    >
+                      <div className="flex items-center gap-2">
+                        <Trash2 size={14} />
+                        <span>Delete Journal</span>
+                      </div>
+                    </DropdownMenuItem>
+                  </DropdownMenuContent>
+                </DropdownMenu>
               </div>
               <Link href={`/work/personal/journals/${journal.id}`}>
                 <Button
@@ -105,6 +139,41 @@ export default function JournalFeature() {
                   View Journal <ExternalLink />
                 </Button>
               </Link>
+              {/* AlertDialog for Delete Confirmation */}
+              <AlertDialog
+                open={journalToDelete?.id === journal.id}
+                onOpenChange={(open) => {
+                  if (!open) setJournalToDelete(null)
+                  else setJournalToDelete(journal)
+                }}
+              >
+                <AlertDialogContent>
+                  <AlertDialogHeader>
+                    <AlertDialogTitle>
+                      Are you absolutely sure?
+                    </AlertDialogTitle>
+                    <AlertDialogDescription>
+                      This action cannot be undone. This will permanently delete the Journal!
+                    </AlertDialogDescription>
+                  </AlertDialogHeader>
+                  <AlertDialogFooter>
+                    <AlertDialogCancel>Cancel</AlertDialogCancel>
+                    <Button
+                      onClick={() => handleDeleteJournal(journal.id)}
+                      disabled={deleteLoading}
+                      aria-label="Confirm Delete"
+                    >
+                      {deleteLoading ? (
+                        <p className="flex gap-1 items-center">
+                          Deleting <Loader2 className="animate-spin" />
+                        </p>
+                      ) : (
+                        "Continue"
+                      )}
+                    </Button>
+                  </AlertDialogFooter>
+                </AlertDialogContent>
+              </AlertDialog>
             </div>
           ))
         )}

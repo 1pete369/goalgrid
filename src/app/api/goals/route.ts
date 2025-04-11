@@ -1,23 +1,22 @@
 import { NextResponse } from "next/server"
 import axios from "axios"
+import { getSecureAxios } from "@/lib/secureAxios"
+import { getServerSession } from "next-auth"
+import { authOptions } from "../auth/[...nextauth]/authOptions"
 
 export async function GET(req: Request) {
-  const { searchParams } = new URL(req.url)
-
-  const uid = searchParams.get("uid") // for getting all goals
-
-  console.log(" uid in server", uid)
-
   try {
-    if (uid) {
-      // Fetch all goals for a user
-      const response = await axios.get(
-        `${process.env.API_URL}/goals/get-goals/${uid}`
-      )
-      console.log("Fetched goals:", response.data)
-      return NextResponse.json(response.data.goals)
+    const session = await getServerSession(authOptions) // ✅ Fetch once
+
+    if (!session?.user?.id) {
+      return NextResponse.json({ message: "Unauthorized" }, { status: 401 })
     }
-    return NextResponse.json({ message: "Missing parameters" }, { status: 400 })
+
+    const { axiosInstance } = await getSecureAxios(session)
+    // Fetch all goals for a user
+    const response = await axiosInstance.get(`/goals/get-goals/${session.user.id}`)
+    console.log("Fetched goals:", response.data)
+    return NextResponse.json(response.data.goals)
   } catch (error) {
     console.error("Error Fetching goals:", error)
     return NextResponse.json(
@@ -28,13 +27,18 @@ export async function GET(req: Request) {
 }
 
 export async function POST(req: Request) {
+  const session = await getServerSession(authOptions) // ✅ Fetch once
+
+  if (!session?.user?.id) {
+    return NextResponse.json({ message: "Unauthorized" }, { status: 401 })
+  }
+
+  const { axiosInstance } = await getSecureAxios(session)
+
   const { goal } = await req.json()
   console.log(goal)
   try {
-    const response = await axios.post(
-      `${process.env.API_URL}/goals/create-goal`,
-      { goal }
-    )
+    const response = await axiosInstance.post(`/goals/create-goal`, { goal })
     console.log(response.data)
     return NextResponse.json(response.data)
   } catch (error) {

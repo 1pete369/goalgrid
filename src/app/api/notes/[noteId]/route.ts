@@ -1,69 +1,88 @@
 import { NextResponse } from "next/server"
-import axios from "axios"
+import { getSecureAxios } from "@/lib/secureAxios"
+import { getServerSession } from "next-auth"
+import { authOptions } from "../../auth/[...nextauth]/authOptions"
 
 export async function PATCH(
   req: Request,
   { params }: { params: Promise<{ noteId: string }> }
 ) {
   try {
-    const noteId = (await params).noteId
+    const session = await getServerSession(authOptions) // ✅ Fetch once
+
+    if (!session?.user?.id) {
+      return NextResponse.json({ message: "Unauthorized" }, { status: 401 })
+    }
+
+    const { axiosInstance } = await getSecureAxios(session)
     const { noteObj } = await req.json()
-    if (!noteId) {
-      return NextResponse.json({ message: "Missing note id" }, { status: 400 })
+    const noteId = (await params).noteId
+
+    if (!noteId || !noteObj) {
+      return NextResponse.json({ message: "Missing data" }, { status: 400 })
     }
-    const response = await axios.patch(
-      `${process.env.NEXT_PUBLIC_API_URL}/notes/update-note/${noteId}`,
-      { noteObj }
-    )
+
+    const response = await axiosInstance.patch(`/notes/update-note/${noteId}`, {
+      noteObj
+    })
     return NextResponse.json(response.data)
   } catch (error) {
-    return NextResponse.json(
-      { message: "Internal server error" },
-      { status: 504 }
-    )
+    console.error("Error updating note:", error)
+    const status = (error as any)?.response?.status || 504
+    return NextResponse.json({ message: "Internal server error" }, { status })
   }
 }
 
-export async function DELETE(req: Request,{
-  params
-}: {
-  params: Promise<{ noteId: string }>
-}) {
+export async function DELETE(
+  _req: Request,
+  { params }: { params: Promise<{ noteId: string }> }
+) {
   try {
+    const session = await getServerSession(authOptions) // ✅ Fetch once
+
+    if (!session?.user?.id) {
+      return NextResponse.json({ message: "Unauthorized" }, { status: 401 })
+    }
+
+    const { axiosInstance } = await getSecureAxios(session)
     const noteId = (await params).noteId
+
     if (!noteId) {
       return NextResponse.json({ message: "Missing note id" }, { status: 400 })
     }
-    const response = await axios.delete(
-      `${process.env.NEXT_PUBLIC_API_URL}/notes/delete-note/${noteId}`
-    )
+
+    const response = await axiosInstance.delete(`/notes/delete-note/${noteId}`)
     return NextResponse.json(response.data)
   } catch (error) {
-    return NextResponse.json(
-      { message: "Internal server error" },
-      { status: 504 }
-    )
+    console.error("Error deleting note:", error)
+    const status = (error as any)?.response?.status || 504
+    return NextResponse.json({ message: "Internal server error" }, { status })
   }
 }
 
-export async function GET(req: Request,{ params }: { params: Promise<{ noteId: string }> }) {
-  console.log("Get note called in server")
-
+export async function GET(
+  _req: Request,
+  { params }: { params: Promise<{ noteId: string }> }
+) {
   try {
+    const session = await getServerSession(authOptions) // ✅ Fetch once
+
+    if (!session?.user?.id) {
+      return NextResponse.json({ message: "Unauthorized" }, { status: 401 })
+    }
+
+    const { axiosInstance } = await getSecureAxios(session)
     const noteId = (await params).noteId
-    console.log("noteId", noteId)
+
     if (!noteId) {
       return NextResponse.json({ message: "Missing note id" }, { status: 400 })
     }
-    const response = await axios.get(
-      `${process.env.NEXT_PUBLIC_API_URL}/notes/get-note/${noteId}`
-    )
-    console.log("Note", response.data.note)
+
+    const response = await axiosInstance.get(`/notes/get-note/${noteId}`)
     return NextResponse.json(response.data.note)
   } catch (error) {
-    return NextResponse.json(
-      { message: "Internal server error" },
-      { status: 504 }
-    )
+    console.error("Error fetching note:", error)
+    const status = (error as any)?.response?.status || 504
+    return NextResponse.json({ message: "Internal server error" }, { status })
   }
 }

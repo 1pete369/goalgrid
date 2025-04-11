@@ -30,7 +30,7 @@ export default function FriendRequests() {
           // const response = await axios.get(
           //   `${process.env.NEXT_PUBLIC_API_URL}/friends/get-requests/${user?.uid}`
           // )
-          const response= await axios.get(`/api/friends/get-requests/${user?.uid}`)
+          const response= await axios.get(`/api/friends/get-requests`)
 
           const { receivedRequests, sentRequests } = response.data
           setReceivedRequests(receivedRequests)

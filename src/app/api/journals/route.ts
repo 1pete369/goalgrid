@@ -1,17 +1,22 @@
 import { NextResponse } from "next/server"
-import axios from "axios"
+import { getServerSession } from "next-auth"
+import { getSecureAxios } from "@/lib/secureAxios"
+import { authOptions } from "../auth/[...nextauth]/authOptions"
 
 export async function GET(req: Request) {
-  const { searchParams } = new URL(req.url)
-  const uid = searchParams.get("uid")
-  if (!uid) {
-    return NextResponse.json({ message: "Missing Uid" }, { status: 400 })
+  const session = await getServerSession(authOptions) // ✅ Fetch once
+
+  if (!session?.user?.id) {
+    return NextResponse.json({ message: "Unauthorized" }, { status: 401 })
   }
+
+  const { axiosInstance } = await getSecureAxios(session)
+
   try {
-    const response = await axios.get(
-      `${process.env.API_URL}/journals/get-journals/${uid}`
+    const response = await axiosInstance.get(
+      `/journals/get-journals/${session.user.id}`
     )
-    console.log("response",response.data)
+    console.log("response", response.data)
 
     const journals = response.data.journals
     return NextResponse.json(journals)
@@ -24,14 +29,23 @@ export async function GET(req: Request) {
 }
 
 export async function POST(req: Request) {
+  
+  const session = await getServerSession(authOptions) // ✅ Fetch once
+
+  if (!session?.user?.id) {
+    return NextResponse.json({ message: "Unauthorized" }, { status: 401 })
+  }
+
+  const { axiosInstance } = await getSecureAxios(session)
+
   const { journalObj } = await req.json()
 
   if (!journalObj) {
     return NextResponse.json({ message: "Missing data" }, { status: 400 })
   }
   try {
-    const response = await axios.post(
-      `${process.env.API_URL}/journals/create-journal`,
+    const response = await axiosInstance.post(
+      `/journals/create-journal`,
       { journalObj }
     )
 

@@ -1,18 +1,31 @@
 import { NextResponse } from "next/server"
 import axios from "axios"
+import { getSecureAxios } from "@/lib/secureAxios"
+import { getServerSession } from "next-auth"
+import { authOptions } from "../../auth/[...nextauth]/authOptions"
 
 export async function DELETE(
   req: Request,
   { params }: { params: Promise<{ categoryId: string }> }
 ) {
+
+    const session = await getServerSession(authOptions) // ✅ Fetch once
+    
+    if (!session?.user?.id) {
+      return NextResponse.json({ message: "Unauthorized" }, { status: 401 })
+    }
+  
+    const { axiosInstance } = await getSecureAxios(session)
+  
+
   const categoryId = (await params).categoryId
   if (!categoryId) {
     return NextResponse.json({ message: "Missing CategoryId" }, { status: 400 })
   }
 
   try {
-    const response = await axios.delete(
-      `${process.env.API_URL}/categories/delete-category/${categoryId}`
+    const response = await axiosInstance.delete(
+      `/categories/delete-category/${categoryId}`
     )
 
     console.log(response.data)
@@ -48,17 +61,26 @@ export async function PATCH(
   req: Request,
   { params }: { params: Promise<{ categoryId: string }> }
 ) {
+  const session = await getServerSession(authOptions) // ✅ Fetch once
+  
+  if (!session?.user?.id) {
+    return NextResponse.json({ message: "Unauthorized" }, { status: 401 })
+  }
+
+  const { axiosInstance } = await getSecureAxios(session)
 
   console.log("Came to patch")
   
   const categoryId = (await params).categoryId
+
   console.log("Came to patch")
+  
   if (!categoryId) {
     return NextResponse.json({ message: "Missing Category Id" }, { status: 400 })
   }
   try {
-    const response = await axios.patch(
-      `${process.env.API_URL}/categories/update-category-status/${categoryId}`
+    const response = await axiosInstance.patch(
+      `/categories/update-category-status/${categoryId}`
     )
     console.log(response.data)
     const updatedCategory = response.data.updatedCategory

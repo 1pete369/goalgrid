@@ -1,31 +1,41 @@
-import { NextResponse } from "next/server";
-import axios from "axios";
+import { NextResponse } from "next/server"
+import axios from "axios"
+import { getSecureAxios } from "@/lib/secureAxios"
+import { getServerSession } from "next-auth"
+import { authOptions } from "../../auth/[...nextauth]/authOptions"
 
 export async function POST(req: Request) {
+  const session = await getServerSession(authOptions) // ✅ Fetch once
+
+  if (!session?.user?.id) {
+    return NextResponse.json({ message: "Unauthorized" }, { status: 401 })
+  }
+
+  const { axiosInstance } = await getSecureAxios(session)
+
   try {
-    const { friendRequestObject, userId } = await req.json();
+    const { friendRequestObject } = await req.json()
 
-    const response = await axios.post(
-      `${process.env.API_URL}/friends/send-friend-request`,
+    console.log("friendRequestObject",friendRequestObject)
+
+    const response = await axiosInstance.post(
+      `/friends/send-friend-request`,
       friendRequestObject
-    );
+    )
 
-    console.log(response.data.friendRequest._id)
+    console.log("response.data.friendRequest._id",response.data)
 
-    await axios.patch(
-      `${process.env.API_URL}/users/push-friend-id/${userId}`,
-      {
-        _id: response.data.friendRequest._id,
-        recipientId: friendRequestObject.recipientId
-      }
-    );
+    await axiosInstance.patch(`/users/push-friend-id/${session.user.id}`, {
+      _id: response.data.friendRequest._id,
+      recipientId: friendRequestObject.recipientId
+    })
 
-    return NextResponse.json(response.data);
+    return NextResponse.json(response.data)
   } catch (error) {
-    console.error("Failed to send friend request:", error);
+    console.error("Failed to send friend request:", error)
     return NextResponse.json(
       { error: "Failed to send friend request" },
       { status: 500 }
-    );
+    )
   }
 }

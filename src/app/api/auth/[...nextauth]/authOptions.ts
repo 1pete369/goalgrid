@@ -121,32 +121,21 @@ export const authOptions: AuthOptions = {
     })
   ],
   callbacks: {
-    async jwt({ token, user, account, profile, trigger, session }) {
-      console.log("Before fetching:", token);
-  
+    async jwt({ token, user }) {
       if (user) {
-        // Assign basic user details when signing in
+        // Only on login/register
         token.uid = user.id;
-        token.provider = account?.provider;
+        token.provider = user.provider;
         token.name = user.name;
         token.email = user.email;
         token.image = user.image;
-        token.accountVerified = profile?.email_verified || false;
+        token.accountVerified = user.accountVerified;
+        token.subscriptionPlan = user.subscriptionPlan || "free";
       }
-  
-      // Always fetch the latest subscription plan
-      try {
-        console.log("Fetching updated subscription plan...");
-        const subscriptionPlan = await fetchUserSubscription(token.sub as string);
-        token.subscriptionPlan = subscriptionPlan || "free";
-        console.log(`Fetched subscriptionPlan for user ${token.uid}: ${token.subscriptionPlan}`);
-      } catch (error) {
-        console.error("Error fetching subscription plan:", error);
-        token.subscriptionPlan = "free"; // Default fallback
-      }
-  
-      console.log("Final JWT token:", token);
-      return token; // Ensure token is returned correctly
+    
+      // ✅ Skip fetching subscription again here on every request
+    
+      return token;
     },
   
     async session({ session, token }) {

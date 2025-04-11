@@ -4,7 +4,6 @@ import axios from "axios"
 export async function postTodo(todo: Todo, uid: string, categoryId: string) {
   try {
     const response = await axios.post(`/api/category-todos`, {
-      uid,
       todo,
       categoryId
     })

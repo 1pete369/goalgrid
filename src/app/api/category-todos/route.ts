@@ -1,15 +1,27 @@
 // app/api/category-todos/route.ts
 import { NextResponse } from "next/server"
 import axios from "axios"
+import { getSecureAxios } from "@/lib/secureAxios"
+import { getServerSession } from "next-auth"
+import { authOptions } from "../auth/[...nextauth]/authOptions"
 
 export async function POST(req: Request) {
+
+  const session = await getServerSession(authOptions) // ✅ Fetch once
+  
+  if (!session?.user?.id) {
+    return NextResponse.json({ message: "Unauthorized" }, { status: 401 })
+  }
+
+  const { axiosInstance } = await getSecureAxios(session)
+
   try {
     // Parse the request body to extract the necessary data
-    const { todo, uid, categoryId } = await req.json()
+    const { todo, categoryId } = await req.json()
 
     // Make a request to create the todo
     const response = (
-      await axios.post(`${process.env.API_URL}/todos/create-todo`, {
+      await axiosInstance.post(`/todos/create-todo`, {
         todo
       })
     ).data
@@ -20,8 +32,8 @@ export async function POST(req: Request) {
     console.log("TodoObjectId", todoObjectId)
 
     // Update the category with the new Todo ID
-    const response2 = await axios.patch(
-      `${process.env.API_URL}/categories/push-todo-id/${uid}`,
+    const response2 = await axiosInstance.patch(
+      `/categories/push-todo-id/${session.user.id}`,
       { todoObjectId, categoryId }
     )
     console.log(response2)

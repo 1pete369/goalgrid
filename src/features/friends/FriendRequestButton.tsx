@@ -32,16 +32,15 @@ export default function FriendRequestButton({
       }
 
       const response = await axios.post(
-        `${process.env.NEXT_PUBLIC_API_URL}/friends/send-friend-request`,
+        `/api/friends/send-friend-request`,
         friendRequestObject
       )
       console.log(response.data.friendRequest._id)
 
       await axios.patch(
-        `${process.env.NEXT_PUBLIC_API_URL}/users/push-friend-id/${myUserId}`,
+        `/api/users/push-friend-id/${myUserId}`,
         { _id: response.data.friendRequest._id, recipientId: recipientUserId }
       )
-
       // Refresh friend list
       await refreshFriendList()
     } catch (error) {

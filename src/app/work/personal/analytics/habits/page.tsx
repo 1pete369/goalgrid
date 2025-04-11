@@ -77,7 +77,7 @@ export default function HabitDashboard() {
       const getAnalytics = async () => {
         try {
           setIsLoading(true)
-          const res= await axios.get(`/api/analytics/habits/${user.uid}`)
+          const res= await axios.get(`/api/analytics/habits`)
           // Introduce a slight delay before setting the data
           const data=res.data
           setData(data)

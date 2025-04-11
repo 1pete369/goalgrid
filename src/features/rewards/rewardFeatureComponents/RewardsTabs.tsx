@@ -59,10 +59,8 @@ export default function RewardsTabs() {
 
   useEffect(() => {
     async function loadData() {
-      if (user) {
-        const data: DailyRewardsResponseType = await getDailyRewardsStatus(
-          user.uid
-        )
+      if (user!==null) {
+        const data: DailyRewardsResponseType = await getDailyRewardsStatus()
         console.log("Data at rewards", data)
         if (data.rewardsClaimed.length > 0) {
           setClaimedRewards(new Set(data.rewardsClaimed[0].rewards))
@@ -85,7 +83,7 @@ export default function RewardsTabs() {
 
     const updatedRewards = new Set([...claimedRewards, task])
 
-    await axios.post(`/api/rewards/${user?.uid}`, { task, tokens })
+    await axios.post(`/api/rewards`, { task, tokens })
 
     setClaimedRewards(updatedRewards)
   }
@@ -160,7 +158,7 @@ export default function RewardsTabs() {
                         handleClaimReward(reward.task, reward.reward)
                       }
                       disabled={!canClaimReward(reward.task)}
-                      className={`bg-transparent text-black hover:bg-transparent text-lg font-semibold select-none ${
+                      className={`bg-transparent hover:bg-transparent text-lg font-semibold text-black dark:text-white border-2 select-none ${
                         !canClaimReward(reward.task)
                           ? "opacity-50 cursor-not-allowed"
                           : ""

@@ -138,7 +138,7 @@ export default function TodoListCategoryCard({
 
   return (
     <Card
-      className={`max-h-[350px] w-[240px] bg-[${category.categoryColor}] rounded-sm border-[1px] border-black p-4 text-black`}
+      className={`max-h-[350px] w-full max-w-[280px] bg-[${category.categoryColor}] rounded-sm border-[1px] border-black p-4 text-black`}
       key={category.id}
       style={{ backgroundColor: category.categoryColor }}
     >

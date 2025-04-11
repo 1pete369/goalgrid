@@ -99,7 +99,7 @@ export default function TodayTaskListFeatureForm({
 
   const handleAddNewTask = async () => {
     setLoading(true)
-    const resourceResult = await getResourceCount(user?.uid as string, "tasks")
+    const resourceResult = await getResourceCount( "tasks")
     if (resourceResult.success) {
       const taskObject: Task | undefined = createTaskObject()
 
@@ -186,7 +186,7 @@ export default function TodayTaskListFeatureForm({
           <Button className="font-semibold text-base flex items-center">
             <Plus />
             Add
-            <p className="hidden md:flex">new Task!</p>
+            <p className="hidden md:flex">Task!</p>
           </Button>
         </DialogTrigger>
         <DialogContent className="sm:max-w-[425px] p-4">

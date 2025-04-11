@@ -18,7 +18,6 @@ export default function Page() {
   const onSubmit = async (name: string, content: string) => {
     if (user !== null) {
       const resourceResult = await getResourceCount(
-        user?.uid as string,
         "journals"
       )
       if (resourceResult.success) {

@@ -1,43 +1,50 @@
 import { NextResponse } from "next/server"
-import axios from "axios"
+import { getSecureAxios } from "@/lib/secureAxios"
+import { getServerSession } from "next-auth"
+import { authOptions } from "../auth/[...nextauth]/authOptions"
 
-export async function GET(req: Request) {
-  const { searchParams } = new URL(req.url)
-  const uid = searchParams.get("uid")
-  if (!uid) {
-    return NextResponse.json({ message: "Missing Uid" }, { status: 400 })
-  }
+export async function GET() {
   try {
-    const response = await axios.get(
-      `${process.env.NEXT_PUBLIC_API_URL}/notes/get-notes/${uid}`
-    )
+     const session = await getServerSession(authOptions) // ✅ Fetch once
+
+    if (!session?.user?.id) {
+      return NextResponse.json({ message: "Unauthorized" }, { status: 401 })
+    }
+
+    const { axiosInstance } = await getSecureAxios(session) 
+
+    const response = await axiosInstance.get(`/notes/get-notes/${session.user.id}`)
     const notes = response.data.notes
+
     return NextResponse.json(notes)
   } catch (error) {
-    return NextResponse.json(
-      { message: "Internal server error" },
-      { status: 504 }
-    )
+    console.error("Error fetching notes:", error)
+    const status = (error as any)?.response?.status || 504
+    return NextResponse.json({ message: "Internal server error" }, { status })
   }
 }
 
 export async function POST(req: Request) {
-  const { noteObj } = await req.json()
-
-  if (!noteObj) {
-    return NextResponse.json({ message: "Missing data" }, { status: 400 })
-  }
   try {
-    const response = await axios.post(
-        `${process.env.NEXT_PUBLIC_API_URL}/notes/create-note`,
-        { noteObj }
-      )
+     const session = await getServerSession(authOptions) // ✅ Fetch once
+
+    if (!session?.user?.id) {
+      return NextResponse.json({ message: "Unauthorized" }, { status: 401 })
+    }
+
+    const { axiosInstance } = await getSecureAxios(session) 
+    const { noteObj } = await req.json()
+
+    if (!noteObj) {
+      return NextResponse.json({ message: "Missing data" }, { status: 400 })
+    }
+
+    const response = await axiosInstance.post("/notes/create-note", { noteObj })
 
     return NextResponse.json(response.data)
   } catch (error) {
-    return NextResponse.json(
-      { message: "Internal server error" },
-      { status: 504 }
-    )
+    console.error("Error creating note:", error)
+    const status = (error as any)?.response?.status || 504
+    return NextResponse.json({ message: "Internal server error" }, { status })
   }
 }

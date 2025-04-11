@@ -62,7 +62,7 @@ export default function GoalFeatureForm({
   const handleCreateGoal = async () => {
     setLoading(true)
 
-    const resourceResult = await getResourceCount(user?.uid as string, "goals")
+    const resourceResult = await getResourceCount("goals")
     if (resourceResult.success) {
       const goalCreated: Goal = createGoalObject(
         goalName,
@@ -189,7 +189,7 @@ export default function GoalFeatureForm({
           <Button className="font-semibold text-base flex items-center">
             <Plus />
             Add
-            <p className="hidden md:flex">new Goal!</p>
+            <p className="hidden md:flex">Goal!</p>
           </Button>
         </DialogTrigger>
         <DialogContent className="sm:max-w-[425px] p-4">

@@ -5,7 +5,7 @@ import { handleApiError } from "./handleApiError"
 
 export const getJournals = async (uid: string) => {
   try {
-    const response = await axios.get(`/api/journals?uid=${uid}`)
+    const response = await axios.get(`/api/journals`)
     return response.data
   } catch (error) {
     console.log(error)

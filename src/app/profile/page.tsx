@@ -1,28 +1,31 @@
 "use client"
-import React from "react"
+import FullPageLoading from "@/AppComponents/loaders/FullPageLoading"
+import generateSVGRectsForYear from "@/AppComponents/svgs/svghelper"
+import YearlyGridComponent from "@/AppComponents/svgs/YearlyGrid"
+import { Button } from "@/components/ui/button"
+import { useUserContext } from "@/contexts/UserDataProviderContext"
+import { Pencil } from "lucide-react"
+import { signOut } from "next-auth/react"
 import Image from "next/image"
 import Link from "next/link"
+import { useEffect } from "react"
 import ReactCountryFlag from "react-country-flag"
-import { signOut } from "next-auth/react"
-import { useUserContext } from "@/contexts/UserDataProviderContext"
-import { formatDate } from "@/utils/basics"
-import { format, parseISO } from "date-fns"
-import { usePathname } from "next/navigation"
-import FullPageLoading from "@/AppComponents/loaders/FullPageLoading"
-import { Button } from "@/components/ui/button"
-import { Pencil } from "lucide-react"
 
 export default function Page() {
-  const { user, loading } = useUserContext()
+  const { user } = useUserContext()
 
   const handleLogout = async () => {
     await signOut({ redirect: false })
   }
 
+  // useEffect(()=>{
+  //   generateSVGRectsForYear(2025);
+  // },[])
+
   if (user === null) return <FullPageLoading />
 
   return (
-    <div className="  min-h-screen ">
+    <div className="  min-h-screen bg-squares">
       <div className="relative h-40">
         <Image
           src={"/gradient.png"}
@@ -76,6 +79,8 @@ export default function Page() {
             </Button>
           </Link>
         </div>
+        <hr className="mt-2" />
+        <YearlyGridComponent />
         <hr className="mt-2" />
         <div className="mt-2 ">
           <p className="text-xl font-semibold">Badges Earned</p>

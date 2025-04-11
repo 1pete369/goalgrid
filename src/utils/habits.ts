@@ -28,7 +28,7 @@ export async function updateHabit(habit: Habit): Promise<ApiResponse<any>>  {
 // Function to get habits for a user by UID
 export async function getHabits(uid: string): Promise<ApiResponse<any>>  {
   try {
-    const response = await axios.get(`/api/habits?uid=${uid}`)
+    const response = await axios.get(`/api/habits`)
     console.log(response.data)
     return { success: true, data: response.data }
   } catch (error) {
