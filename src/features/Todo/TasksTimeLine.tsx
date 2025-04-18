@@ -86,7 +86,7 @@ export default function TasksTimeLine({ Tasks }: { Tasks: Task[] }) {
                 style={{ borderColor }}
               ></div>
               <div
-                className="bg-white dark:bg-slate-800/70 shadow-lg p-5 rounded-lg ml-6 w-full border-l-4"
+                className="bg-white dark:bg-slate-800/70 p-5 rounded-sm ml-6 w-full border-l-4 border-2"
                 style={{ borderColor }}
               >
                 <div className="flex justify-between items-center">

@@ -97,7 +97,7 @@ export default function NotesFeature() {
           notes.map((note) => (
             <Card
               key={note.id}
-              className="w-[290px] p-4 border rounded-sm shadow-none flex flex-col bg-transparent dark:bg-transparent"
+              className=" w-full sm:w-[290px]  p-4 border rounded-sm shadow-none flex flex-col bg-transparent dark:bg-transparent"
             >
               <div className="flex justify-between">
                 <div className="flex flex-col">

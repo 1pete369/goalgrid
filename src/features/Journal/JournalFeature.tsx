@@ -88,7 +88,7 @@ export default function JournalFeature() {
           journals.map((journal) => (
             <div
               key={journal.id}
-              className="w-[290px] p-4 border rounded-sm shadow-none flex flex-col"
+              className="w-full sm:w-[290px] p-4 border rounded-sm shadow-none flex flex-col"
             >
               <div className="flex justify-between">
                 <div className="flex flex-col">
