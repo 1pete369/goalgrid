@@ -16,7 +16,7 @@ export default function CommunityFeedbackClient({
   const [isUserJoined, setIsUserJoined] = useState(initialIsJoined)
 
   return (
-    <>
+    <div className="min-h-screen px-4 pt-16">
       {!isUserJoined ? (
         <CommunityFeedbackLandingpage
           uid={userId}
@@ -26,6 +26,6 @@ export default function CommunityFeedbackClient({
       ) : (
         <ChatBox roomName={roomName} />
       )}
-    </>
+    </div>
   )
 }

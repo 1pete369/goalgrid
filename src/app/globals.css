@@ -1,4 +1,3 @@
-
 @import url("https://fonts.googleapis.com/css2?family=Figtree:wght@400;600;700&display=swap");
 
 @tailwind base;
@@ -6,23 +5,30 @@
 @tailwind utilities;
 
 :root {
-  /* Light mode background */ /* Light mode text color */
+  --primary-300: #d6bbfb;
+  --primary-500: #7d47eb;
+  --primary-800: #6f00ff;
 
-  --primary-300: #d6bbfb; /* Light primary shade */
-  --primary-500: #7d47eb; /* Main primary color */
-  --primary-800: #6f00ff; /* Dark primary shade */
 
-  --neutral-300: #e4e7eb; /* Light neutral shade (backgrounds) */
-  --neutral-500: #717680; /* Default neutral text */
-  --neutral-800: #131628; /* Darker neutral for strong text */
+--secondary-300: #bae6fd;  
+--secondary-500: #0ea5e9;  
+--secondary-800: #075985;  
 
-  --accent-blue: #2e90fa; /* Accent blue */
-  --accent-pink: #ee46bc; /* Accent pink */
-  --accent-indigo: #6172f3; /* Accent indigo */
+--tertiary-300: #a5f3fc;
+  --tertiary-500: #22d3ee;
+  --tertiary-800: #0e7490;
 
-  --error: #f04438; /* Error red */
-  --warning: #f79009; /* Warning yellow */
-  --success: #12b76a; /* Success green */
+  --neutral-300: #e4e7eb;
+  --neutral-500: #717680;
+  --neutral-800: #131628;
+
+  --accent-blue: #2e90fa;
+  --accent-pink: #ee46bc;
+  --accent-indigo: #6172f3;
+
+  --error: #f04438;
+  --warning: #f79009;
+  --success: #12b76a;
 }
 
 /* @media (prefers-color-scheme: dark) {
@@ -163,18 +169,24 @@ body {
   height: auto;
 }
 
-
 .bg-dot-pattern {
   @apply bg-primary-800;
-  background-image: radial-gradient(circle, rgba(255, 255, 255, 0.1) 1px, transparent 1px);
+  background-image: radial-gradient(
+    circle,
+    rgba(255, 255, 255, 0.1) 1px,
+    transparent 1px
+  );
   background-size: 16px 16px; /* Smaller dots for a better effect */
 }
-
 
 @layer utilities {
   .bg-squares {
     background-color: hsl(var(--background));
-    background-image: linear-gradient(to right, hsl(var(--border) / 0.2) 1px, transparent 1px),
+    background-image: linear-gradient(
+        to right,
+        hsl(var(--border) / 0.2) 1px,
+        transparent 1px
+      ),
       linear-gradient(to bottom, hsl(var(--border) / 0.2) 1px, transparent 1px);
     background-size: 60px 60px;
   }

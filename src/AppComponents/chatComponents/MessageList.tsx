@@ -23,139 +23,130 @@ export default function MessageList({
   messages,
   joinedUsersData,
   me,
-  messagesLoading
+  messagesLoading,
 }: MessageListPropsType) {
   const chatEndRef = useRef<HTMLDivElement | null>(null)
+
+
   useEffect(() => {
-    if (chatEndRef.current) {
-      chatEndRef.current.scrollIntoView({ behavior: "smooth" })
-    }
+    chatEndRef.current?.scrollIntoView({ behavior: "smooth" })
   }, [messages])
 
   return (
-    <div className="m-4 mx-auto w-full bg-white dark:bg-transparent flex flex-col overflow-y-auto h-[80vh] p-4 space-y-4 rounded-md">
-      {messagesLoading === true ? (
+    <div
+      className="px-2 pt-4 w-full h-[80vh] overflow-y-auto space-y-3"
+    >
+      {messagesLoading ? (
         <MessagesSkeleton />
       ) : (
-        Array.isArray(messages) &&
-        messages.length > 0 &&
         messages.map((message, index) => {
           const user: UserData = joinedUsersData.find(
-            (user: any) => message.uid === user.uid
-        )
+            (u: any) => u.uid === message.uid
+          )
+          const isMe = me === user?.personalInfo?.username
+
           return (
             <div
-              className={`flex items-start space-x-2 ${
-                me === user?.personalInfo?.username &&
-                "self-end flex-row-reverse"
-              }`}
               key={message.id || index}
+              className={`flex items-end gap-3 ${
+                isMe ? "justify-end" : "justify-start"
+              }`}
             >
-              <Image
-                src={user?.personalInfo?.photoURL || "/google.png"}
-                height={22}
-                width={22}
-                alt="User"
-                className={`object-contain mt-2 ${
-                  me === user?.personalInfo?.username ? "ml-1" : "mr-1"
-                } rounded-full`}
-              />
+              {!isMe && (
+                <Image
+                  src={user?.personalInfo?.photoURL || "/google.png"}
+                  height={28}
+                  width={28}
+                  alt="User"
+                  className="rounded-full mt-1"
+                />
+              )}
+
               <div
-                className={`flex flex-col shadow-sm rounded-md p-2 border border-gray-300 ${
-                  me === user?.personalInfo?.username
-                    ? "bg-gray-50 dark:bg-gray-800"
-                    : "bg-gray-50 dark:bg-gray-800"
+                className={`max-w-xs px-4 py-3 rounded-2xl text-sm shadow-sm ${
+                  isMe
+                    ? "bg-primary-500 dark:bg-primary-800 text-white rounded-br-sm"
+                    : "bg-slate-200 dark:bg-slate-800 text-black dark:text-white rounded-bl-sm"
                 }`}
               >
-                <div
-                  className={`flex items-center justify-between mr-2 text-xs gap-2 ${
-                    me === user?.personalInfo?.username
-                      ? "justify-end"
-                      : "text-gray-700 dark:text-gray-100"
-                  }`}
-                >
-                  <div className="flex items-center gap-2">
-                    <h6
-                      className={`font-semibold leading-5 text-sm ${
-                        me === user?.personalInfo?.username
-                          ? "text-gray-900 dark:text-gray-100"
-                          : "text-gray-700 dark:text-gray-200"
-                      }`}
-                    >
-                      {me === user?.personalInfo?.username
-                        ? "you"
-                        : user?.personalInfo?.name}
-                    </h6>
-                    <p className="font-semibold leading-5 text-gray-500 dark:text-gray-400">
-                      {message.createdAt
-                        ? format(parseISO(message.createdAt), "hh:mm a")
-                        : "Loading date..."}
-                    </p>
-                  </div>
-                  <div>
-                    {message.mediaType !== "none" && (
-                      <Dialog>
-                        <DialogTrigger className="">
-                          <Maximize size={16} className="" />
-                        </DialogTrigger>
-                        <DialogContent>
-                          <DialogHeader>
-                            <DialogTitle className="sr-only">
-                              Media popup
-                            </DialogTitle>
-                            {message.mediaType === "image" ? (
-                              <Image
-                                src={message.mediaUrl as string}
-                                height={200}
-                                width={200}
-                                quality={100}
-                                alt={message.mediaType}
-                                className="w-auto mt-1 rounded"
-                              />
-                            ) : (
-                              <video
-                                src={message.mediaUrl}
-                                height={200}
-                                width={200}
-                                className="w-auto h-[200px] rounded"
-                                muted
-                                autoPlay
-                                loop
-                                controls
-                              />
-                            )}
-                          </DialogHeader>
-                        </DialogContent>
-                      </Dialog>
+                <div className="flex items-center justify-between gap-4 text-xs mb-2 opacity-80">
+                  <span>{isMe ? "You" : user?.personalInfo?.name}</span>
+                  <span>
+                    {message.createdAt
+                      ? format(parseISO(message.createdAt), "hh:mm a")
+                      : ""}
+                  </span>
+                </div>
+
+                {/* Media preview */}
+                {message.mediaType !== "none" && message.mediaUrl && (
+                  <div className="relative group mb-2">
+                    <Dialog>
+                      <DialogTrigger className="absolute top-1 right-1 z-10 p-1 bg-black/40 rounded hover:bg-black/60">
+                        <Maximize size={16} className="text-white" />
+                      </DialogTrigger>
+                      <DialogContent>
+                        <DialogHeader className="flex-1 justify-center items-center">
+                          <DialogTitle className="sr-only">
+                            Media Preview
+                          </DialogTitle>
+                          {message.mediaType === "image" ? (
+                            <Image
+                              src={message.mediaUrl}
+                              height={400}
+                              width={400}
+                              alt="Media"
+                              className="rounded-lg"
+                            />
+                          ) : (
+                            <video
+                              src={message.mediaUrl}
+                              controls
+                              className="rounded-lg max-h-[400px] w-full"
+                            />
+                          )}
+                        </DialogHeader>
+                      </DialogContent>
+                    </Dialog>
+
+                    {message.mediaType === "image" ? (
+                      <Image
+                        src={message.mediaUrl}
+                        height={200}
+                        width={200}
+                        alt="Media"
+                        className="rounded-md"
+                      />
+                    ) : (
+                      <video
+                        src={message.mediaUrl}
+                        className="rounded-md max-h-[200px] w-auto"
+                        autoPlay
+                        loop
+                        muted
+                        controls
+                      />
                     )}
                   </div>
-                </div>
-                {message.mediaType === "none" || !message.mediaUrl ? (
-                  <p className="text-sm text-gray-800 dark:text-gray-100">
+                )}
+
+                {/* Text Message */}
+                {(message.mediaType === "none" || !message.mediaUrl) && (
+                  <p className="whitespace-pre-wrap break-all leading-relaxed">
                     {message.message}
                   </p>
-                ) : message.mediaType === "image" ? (
-                  <Image
-                    src={message.mediaUrl as string}
-                    height={200}
-                    width={200}
-                    quality={100}
-                    alt={message.mediaType}
-                    className="w-auto mt-1"
-                  />
-                ) : (
-                  <video
-                    src={message.mediaUrl}
-                    height={200}
-                    width={200}
-                    className="w-auto h-[200px]"
-                    muted
-                    autoPlay
-                    loop
-                    controls
-                  />
                 )}
               </div>
+
+              {isMe && (
+                <Image
+                  src={user?.personalInfo?.photoURL || "/google.png"}
+                  height={28}
+                  width={28}
+                  alt="You"
+                  className="rounded-full mt-1"
+                />
+              )}
             </div>
           )
         })

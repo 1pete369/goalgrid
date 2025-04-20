@@ -20,8 +20,13 @@ export default function ChatBox({ roomName }: ChatBoxProps) {
   const [joinedUsersData, setJoinedUsersData] = useState<any[]>([])
   const [mediaType, setMediaType] = useState("none")
   const [mediaUrl, setMediaUrl] = useState("")
-  const [messagesLoading,setMessagesLoading] = useState(false)
+  const [messagesLoading, setMessagesLoading] = useState(false)
   const [popoverClose, setPopOverClose] = useState(false)
+
+  const [hasMoreMessages, setHasMoreMessages] = useState(true)
+  const [isFetchingMore, setIsFetchingMore] = useState(false)
+  const [lastMessageTime, setLastMessageTime] = useState<string | null>(null)
+
   const myId = user?.uid
 
   const me = user?.personalInfo.username
@@ -29,18 +34,18 @@ export default function ChatBox({ roomName }: ChatBoxProps) {
   const socketRef = useRef<Socket | null>(null) // Using a ref to store the socket instance
 
   useEffect(() => {
-    if (!user || !roomName) return;
-  
+    if (!user || !roomName) return
+
     // Initialize socket only once when the component mounts
-    socketRef.current = io(process.env.NEXT_PUBLIC_API_URL); // Single connection
-  
+    socketRef.current = io(process.env.NEXT_PUBLIC_API_URL) // Single connection
+
     // Emit event to join the specific room
-    socketRef.current.emit('joinRoom', roomName);
-  
+    socketRef.current.emit("joinRoom", roomName)
+
     // Listen for incoming chat messages
     socketRef.current.on("chatMessage", (message: any) => {
-      setMessages((prevMessages) => [...(prevMessages || []), message]);
-    });
+      setMessages((prevMessages) => [...(prevMessages || []), message])
+    })
 
     // **NEW: Listen for new users joining the room**
     socketRef.current.on("newUserJoined", async (newUserId: string) => {
@@ -63,17 +68,18 @@ export default function ChatBox({ roomName }: ChatBoxProps) {
 
         setJoinedUsersData(joinedUsersData.data.users)
       } catch (error) {
-        console.error("Error fetching new user data:", error);
+        console.error("Error fetching new user data:", error)
       }
-    });
-  
+    })
+
     return () => {
       // Disconnect from the socket when component unmounts
-      socketRef.current?.disconnect();
-    };
-  }, [user, roomName]);
+      socketRef.current?.disconnect()
+    }
+  }, [user, roomName])
   // Empty dependency array means this runs only once
 
+  
   useEffect(() => {
     if (!user) return
 
@@ -100,17 +106,27 @@ export default function ChatBox({ roomName }: ChatBoxProps) {
 
         setJoinedUsersData(joinedUsersData.data.users)
 
-        const response = await axios.get(
-          `${process.env.NEXT_PUBLIC_API_URL}/chats/get-messages/${roomName}`
-        )
+        // const response = await axios.get(
+        //   `${process.env.NEXT_PUBLIC_API_URL}/chats/get-messages/${roomName}`
+        // )
 
-        console.log("Messages response data", response.data)
+        // console.log("Messages response data", response.data)
+        // const messagesFetched: MessageType[] = response.data.data      
+        // setMessages(messagesFetched)
+
+        const response = await axios.get(
+          `${process.env.NEXT_PUBLIC_API_URL}/chats/get-messages/${roomName}?limit=20`
+        )
         const messagesFetched: MessageType[] = response.data.data
-        setMessages(messagesFetched)
         
+        setMessages(messagesFetched)
+        if (messagesFetched.length < 20) setHasMoreMessages(false)
+        if (messagesFetched.length > 0)
+        setLastMessageTime(messagesFetched[0].createdAt)
+
       } catch (error) {
         console.error("Error loading messages:", error)
-      }finally{
+      } finally {
         setMessagesLoading(false)
       }
     }
@@ -153,7 +169,12 @@ export default function ChatBox({ roomName }: ChatBoxProps) {
         id: crypto.randomUUID(),
         message: newMessage,
         mediaUrl: mediaUrl,
-        mediaType: mediaType === "image" ? "image" : mediaType === "video" ? "video" : "none",
+        mediaType:
+          mediaType === "image"
+            ? "image"
+            : mediaType === "video"
+            ? "video"
+            : "none",
         roomName,
         createdAt: new Date().toISOString(),
         uid: user.uid,
@@ -178,26 +199,34 @@ export default function ChatBox({ roomName }: ChatBoxProps) {
     }
   }, [mediaUrl, mediaType])
 
-  if(user===null) return <FullPageLoading />
+  if (user === null) return <FullPageLoading />
 
   return (
-    <div className="min-h-screen max-w-7xl w-full h-full p-4 mx-auto">
+    <div className="min-h-screen px-4 pt-16 flex flex-col h-full">
       <ChatHeader roomName={roomName} />
-      <MessageList
-        messagesLoading={messagesLoading}
-        messages={messages}
-        me={me as string}
-        joinedUsersData={joinedUsersData}
-      />
-      <ChatInput
-        handleSendMessage={handleSendMessage}
-        setNewMessage={setNewMessage}
-        newMessage={newMessage}
-        setMediaType={setMediaType}
-        setMediaUrl={setMediaUrl}
-        setPopOverClose={setPopOverClose}
-        popoverClose={popoverClose}
-      />
+
+      {/* Chat area with scrollable message list */}
+      <div className="flex flex-col flex-grow bg-background border-x border-t border-gray-300 dark:border-slate-800 rounded-t-xl overflow-hidden">
+        <MessageList
+          messagesLoading={messagesLoading}
+          messages={messages}
+          me={me as string}
+          joinedUsersData={joinedUsersData}
+        />
+
+        {/* Input area with top border only */}
+        <div className="border-t border-gray-300 dark:border-slate-800 bg-background px-2 py-3">
+          <ChatInput
+            handleSendMessage={handleSendMessage}
+            setNewMessage={setNewMessage}
+            newMessage={newMessage}
+            setMediaType={setMediaType}
+            setMediaUrl={setMediaUrl}
+            setPopOverClose={setPopOverClose}
+            popoverClose={popoverClose}
+          />
+        </div>
+      </div>
     </div>
   )
 }

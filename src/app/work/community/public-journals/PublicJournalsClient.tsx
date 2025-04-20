@@ -16,7 +16,7 @@ export default function PublicJournalsClient({
   const [isUserJoined, setIsUserJoined] = useState(initialIsJoined)
 
   return (
-    <>
+    <div className="">
       {!isUserJoined ? (
         <PublicJournalsLandingpage
           uid={userId}
@@ -26,6 +26,6 @@ export default function PublicJournalsClient({
       ) : (
         <ChatBox roomName={roomName} />
       )}
-    </>
+    </div>
   )
 }

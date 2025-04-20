@@ -27,22 +27,26 @@ export default function MediaUploadButton({
   setPopOverClose
 }: PropsType) {
   return (
-    <>
-      <AlertDialog open={popoverClose} onOpenChange={() => setPopOverClose((prev) => !prev)}>
-      <AlertDialogTrigger>
-        <ImageIcon size={30} />
+    <AlertDialog open={popoverClose} onOpenChange={() => setPopOverClose(prev => !prev)}>
+      <AlertDialogTrigger className="h-12 mx-2 text-muted-foreground hover:text-foreground transition">
+        <ImageIcon size={26} />
       </AlertDialogTrigger>
-      <AlertDialogContent className="max-w-md w-full sm:max-w-lg md:max-w-xl lg:max-w-2xl mx-auto p-4 rounded-lg">
-        <AlertDialogHeader className="flex flex-col justify-center">
-          <div className="flex justify-between items-center">
-            <AlertDialogTitle>Upload Image/Video</AlertDialogTitle>
-            <AlertDialogCancel>Cancel</AlertDialogCancel>
-          </div>
+  
+      <AlertDialogContent className="w-full max-w-lg p-6 rounded-xl border border-border shadow-xl bg-background space-y-6">
+        <div className="flex justify-between items-center border-b pb-3">
+          <AlertDialogTitle className="text-lg font-semibold">
+            Upload Media
+          </AlertDialogTitle>
+          <AlertDialogCancel className="text-sm text-muted-foreground hover:text-destructive transition">
+            Cancel
+          </AlertDialogCancel>
+        </div>
+  
+        <div className="pt-2">
           <FileUpload setMediaType={setMediaType} setMediaUrl={setMediaUrl} />
-        </AlertDialogHeader>
-        <AlertDialogFooter />
+        </div>
       </AlertDialogContent>
     </AlertDialog>
-    </>
   )
+  
 }

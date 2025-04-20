@@ -24,7 +24,7 @@ export default function HabitCardContent({habit , handleCheckboxClick}: HabitCar
             onCheckedChange={() => handleCheckboxClick(habit)}
             checked={(checkboxValue===true ? true : false) || isHabitExpired}
             disabled={isHabitExpired}
-            className={`h-5 w-5 mt-0.5 rounded-sm border-green-500 data-[state=checked]:bg-green-500 /data-[state=checked]:text-black shadow-none`}
+            className={`h-6 w-6 mt-0.5 rounded-full border-green-500 data-[state=checked]:bg-green-500 /data-[state=checked]:text-black shadow-none`}
           />
           <Label
             htmlFor={habit.id}

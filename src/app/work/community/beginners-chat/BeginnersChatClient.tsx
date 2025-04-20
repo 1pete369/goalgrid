@@ -16,7 +16,7 @@ export default function BeginnersChatClient({
   const [isUserJoined, setIsUserJoined] = useState(initialIsJoined)
 
   return (
-    <>
+    <div className="">
       {!isUserJoined ? (
         <BeginnersChatLandingpage
           uid={userId}
@@ -26,6 +26,6 @@ export default function BeginnersChatClient({
       ) : (
         <ChatBox roomName={roomName} />
       )}
-    </>
+    </div>
   )
 }

@@ -48,9 +48,9 @@ export function NavUser({
 
   return (
     <SidebarMenu>
-      <SidebarMenuItem className="px-2 lg:p-0">
+      <SidebarMenuItem className="px-2 py-1.5 ">
         <Link href={"/"}>
-          <Button className="w-full">
+          <Button className="w-full border-primary-500 border-2 text-black dark:text-white bg-transparent hover:bg-transparent">
             <ArrowLeft />
           </Button>
         </Link>
@@ -118,7 +118,7 @@ export function NavUser({
               </DropdownMenuItem>
             </DropdownMenuGroup>
             <DropdownMenuSeparator />
-            <DropdownMenuItem onClick={async()=>await signOut()}>
+            <DropdownMenuItem onClick={async () => await signOut()}>
               <LogOut />
               Log out
             </DropdownMenuItem>

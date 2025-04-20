@@ -23,7 +23,7 @@ import { useUserContext } from "@/contexts/UserDataProviderContext"
 import { Action, CategoryType } from "@/types/todoFeatureTypes"
 import { getTodayDate } from "@/utils/basics"
 import { createCategory } from "@/utils/categories"
-import MainAddButton from "@/AppComponents/MainAddButton"
+import {MainAddButton} from "@/AppComponents/MainAddButton"
 import { delay } from "@/utils/delay"
 import { useCustomToast } from "@/hooks/useCustomToast"
 import { getResourceCount } from "@/utils/resource-limits"
@@ -124,11 +124,12 @@ export default function TodoListCategoryFeatureForm({
     <section>
       <Dialog open={isDialogOpen} onOpenChange={setIsDialogOpen}>
         <DialogTrigger asChild>
-          <Button className="font-semibold text-base flex items-center">
+          {/* <Button className="font-semibold text-base flex items-center">
             <Plus />
             Add
             <p className="hidden md:flex">Category!</p>
-          </Button>
+          </Button> */}
+          <MainAddButton feature="Category" />
         </DialogTrigger>
         <DialogContent className="sm:max-w-[425px] p-4">
           <DialogHeader>

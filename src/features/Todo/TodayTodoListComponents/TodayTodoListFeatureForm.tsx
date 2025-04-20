@@ -37,6 +37,7 @@ import {
 } from "./TodayTodoListConstants"
 import { getResourceCount } from "@/utils/resource-limits"
 import { ScrollArea } from "@/components/ui/scroll-area"
+import { MainAddButton } from "@/AppComponents/MainAddButton"
 
 type TodayTaskListFeatureFormPropsType = {
   tasks: Task[]
@@ -183,11 +184,12 @@ export default function TodayTaskListFeatureForm({
     <section>
       <Dialog open={isDialogOpen} onOpenChange={setIsDialogOpen}>
         <DialogTrigger asChild>
-          <Button className="font-semibold text-base flex items-center">
+          {/* <Button className="font-semibold text-base flex items-center">
             <Plus />
             Add
             <p className="hidden md:flex">Task!</p>
-          </Button>
+          </Button> */}
+          <MainAddButton feature="Todo"/>
         </DialogTrigger>
         <DialogContent className="sm:max-w-[425px] p-4">
           <DialogHeader>

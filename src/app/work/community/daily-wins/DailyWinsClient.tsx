@@ -16,7 +16,7 @@ export default function DailyWinsClient({
   const [isUserJoined, setIsUserJoined] = useState(initialIsJoined)
 
   return (
-    <>
+    <div className="">
       {!isUserJoined ? (
         <DailyWinsLandingpage
           uid={userId}
@@ -26,6 +26,6 @@ export default function DailyWinsClient({
       ) : (
         <ChatBox roomName={roomName} />
       )}
-    </>
+    </div>
   )
 }

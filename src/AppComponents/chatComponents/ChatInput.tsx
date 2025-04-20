@@ -25,28 +25,26 @@ export default function ChatInput({
   popoverClose
 }: ChatInputPropsType) {
   return (
-    <div className="w-full">
-      <form
-        className="flex items-center gap-2 lg:justify-center"
-        onSubmit={handleSendMessage}
-      >
+    <div className="w-full h-12">
+      <form className="flex items-center" onSubmit={handleSendMessage}>
         <Label htmlFor="messageBox" className="hidden">
           Message
         </Label>
         <Input
           id="messageBox"
           type="text"
-          className="flex-1 md:max-w-md lg:max-lg rounded-sm px-3 py-1 placeholder:text-gray-800 dark:placeholder:text-gray-500 text-gray-800 dark:text-gray-100 focus:border-primary-800"
+          className="w-full h-12 px-3 py-4 placeholder:text-gray-800 dark:placeholder:text-gray-500 text-gray-800 dark:text-gray-100 border-r-2 border-r-black outline-none ring-0 focus:outline-none focus:ring-0  rounded-none shadow-none focus-visible:ring-0"
           placeholder="Enter message here..."
           onChange={(e) => setNewMessage(e.target.value)}
           value={newMessage}
         />
+
         <Button
           type="submit"
-          className="bg-cyan-500 text-white rounded-md shadow-sm hover:bg-cyan-600 focus:outline-none"
+          className="h-12 px-4 py-4  border-r-2 border-r-black bg-secondary-500 text-white rounded-none shadow-sm hover:bg-cyan-600 focus:outline-none"
           disabled={newMessage.trim().length === 0}
         >
-          <Send />
+          <Send size={20}/>
         </Button>
         <MediaUploadButton
           setMediaUrl={setMediaUrl}

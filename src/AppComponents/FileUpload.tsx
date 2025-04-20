@@ -196,7 +196,7 @@ const FileUpload = ({ setMediaType, setMediaUrl }: PropsType) => {
           className="w-full relative overflow-hidden"
         >
           <p className={`z-10 ${isUploading ? "text-black animate-pulse" : "text-white"}`}>
-            {statusMessage || "Upload Image"}
+            {statusMessage || "Send"}
           </p>
           {statusMessage !== "" && (
             <Progress value={progress} className={`absolute h-full w-full ${isUploading ? "bg-green-100" : "bg-black"}`} />

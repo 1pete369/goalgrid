@@ -16,7 +16,8 @@ import {
   SidebarMenuItem,
   useSidebar,
 } from "@/components/ui/sidebar"
-import { useEffect, useState } from "react"
+import React, { useEffect, useState } from "react"
+import { usePathname } from "next/navigation"
 
 export function TeamSwitcher({
   teams,setActiveWorkspace
@@ -29,6 +30,21 @@ export function TeamSwitcher({
 }) {
   const { isMobile } = useSidebar()
   const [activeTeam, setActiveTeam] = useState(teams[0])
+
+  const pathname = usePathname()
+  
+  React.useEffect(() => {
+    if (pathname.startsWith('/work/personal')) {
+      setActiveWorkspace("My Space")
+      setActiveTeam(teams[0])
+      localStorage.setItem("activeWorkspace", "My Space")
+    } else if (pathname.startsWith('/work/community')) {
+      setActiveWorkspace("Community Space")
+      setActiveTeam(teams[1])
+      localStorage.setItem("activeWorkspace", "Community Space")
+    }
+  }, [pathname])
+  
 
   useEffect(()=>{
     setActiveWorkspace(activeTeam.name)

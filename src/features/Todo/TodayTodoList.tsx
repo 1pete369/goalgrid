@@ -9,7 +9,12 @@ import {
 import { useUserContext } from "@/contexts/UserDataProviderContext"
 import { Task } from "@/types/todayTodoFeatureTypes"
 import { deleteTask, getTasks, toggleTask } from "@/utils/todayTasks"
-import { ArrowDownIcon, ArrowUpIcon, EllipsisVertical } from "lucide-react"
+import {
+  ArrowDownIcon,
+  ArrowUpIcon,
+  Clock,
+  EllipsisVertical
+} from "lucide-react"
 import { useEffect, useState } from "react"
 import TaskCard from "./TodayTodoListComponents/TaskCard"
 import TodayTodoListFeatureForm from "./TodayTodoListComponents/TodayTodoListFeatureForm"
@@ -28,6 +33,8 @@ import { Switch } from "@/components/ui/switch"
 import { useCustomToast } from "@/hooks/useCustomToast"
 import TodayTaskSkeleton from "@/skeletons/TodayTaskSkeleton"
 import TasksTimeLine from "./TasksTimeLine"
+import { Toggle } from "@/components/ui/toggle"
+import { Badge } from "@/components/ui/badge"
 
 export default function TodayTodoList() {
   const [tasks, setTasks] = useState<Task[]>([])
@@ -138,7 +145,7 @@ export default function TodayTodoList() {
   }
 
   return (
-    <div className="container min-h-[calc(100vh-64px)] md:px-16 pt-20 p-4">
+    <div className="container min-h-[calc(100vh-64px)] md:px-16 p-4 mx-auto">
       <header className="flex md:flex-row gap-2 md:gap-4 items-center justify-between">
         <div className="w-full flex gap-2 items-center justify-between">
           <Greetings feature="todo" />
@@ -153,16 +160,30 @@ export default function TodayTodoList() {
             </label>
           </div> */}
           <div className="flex items-center gap-4">
-            <div className="flex items-center gap-2">
-              <Switch
-                id="flag"
-                checked={activateTimeLine}
-                onCheckedChange={() => setActivateTimeLine((prev) => !prev)}
-              />
-              <label className="text-sm font-medium" htmlFor="flag">
-                Time line
-              </label>
+            <div className="flex items-center gap-4">
+              <div className="flex items-center gap-2">
+                {/* <Switch
+                  id="timeline"
+                  checked={activateTimeLine}
+                  onCheckedChange={() => setActivateTimeLine((prev) => !prev)}
+                  className="data-[state=checked]:bg-primary-500"
+                /> */}
+                <Toggle
+                  pressed={activateTimeLine}
+                  onPressedChange={() => setActivateTimeLine((prev) => !prev)}
+                  className="flex items-center gap-2 text-sm font-medium text-neutral-800 data-[state=on]:bg-primary-800 border-2 border-primary-500 data-[state=on]:text-white hover:bg-transparent hover:text-black "
+                >
+                  <Clock
+                    className={`w-4 h-4 transition-all  ${
+                      activateTimeLine ? "text-white" : "text-black"
+                    }`}
+                  />
+                  Timeline
+                </Toggle>
+              </div>
+
             </div>
+
             {process.env.NEXT_PUBLIC_TASKS_FILTER === "true" && (
               <div className="hidden lg:flex items-center gap-4">
                 {/* Sorting Criteria */}
